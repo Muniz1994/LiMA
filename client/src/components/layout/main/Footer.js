@@ -9,9 +9,9 @@ const Footer = () => {
     return (
         <footer className="bg-dark text-center text-white mt-auto">
             {/* <!-- Grid container --> */}
-            <div className="container p-4 pb-0">
+            <div className="container p-3 pb-0">
                 {/* <!-- Section: Social media --> */}
-                <section className="mb-4">
+                <section className="">
                     {/* <!-- Twitter --> */}
                     <a className="btn rounded-circle btn-outline-light btn-floating m-1" href="#!" role="button">
                         <FontAwesomeIcon icon="fab fa-twitter" />

@@ -19,7 +19,6 @@ export function NewClauseModal({ ShowState, HideFunction, regulationId, setUpdat
         };
         axios.post('http://127.0.0.1:8000/api/licence/clause/', newClause)
             .then(response => {
-                console.log(response.data);
                 setUpdatedClause(response.data);
                 HideFunction();
             })
@@ -50,10 +49,10 @@ export function NewClauseModal({ ShowState, HideFunction, regulationId, setUpdat
                             placeholder="Insert the text" />
                     </Form.Group>
                     <Stack direction='horizontal' gap={2}>
-                        <Button variant="primary" type="submit">
+                        <Button variant="theme-b text-white" type="submit">
                             Save
                         </Button>
-                        <Button onClick={HideFunction} variant="danger">
+                        <Button onClick={HideFunction} variant="theme-e text-white">
                             Cancel
                         </Button>
                     </Stack>

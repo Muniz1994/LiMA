@@ -17,7 +17,7 @@ class RegulationsAdmin(admin.ModelAdmin):
 
 
 class ClauseAdmin(admin.ModelAdmin):
-    list_display = ["name", "text", "code", "has_code", "regulation"]
+    list_display = ["name", "text", "python_code", "code", "has_code", "regulation"]
 
 
 admin.site.register(CustomUser, CustomUserAdmin)

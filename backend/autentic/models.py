@@ -18,7 +18,6 @@ class Projects(models.Model):
     name = models.CharField(max_length=100)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
-    owner = models.ManyToManyField(CustomUser)
 
 
 class Regulations(models.Model):
@@ -38,6 +37,7 @@ class Clause(models.Model):
     name = models.CharField(max_length=100)
     text = models.CharField(max_length=10000, default="No text")
     code = models.CharField(max_length=10000, blank=True)
+    python_code = models.CharField(max_length=10000, blank=True)
     has_code = models.BooleanField(default=False)
     regulation = models.ForeignKey(
         Regulations, related_name="clauses", on_delete=models.CASCADE

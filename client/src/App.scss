@@ -1,0 +1,302 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+$themeA: #264653;
+$themeB: #2A9D8F;
+$themeC: #E9C46A;
+$themeD: #F4A261;
+$themeE: #E76F51;
+
+$blue: #0d6efd;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #d63384;
+$red: #dc3545;
+$orange: #fd7e14;
+$yellow: #ffc107;
+$green: #198754;
+$teal: #20c997;
+$cyan: #0dcaf0;
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
+
+$primary: $blue;
+$secondary: $gray-600;
+$success: $green;
+$info: $cyan;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $gray-900;
+
+
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  "success": $success,
+  "info": $info,
+  "warning": $warning,
+  "danger": $danger,
+  "light": $light,
+  "dark": $dark,
+  "theme-a": $themeA,
+  "theme-b": $themeB,
+  "theme-c": $themeC,
+  "theme-d": $themeD,
+  "theme-e": $themeE,
+);
+
+
+
+// Include any default variable overrides here (though functions won't be available)
+
+@import '~bootstrap/scss/bootstrap';
+
+// Then add additional custom code here
+
+
+body {
+  height: 100vh;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+#root {
+  height: 100%;
+}
+
+.App {
+  max-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.f-grow-1 {
+  flex-grow: 1;
+}
+
+.h-100 {
+  height: 100%;
+  max-height: calc(100%);
+}
+
+.h-70 {
+  height: 70%;
+  max-height: 70%;
+}
+
+.h-60 {
+  height: 60%;
+  max-height: 60%;
+}
+
+.h-40 {
+  height: 40%;
+  max-height: 40%;
+}
+
+.h-30 {
+  height: 30%;
+  max-height: 30%;
+}
+
+.overflow-scroll {
+  overflow: scroll;
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+div::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.App-logo {
+  height: 30vmin;
+  pointer-events: none;
+}
+
+.login-page {
+  background-image: url("michal-matlon-vTO9BdckvkU-unsplashbw.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+
+
+a.nav-link:hover {
+  border-bottom: thick white;
+}
+
+.clause-list-size {
+  max-height: 50vh;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.viewer {
+  height: 100%;
+}
+
+/* .blockly-workspace {
+  width: 800px;
+  height: 800px;
+} */
+
+.reg-dropdown {
+  width: 100%;
+}
+
+.auth-card {
+  width: 30%;
+}
+
+.max-h-100 {
+  max-height: 100%;
+}
+
+.code-block {
+  height: 100%;
+  overflow: scroll;
+  overflow-y: scroll;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+
+  h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  code {
+    border-radius: 3px;
+  }
+
+  &+.bs-callout {
+    margin-top: -5px;
+  }
+}
+
+@each $name,
+$color in (default, #777),
+(primary, #428bca),
+(success, #5cb85c),
+(danger, #d9534f),
+(warning, #f0ad4e),
+(info, #5bc0de),
+(bdc, #29527a) {
+  .callout-#{$name} {
+    border-left-color: $color;
+
+    h4 {
+      color: $color;
+    }
+  }
+}
+
+.nav-link {
+  color: $white;
+}
+
+.nav-link:hover {
+  border-bottom: 3px solid $white !important;
+}
+
+.nav-link.active {
+  border-bottom: 3px solid $white !important;
+}
+
+@media only screen and (min-width: 992px) {
+  .navbar {
+    padding: 0;
+  }
+
+  .navbar .navbar-brand {
+    padding: 0 0.7em;
+  }
+
+  .navbar .navbar-nav .nav-link {
+    padding: 1em 0.5em;
+  }
+
+  .navbar .navbar-nav .nav-item {
+    margin: 0 1em;
+  }
+}
+
+.navbar .navbar-nav .nav-item:hover {
+  transition: all 0.5s;
+}
+
+
+// nav.transparent {
+//   background-image: linear-gradient(180deg, rgba(38, 70, 83, 1) 0%, rgba(38, 70, 83, 0.8743872549019608) 100%, rgba(0, 212, 255, 0) 100%);
+//   z-index: 99;
+// }

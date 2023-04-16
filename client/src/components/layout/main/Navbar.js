@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 // Import logo
-import logo from '../../../Lima_new.svg'
+import { ReactComponent as Logo } from '../../../lima_new_2.svg'
 
 // Import React Bootstrap components
 import Container from 'react-bootstrap/Container';
@@ -41,10 +41,10 @@ const LogoutModal = ({ ShowState, HideFunction }) => {
                     <span>Do you wish to logout?</span>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button className='px-4' onClick={handleLogout} variant='success'>
+                    <Button className='px-4' onClick={handleLogout} variant='theme-b'>
                         Yes
                     </Button>
-                    <Button className='px-4' onClick={HideFunction} variant='danger'>
+                    <Button className='px-4' onClick={HideFunction} variant='theme-e'>
                         No
                     </Button>
                 </Modal.Footer>
@@ -52,6 +52,7 @@ const LogoutModal = ({ ShowState, HideFunction }) => {
         </>
     )
 }
+
 
 // Internal and public links
 const InternalLinks = () => {
@@ -81,24 +82,23 @@ const Navigationbar = props => {
     }, []);
 
     return (
-        <Navbar className='border-bottom border-dark shadow-sm text-white' sticky='top' bg="dark" variant='dark' expand="lg">
-            <Container>
+        <Navbar className='shadow text-white' bg='dark' sticky='top' variant='dark' expand="lg">
+            <Container >
                 <LogoutModal
                     ShowState={logoutState}
                     HideFunction={() => setLogoutState(false)} />
-                <Navbar.Brand href="/">
-                    <img
-                        src={logo}
-                        height="35"
-                        className="d-inline-block align-top"
-                        alt="Brand logo"
-                    />
+                <Navbar.Brand
+                    className='text-dark'
+                    href="/">
+                    <Logo
+                        height="40"
+                        width="auto" />
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     {isAuth === true ? (
                         <>
-                            <Nav activeKey={props.pathname} className="ms-auto"><InternalLinks /></Nav>
+                            <Nav activeKey={props.pathname} className="ms-auto text-white"><InternalLinks /></Nav>
                             <Nav className="ms-auto"><Button onClick={() => setLogoutState(true)} variant='light'>Logout</Button></Nav>
 
                         </>

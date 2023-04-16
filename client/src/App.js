@@ -1,3 +1,5 @@
+import './App.scss';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigationbar from './components/layout/main/Navbar'; // import navbar
 import Footer from './components/layout/main/Footer';
@@ -11,7 +13,7 @@ import Regulations from './views/app/Regulations';
 import Testpage from './views/app/TestPage';
 
 
-import './App.css';
+
 import Container from 'react-bootstrap/esm/Container';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
@@ -22,7 +24,7 @@ const App = () => {
     <div className='App'>
       <Router>
         <Navigationbar />
-        <Container fluid className='h-100 max-h-100 overflow-hidden'>
+        <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
           <Row className='h-100'>
             <Col className='max-h-100'>
               <Routes>

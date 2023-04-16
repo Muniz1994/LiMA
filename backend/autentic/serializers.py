@@ -17,7 +17,7 @@ class UserSerializer(ModelSerializer):
 class ClauseSerializer(ModelSerializer):
     class Meta:
         model = Clause
-        fields = ("id", "name", "regulation", "text", "code", "has_code")
+        fields = ("id", "name", "regulation", "text", "python_code", "code", "has_code")
 
 
 class RegulationSerializer(ModelSerializer):

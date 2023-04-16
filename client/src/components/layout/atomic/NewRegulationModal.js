@@ -11,7 +11,7 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
     const [regulationCity, setRegulationCity] = useState('');
 
     const HandleSubmit = (event) => {
-        event.preventDefault();
+        event.PreventDefault();
         const newRegulation = {
             name: regulationName,
             city: regulationCity
@@ -48,9 +48,9 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
                             placeholder="Insert the city" />
                     </Form.Group>
                     <Stack direction='horizontal' gap={2}>
-                        <input className="btn btn-primary" type="submit">
+                        <input className="btn btn-theme-b text-white" type="submit">
                         </input>
-                        <Button onClick={HideFunction} variant="danger">
+                        <Button onClick={HideFunction} variant="theme-e text-white">
                             Cancel
                         </Button>
                     </Stack>
