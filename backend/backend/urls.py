@@ -23,6 +23,7 @@ licence_router = routers.DefaultRouter()
 licence_router.register(r"regulations", autentic_views.RegulationViewSet)
 licence_router.register(r"clause", autentic_views.ClauseViewSet)
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/licence/", include(licence_router.urls)),

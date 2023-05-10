@@ -10,7 +10,11 @@ export var toolbox = {
             "contents": [
                 {
                     "kind": "block",
-                    "type": "open_ifc_file"
+                    "type": "add_verification"
+                },
+                {
+                    "kind": "block",
+                    "type": "get_prop_value"
                 },
                 {
                     "kind": "block",
@@ -19,6 +23,27 @@ export var toolbox = {
                 {
                     "kind": "block",
                     "type": "alert_check"
+                },
+                {
+                    "kind": "block",
+                    "type": "applicable_list"
+                },
+                {
+                    "kind": "block",
+                    "type": "text"
+                },
+
+
+            ]
+        },
+        {
+            "kind": "category",
+            "name": "Building",
+            "categorystyle": "logic_category",
+            "contents": [
+                {
+                    "kind": "block",
+                    "type": "building"
                 },
             ]
         },

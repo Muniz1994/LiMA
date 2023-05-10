@@ -15,6 +15,15 @@ import Navbar from 'react-bootstrap/Navbar';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
 
+import Stack from 'react-bootstrap/Stack';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPuzzlePiece, faBuilding } from '@fortawesome/free-solid-svg-icons'
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+library.add(faPuzzlePiece, faBuilding);
+
+
 
 // Logout
 const handleLogout = e => {
@@ -58,10 +67,8 @@ const LogoutModal = ({ ShowState, HideFunction }) => {
 const InternalLinks = () => {
     return (
         <>
-            <Nav.Link as={Link} to='/projects'>Projects</Nav.Link>
-            <Nav.Link as={Link} to='/regulations'>Regulations</Nav.Link>
-            <Nav.Link as={Link} to='/verifications'>Verifications</Nav.Link>
-            <Nav.Link as={Link} to='/testpage'>Test Page</Nav.Link>
+            <Nav.Link as={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Code</span></Stack></Nav.Link>
+            <Nav.Link as={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></Nav.Link>
         </>
     )
 }

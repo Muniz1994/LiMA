@@ -1,26 +1,20 @@
-from rest_framework.serializers import (
-    ModelSerializer,
-    HyperlinkedModelSerializer,
-    PrimaryKeyRelatedField,
-    RelatedField,
-    SlugRelatedField,
-)
+from rest_framework import serializers
 from .models import CustomUser, Regulations, Clause
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ("email", "last_login", "date_joined", "is_staff")
 
 
-class ClauseSerializer(ModelSerializer):
+class ClauseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clause
         fields = ("id", "name", "regulation", "text", "python_code", "code", "has_code")
 
 
-class RegulationSerializer(ModelSerializer):
+class RegulationSerializer(serializers.ModelSerializer):
     clauses = ClauseSerializer(many=True, read_only=True)
 
     class Meta:
@@ -34,3 +28,8 @@ class RegulationSerializer(ModelSerializer):
             "date_created",
             "date_modified",
         )
+
+
+class TestSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    string = serializers.CharField(required=False, allow_blank=True, max_length=100)

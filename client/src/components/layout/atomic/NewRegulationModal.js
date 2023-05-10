@@ -11,7 +11,7 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
     const [regulationCity, setRegulationCity] = useState('');
 
     const HandleSubmit = (event) => {
-        event.PreventDefault();
+        event.preventDefault();
         const newRegulation = {
             name: regulationName,
             city: regulationCity
