@@ -95,7 +95,6 @@ const Navigationbar = props => {
                     ShowState={logoutState}
                     HideFunction={() => setLogoutState(false)} />
                 <Navbar.Brand
-                    className='text-dark'
                     href="/">
                     <Logo
                         height="40"
