@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "autentic",
     "digital_regulation",
     "model_check",
+    "check_module",
 ]
 
 MIDDLEWARE = [

@@ -8,6 +8,8 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from check_module.main import ModelCheck
+
 
 # Create your models here.
 class Verification(models.Model):
@@ -25,6 +27,8 @@ def parse_ifc(sender, instance, **kwargs):
     if not getattr(instance, "processed", False):
         ifc_file = ifcopenshell.open(str(instance.model.file))
 
-        instance.result = ifc_file.by_type("IfcWall")[0]
+        model_check = ModelCheck(str(instance.regulation.file))
+
+        instance.result = model_check.execute()
         instance.processed = True
         instance.save()
