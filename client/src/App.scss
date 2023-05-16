@@ -295,8 +295,74 @@ $color in (default, #777),
   transition: all 0.5s;
 }
 
+.full-screen {
+
+  height: 100%;
+  overflow: hidden;
+}
+
 
 // nav.transparent {
 //   background-image: linear-gradient(180deg, rgba(38, 70, 83, 1) 0%, rgba(38, 70, 83, 0.8743872549019608) 100%, rgba(0, 212, 255, 0) 100%);
 //   z-index: 99;
 // }
+
+
+/* ----------------------------------------------------------------------------------------------------------*/
+        /* ContextMenu */
+        /* ----------------------------------------------------------------------------------------------------------*/
+
+        .xeokit-context-menu {
+          font-family: 'Roboto', sans-serif;
+          font-size: 15px;
+          display: none;
+          z-index: 300000;
+          background: rgba(255, 255, 255, 0.46);
+          border: 1px solid black;
+          border-radius: 6px;
+          padding: 0;
+          width: 200px;
+      }
+
+      .xeokit-context-menu ul {
+          list-style: none;
+          margin-left: 0;
+          padding: 0;
+      }
+
+      .xeokit-context-menu ul li {
+          list-style-type: none;
+          padding-left: 10px;
+          padding-right: 20px;
+          padding-top: 4px;
+          padding-bottom: 4px;
+          color: black;
+          border-bottom: 1px solid gray;
+          background: rgba(255, 255, 255, 0.46);
+          cursor: pointer;
+          width: calc(100% - 30px);
+      }
+
+      .xeokit-context-menu ul li:hover {
+          background: black;
+          color: white;
+          font-weight: normal;
+      }
+
+      .xeokit-context-menu ul li span {
+          display: inline-block;
+      }
+
+      .xeokit-context-menu .disabled {
+          display: inline-block;
+          color: gray;
+          cursor: default;
+          font-weight: normal;
+      }
+
+      .xeokit-context-menu .disabled:hover {
+          color: gray;
+          cursor: default;
+          background: #eeeeee;
+          font-weight: normal;
+      }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 // Import general tools
 import axios from 'axios';
@@ -25,6 +25,7 @@ import { NewRegulationModal } from '../../components/layout/atomic/NewRegulation
 import { NewClauseModal } from '../../components/layout/atomic/NewClauseModal';
 import { InfoRegulationModal } from '../../components/layout/atomic/InfoRegulationModal';
 
+import { TestCoponent } from './TestCoponent';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -104,7 +105,8 @@ export function ClauseListModal({ ShowState, HideFunction, setClauseListModalSho
     );
 }
 
-function UploadButton() {
+
+function UploadButton({setIfcFile}) {
 
     const [inputFile, setInputFile] = useState(null);
     const [uploadedFileName, setInputFileName] = useState(null);
@@ -119,8 +121,10 @@ function UploadButton() {
         inputRef.current?.click()
     }
 
-    const handleDisplayFileDetails = () => {
-        inputRef.current?.files && setInputFileName(inputRef.current.files[0].name)
+    const handleDisplayFileDetails = async () => {
+        inputRef.current?.files && setInputFileName(inputRef.current.files[0].name);
+        setIfcFile(URL.createObjectURL(inputRef.current.files[0]));
+
     }
 
     return (
@@ -131,7 +135,6 @@ function UploadButton() {
         </div>
     );
 }
-
 
 const Regulations = () => {
 
@@ -147,57 +150,16 @@ const Regulations = () => {
 
     // Modals States
     const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
-    const [newRegulationModalShow, setNewRegulationModalShow] = useState(false);
-    const [newClauseModalShow, setNewClauseModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
-    const [showCode, setShowCode] = useState(true);
 
-
-    // Controls the state of the block editor
-    const [blockXml, setBlockXml] = useState('<xml xmlns="http://www.w3.org/1999/xhtml"><block type="text" x="70" y="30"><field name="TEXT"></field></block></xml>');
-    const [blockPython, setBlockPython] = useState('')
-    const [editorKey, setEditorKey] = useState(Math.random()); // used to execute a hard update on the editor 
-    const [isClauseCodeUpdated, setIsClauseCodeUpdated] = useState(false);
+    const [ifcFile, setIfcFile] = useState(null);
 
 
     // set state changes in the DB
     const [updatedRegulations, setUpdatedRegulations] = useState({});
     const [UpdatedClause, setUpdatedClause] = useState({});
 
-    useEffect(() => {
-        if (activeClause.code === blockXml) {
-            setIsClauseCodeUpdated(true);
-        }
-        else {
-            setIsClauseCodeUpdated(false);
-        }
-    }, [UpdatedClause, blockXml]);
 
-
-
-    function SaveClauseCode(blockXml, blockPython) {
-
-        const xml = '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
-
-        var newCode = {
-            code: '',
-            python_code: ''
-        }
-        if (blockXml !== xml) {
-            newCode = {
-                code: blockXml,
-                python_code: blockPython
-            }
-        }
-
-        axios.patch('http://127.0.0.1:8000/api/licence/clause/' + activeClause.id + '/', newCode)
-            .then(response => {
-                setUpdatedClause(response.data);
-                setActiveClause(response.data);
-            })
-            .catch(err => console.log(err));
-
-    };
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
@@ -235,31 +197,12 @@ const Regulations = () => {
             {loading === false && (
                 <>
                     {/* Initiate the modals */}
-                    <ClauseListModal
-                        ShowState={clauseListModalShow}
-                        HideFunction={() => setClauseListModalShow(false)}
-                        setClauseListModalShow={setClauseListModalShow}
-                        activeRegulation={activeRegulation}
-                        regulations_list={regulations_list}
-                        setActiveClause={setActiveClause}
-                        setEditorKey={setEditorKey}
-                        setNewClauseModalShow={setNewClauseModalShow}
-                    />
+            
                     <InfoRegulationModal
                         regulation={activeRegulation.name}
                         regulations_list={regulations_list}
                         ShowState={infoRegulationModalShow}
                         HideFunction={() => setInfoRegulationModalShow(false)} />
-                    <NewRegulationModal
-                        setUpdatedRegulations={setUpdatedRegulations}
-                        ShowState={newRegulationModalShow}
-                        HideFunction={() => setNewRegulationModalShow(false)} />
-                    <NewClauseModal
-                        regulationId={activeRegulation.id}
-                        setUpdatedClause={setUpdatedClause}
-                        ShowState={newClauseModalShow}
-                        HideFunction={() => setNewClauseModalShow(false)} />
-
                     {/* Page */}
                     <Row className='h-100'>
                         {/* Regulation left panel start */}
@@ -267,7 +210,7 @@ const Regulations = () => {
                             {/* Regulation choose start */}
                             <Row className='border-bottom'>
                                 <Col className='p-2'>
-                                    <UploadButton />
+                                    <UploadButton setIfcFile={setIfcFile} />
                                 </Col>
                             </Row>
                             {/* Regulation choose end */}
@@ -294,16 +237,6 @@ const Regulations = () => {
                                                         }} />)}
                                             </Dropdown.Menu>
                                         </Dropdown>
-                                        <Button
-                                            onClick={() => setNewRegulationModalShow(true)}
-                                            size='sm'
-                                            className='m-2'
-                                            variant='light'>
-                                            <Stack gap={2} direction="horizontal">
-                                                <span>New regulation</span>
-                                                <FontAwesomeIcon icon="fa-plus" />
-                                            </Stack>
-                                        </Button>
                                         <Button
                                             onClick={() => setClauseListModalShow(true)}
                                             size='sm'
@@ -368,15 +301,13 @@ const Regulations = () => {
                                                                 as='button'
                                                                 onClick={() => {
                                                                     setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code })
-                                                                    setEditorKey(Math.random())
                                                                 }}>
                                                                 <div className="ms-2 me-auto d-flex">
-                                                                    <Stack direction='horizontal' gap={2}>
+                                                                    <Stack direction='horizontal' gap={2} >
                                                                         <FontAwesomeIcon icon="fa-section" />
                                                                         <div className="fw-bold">{clauses.name}</div>
                                                                         <FontAwesomeIcon className='me-auto' icon="fa-circle-info" />
                                                                     </Stack>
-
                                                                 </div>
                                                                 {clauses.has_code === false ?
                                                                     <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
@@ -395,8 +326,8 @@ const Regulations = () => {
                         </Col>
                         {/* Regulation left panel end */}
                         <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                            <Row>
-                                <p>Olá</p>
+                            <Row className='h-100'>
+                                <TestCoponent ifcFile={ifcFile} /> 
                             </Row>
                         </Col>
                     </Row>
