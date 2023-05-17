@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
 from digital_regulation import views as regulation_views
-from model_check import views as model_check_views
+from verification import views as verification_views
 
 
 from django.conf import settings
@@ -28,10 +28,10 @@ regulation_router = routers.DefaultRouter()
 regulation_router.register(r"regulations", regulation_views.RegulationViewSet)
 regulation_router.register(r"clause", regulation_views.ClauseViewSet)
 
-model_check_router = routers.DefaultRouter()
-model_check_router.register(r"model_check", model_check_views.VerificationViewSet)
-# model_check_router.register(
-#     r"upload", model_check_views.UploadViewSet, basename="upload"
+verification_router = routers.DefaultRouter()
+verification_router.register(r"verification", verification_views.VerificationViewSet)
+# verification_router.register(
+#     r"upload", verification_views.UploadViewSet, basename="upload"
 # )
 
 
@@ -39,8 +39,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/licence/", include(regulation_router.urls)),
     path("api/v1/users/", include("autentic.urls")),
-    path("api/", include(model_check_router.urls)),
-    # re_path(r"^ola/$", model_check_views.MyView.as_view()),
+    path("api/", include(verification_router.urls)),
+    # re_path(r"^ola/$", verification_views.MyView.as_view()),
 ]
 
 if settings.DEBUG:

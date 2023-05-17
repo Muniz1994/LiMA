@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     # Local apps
     "autentic",
     "digital_regulation",
-    "model_check",
+    "verification",
     "check_module",
 ]
 

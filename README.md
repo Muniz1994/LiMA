@@ -10,7 +10,7 @@ LiMA/
 │   ├── check_module/ # Python module to execute the verifications based on the digital regulations and the IFC modules
 │   ├── digital_regulation/ # Django app that handles the digital regulation creation
 │   ├── media/ # Folder to manae static files
-│   ├── model_check/ # Django app that handles the model checking
+│   ├── verification/ # Django app that handles the model checking
 │   ├── Dockerfile 
 │   ├── manage.py
 │   └── requirements.txt

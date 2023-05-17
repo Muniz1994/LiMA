@@ -27,8 +27,8 @@ def parse_ifc(sender, instance, **kwargs):
     if not getattr(instance, "processed", False):
         ifc_file = ifcopenshell.open(str(instance.model.file))
 
-        model_check = ModelCheck(str(instance.regulation.file))
+        verification = ModelCheck(str(instance.regulation.file))
 
-        instance.result = model_check.execute()
+        instance.result = verification.execute()
         instance.processed = True
         instance.save()
