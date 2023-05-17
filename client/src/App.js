@@ -3,15 +3,15 @@ import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
-import Navigationbar from './components/layout/main/Navbar'; // import navbar
-import Footer from './components/layout/main/Footer';
+import Navigationbar from './components/Navbar'; // import navbar
+import Footer from './components/Footer';
 
 
 import Login from './views/auth/Login';
 import Signup from './views/auth/Signup';
 import Logout from './views/auth/Logout';
-import Verifications from './views/app/Verifications';
-import Regulations from './views/app/Regulations';
+import Verifications from './views/Verifications';
+import Regulations from './views/Regulations';
 
 
 
