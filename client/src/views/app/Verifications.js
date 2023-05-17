@@ -1,9 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
-// Import general tools
-import axios from 'axios';
-import MyBlocklyEditor from '../../components/tools/BlockEditor';
-
 
 // React-Boostrap imports
 import Col from 'react-bootstrap/esm/Col';
@@ -15,17 +11,14 @@ import Badge from 'react-bootstrap/Badge';
 import Stack from 'react-bootstrap/Stack';
 import Modal from 'react-bootstrap/Modal'
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
-import InputGroup from 'react-bootstrap/InputGroup';
 
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import { NewRegulationModal } from '../../components/layout/atomic/NewRegulationModal';
-import { NewClauseModal } from '../../components/layout/atomic/NewClauseModal';
+import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import { InfoRegulationModal } from '../../components/layout/atomic/InfoRegulationModal';
 
-import { TestCoponent } from './TestCoponent';
+import { ViewerXeokit } from '../../components/tools/ViewerXeokit';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -136,7 +129,7 @@ function UploadButton({setIfcFile}) {
     );
 }
 
-const Regulations = () => {
+const Verifications = () => {
 
     // Page loading state
     const [loading, setLoading] = useState(true);
@@ -153,6 +146,7 @@ const Regulations = () => {
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
 
     const [ifcFile, setIfcFile] = useState(null);
+    const [highlightedElements, setHighlightedElements] = useState(null);
 
 
     // set state changes in the DB
@@ -300,7 +294,8 @@ const Regulations = () => {
                                                                 action
                                                                 as='button'
                                                                 onClick={() => {
-                                                                    setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code })
+                                                                    setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code });
+                                                                    setHighlightedElements(["2O2Fr$t4X7Zf8NOew3FLR9","2O2Fr$t4X7Zf8NOew3FLQD"]);
                                                                 }}>
                                                                 <div className="ms-2 me-auto d-flex">
                                                                     <Stack direction='horizontal' gap={2} >
@@ -327,7 +322,7 @@ const Regulations = () => {
                         {/* Regulation left panel end */}
                         <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
                             <Row className='h-100'>
-                                <TestCoponent ifcFile={ifcFile} /> 
+                                <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} /> 
                             </Row>
                         </Col>
                     </Row>
@@ -337,4 +332,4 @@ const Regulations = () => {
     );
 };
 
-export default Regulations;
+export default Verifications;
