@@ -38,14 +38,6 @@ export const ViewerXeokit = ({ifcFile, highlightedElements, annotations}) => {
             viewer.camera.look = [13.44, 3.31, -14.83];
             viewer.camera.up = [0.10, 0.98, -0.14];
 
-            new DirLight(viewer.scene, {
-                id: "keyLight",
-                dir: [0.8, -0.6, -0.8],
-                color: [1.0, 1.0, 1.0],
-                intensity: 0.5,
-                space: "view"
-            });
-        
 
             //------------------------------------------------------------------------------------------------------------------
             // Set loader
