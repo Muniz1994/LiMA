@@ -1,0 +1,14 @@
+{
+    "id":1,
+    "regulations":["regulation A", "regulation B"],
+    "date_executed":"17.05.2023",
+    "ifc_model_verified":"modelblabla.ifc",
+    "rules_verified":[
+        {
+            "id":1,
+            "elements_involved_id":["3rsyfUGmr4aeQpEV__CZGc","3eKJovGj55pvn9EaGmrBkc"],
+            "result": true,
+            "rule_text": "Lorem ipsum dolor sit amet, cu vim minim aliquip philosophia, ius enim nonumy explicari eu. Vis te saperet debitis rationibus, ei modus utinam comprehensam his. Vis ex erat denique, ex exerci propriae consectetuer vim. Quas posidonium vim no, omnes prodesset ea sea. Impetus aeterno ancillae et pro, pri wisi debitis nonumes ad. No mea discere accusamus, luptatum concludaturque usu at, usu duis inermis ad."
+        }
+    ]
+}
