@@ -66,7 +66,7 @@ export const ViewerXeokit = ({ifcFile, highlightedElements, annotations}) => {
                  ifcLoader.load({
                 src: ifcFile,
                 excludeTypes: ["IfcSpace"],
-                edges: false
+                edges: true
             });
 
             setSceneModel(sceneModel);
