@@ -15,6 +15,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@xeokit/xeokit-bim-viewer": "^2.4.9-alpha-9",
     "@xeokit/xeokit-convert": "^1.1.7",
     "@xeokit/xeokit-sdk": "^2.3.9",
     "axios": "^0.24.0",

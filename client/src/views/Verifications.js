@@ -19,6 +19,7 @@ import { ClauseListModal } from '../components/ClauseListModal';
 
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
+import { BIMViewerXeokit } from '../components/ModelViewer/ViewerXeokitBIMViewer2';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -34,7 +35,7 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 }
 
 
-function UploadButton({setIfcFile}) {
+function UploadButton({ setIfcFile }) {
 
 
     const [uploadedFileName, setInputFileName] = useState(null);
@@ -230,7 +231,7 @@ const Verifications = () => {
                                                                 as='button'
                                                                 onClick={() => {
                                                                     setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code });
-                                                                    setHighlightedElements(["2O2Fr$t4X7Zf8NOew3FLR9","2O2Fr$t4X7Zf8NOew3FLQD"]);
+                                                                    setHighlightedElements(["2O2Fr$t4X7Zf8NOew3FLR9", "2O2Fr$t4X7Zf8NOew3FLQD"]);
                                                                 }}>
                                                                 <div className="ms-2 me-auto d-flex">
                                                                     <Stack direction='horizontal' gap={2} >
@@ -257,7 +258,8 @@ const Verifications = () => {
                         {/* Regulation left panel end */}
                         <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
                             <Row className='h-100'>
-                                <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} /> 
+                                {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
+                                <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />
                             </Row>
                         </Col>
                     </Row>
