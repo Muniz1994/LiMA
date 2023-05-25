@@ -13,9 +13,7 @@ class Project(models.Model):
     pj_user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     pj_regulations = models.ManyToManyField(Regulation)
 
-    def __str__(self) -> str:
-        return self.pj_name
-    
+
     
 class UrbanisticOperation(models.Model):
 
@@ -30,3 +28,5 @@ class BuildingModel(models.Model):
     bm_urbanistic_operation = models.OneToOneField(UrbanisticOperation, on_delete=models.CASCADE)
     bm_ifc_file = models.FileField(upload_to='ifc_files/')
     bm_xkt_file = models.FileField(upload_to='xkt_files/')
+
+

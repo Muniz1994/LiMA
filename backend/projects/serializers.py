@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Project, UrbanisticOperation, BuildingModel
+from digital_regulation.serializers import RegulationSerializer
 
 class BuildingModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,7 +9,7 @@ class BuildingModelSerializer(serializers.ModelSerializer):
 
 class UrbanisticOperationSerializer(serializers.ModelSerializer):
 
-    uo_building_models = BuildingModelSerializer(many=True, read_only=True, source='buildingmodel_set')
+    uo_building_models = BuildingModelSerializer( read_only=True, source='buildingmodel')
 
     class Meta:
         model = UrbanisticOperation
@@ -16,8 +17,8 @@ class UrbanisticOperationSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
 
-    pj_urbanistic_operations = UrbanisticOperationSerializer(many=False, read_only=True, source='urbanisticoperation_set')
+    pj_urbanistic_operation = UrbanisticOperationSerializer( read_only=True, source='urbanisticoperation')
 
     class Meta:
         model = Project
-        fields = ['pj_date_created', 'pj_name', 'pj_user', 'pj_urbanistic_operations']
+        fields = ['pj_name','pj_regulations','pj_urbanistic_operation']

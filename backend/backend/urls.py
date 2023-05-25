@@ -28,10 +28,12 @@ router = routers.DefaultRouter()
 
 router.register(r'regulations', regulation_views.RegulationViewSet)
 router.register(r'zones',regulation_views.ZoneViewSet)
+router.register(r'rules', regulation_views.RuleViewSet)
 
 
 router.register(r'projects', project_views.ProjectViewSet)
 router.register(r'urbanistic-operations', project_views.UrbanisticOperationViewSet)
+router.register(r'building-models', project_views.BuildingModelViewSet)
 
 
 urlpatterns = [
