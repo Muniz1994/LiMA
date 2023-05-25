@@ -1,17 +1,20 @@
 from django.contrib import admin
 
-from .models import Regulations, Clause
+from .models import Regulation, Zone, Rule
 
 # Register your models here.
 
 
-class RegulationsAdmin(admin.ModelAdmin):
-    list_display = ["name", "city", "came_into_effect", "date_created", "date_modified"]
+class RegulationAdmin(admin.ModelAdmin):
+    list_display = ["rg_name", "rg_scope"]
 
 
-class ClauseAdmin(admin.ModelAdmin):
-    list_display = ["name", "text", "python_code", "code", "has_code", "regulation"]
+class ZoneAdmin(admin.ModelAdmin):
+    list_display = ["zn_name", "zn_regulation"]
 
+class RuleAdmin(admin.ModelAdmin):
+    list_display = ["rl_name", "rl_text", "rl_external_reference", "rl_code"]
 
-admin.site.register(Regulations, RegulationsAdmin)
-admin.site.register(Clause, ClauseAdmin)
+admin.site.register(Regulation, RegulationAdmin)
+admin.site.register(Zone, ZoneAdmin)
+admin.site.register(Rule, RuleAdmin)

@@ -5,7 +5,7 @@ from .models import Verification
 class VerificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Verification
-        fields = ("model", "regulation", "result", "date_executed")
+        fields = ("vf_project", "vf_report")
 
 
 # class UploadSerializer(serializers.Serializer):

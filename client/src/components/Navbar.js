@@ -18,10 +18,10 @@ import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPuzzlePiece, faBuilding } from '@fortawesome/free-solid-svg-icons'
+import { faPuzzlePiece, faBuilding, faListCheck } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-library.add(faPuzzlePiece, faBuilding);
+library.add(faPuzzlePiece, faBuilding, faListCheck);
 
 
 
@@ -68,6 +68,7 @@ const InternalLinks = () => {
     return (
         <>
             <Nav.Link as={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Code</span></Stack></Nav.Link>
+            <Nav.Link as={Link} to='/projects'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Projects</span></Stack></Nav.Link>
             <Nav.Link as={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></Nav.Link>
         </>
     )

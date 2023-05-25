@@ -1,24 +1,28 @@
 from rest_framework import serializers
-from .models import Regulations, Clause
+from .models import Regulation, Zone, Rule
 
 
-class ClauseSerializer(serializers.ModelSerializer):
+class RuleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Clause
-        fields = ("id", "name", "regulation", "text", "python_code", "code", "has_code")
+        model = Rule
+        fields = ["rl_name", "rl_text", "rl_external_reference", "rl_code"]
+
+
+class ZoneSerializer(serializers.ModelSerializer):
+
+    zn_rules = RuleSerializer(many=True, read_only=True, source='rule_set')
+
+    class Meta:
+        model = Zone
+        fields = ["zn_name", "zn_regulation", "zn_rules"]
 
 
 class RegulationSerializer(serializers.ModelSerializer):
-    clauses = ClauseSerializer(many=True, read_only=True)
+
+    rg_zones = ZoneSerializer(many=True, read_only=True, source='zone_set')
 
     class Meta:
-        model = Regulations
-        fields = (
-            "id",
-            "name",
-            "city",
-            "came_into_effect",
-            "clauses",
-            "date_created",
-            "date_modified",
-        )
+        model = Regulation
+        fields = [ "rg_name",
+            "rg_scope",
+            "rg_zones"]

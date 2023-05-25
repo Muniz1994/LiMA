@@ -10,25 +10,22 @@ from django.dispatch import receiver
 
 from check_module.main import ModelCheck
 
+from projects.models import Project
 
 # Create your models here.
 class Verification(models.Model):
-    model = models.FileField(upload_to="ifc_files/")
-    regulation = models.FileField(upload_to="digital_regulations/")
-    result = models.CharField(max_length=100, blank=True, default="Not executed")
-    date_executed = models.DateTimeField(auto_now=True)
-
-    def __str__(self) -> str:
-        return str(self.id)
+    
+    vf_project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    vf_report = models.FileField(upload_to='reports/')
 
 
-@receiver(post_save, sender=Verification)
-def parse_ifc(sender, instance, **kwargs):
-    if not getattr(instance, "processed", False):
-        ifc_file = ifcopenshell.open(str(instance.model.file))
+# @receiver(post_save, sender=Verification)
+# def parse_ifc(sender, instance, **kwargs):
+#     if not getattr(instance, "processed", False):
+#         ifc_file = ifcopenshell.open(str(instance.model.file))
 
-        verification = ModelCheck(str(instance.regulation.file))
+#         verification = ModelCheck(str(instance.regulation.file))
 
-        instance.result = verification.execute()
-        instance.processed = True
-        instance.save()
+#         instance.result = verification.execute()
+#         instance.processed = True
+#         instance.save()

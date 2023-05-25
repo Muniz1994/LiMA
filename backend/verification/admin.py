@@ -5,7 +5,7 @@ from .models import Verification
 
 # Register your models here.
 class VerificationAdmin(admin.ModelAdmin):
-    list_display = ["model", "regulation", "result", "date_executed"]
+    list_display = ["vf_project", "vf_report"]
 
 
 admin.site.register(Verification, VerificationAdmin)

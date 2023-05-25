@@ -1,36 +1,30 @@
 from django.db import models
 import datetime
 
-
 # Create your models here.
-class Regulations(models.Model):
-    name = models.CharField(max_length=100)
-    city = models.CharField(max_length=200, default="No attributed city")
-    came_into_effect = models.DateTimeField(default=datetime.datetime(1990, 1, 1))
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_modified = models.DateTimeField(auto_now=True)
+class Regulation(models.Model):
+
+    rg_name = models.CharField(max_length=100)
+    rg_scope = models.CharField(max_length=200, default="No attributed city")
 
     def __str__(self) -> str:
-        return self.name
+        return self.rg_name
 
+class Rule(models.Model):
 
-class Clause(models.Model):
-    name = models.CharField(max_length=100)
-    text = models.CharField(max_length=10000, default="No text")
-    code = models.CharField(max_length=10000, blank=True)
-    python_code = models.CharField(max_length=10000, blank=True)
-    has_code = models.BooleanField(default=False)
-    regulation = models.ForeignKey(
-        Regulations, related_name="clauses", on_delete=models.CASCADE
-    )
+    rl_name = models.CharField(max_length=100)
+    rl_text = models.CharField(max_length=1000)
+    rl_external_reference = models.CharField(max_length=100)
+    rl_code = models.CharField(max_length=1000)
+    
+    def __str__(self) -> str:
+        return self.rl_name
 
-    def save(self, *args, **kwargs):
-        if (self.code != None) and (self.code != ""):
-            self.has_code = True
-        else:
-            self.has_code = False
+class Zone(models.Model):
 
-        super(Clause, self).save(*args, **kwargs)
+    zn_name = models.CharField(max_length=100)
+    zn_regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
+    zn_rules = models.ManyToManyField(Rule)
 
     def __str__(self) -> str:
-        return self.name
+        return self.zn_name

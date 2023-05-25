@@ -19,7 +19,6 @@ import { ClauseListModal } from '../components/ClauseListModal';
 
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
-import { BIMViewerXeokit } from '../components/ModelViewer/ViewerXeokitBIMViewer2';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 

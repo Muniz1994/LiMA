@@ -17,29 +17,27 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import routers
 from digital_regulation import views as regulation_views
-from verification import views as verification_views
+from projects import views as project_views
 
 
 from django.conf import settings
 from django.conf.urls.static import static
 
 
-regulation_router = routers.DefaultRouter()
-regulation_router.register(r"regulations", regulation_views.RegulationViewSet)
-regulation_router.register(r"clause", regulation_views.ClauseViewSet)
+router = routers.DefaultRouter()
 
-verification_router = routers.DefaultRouter()
-verification_router.register(r"verification", verification_views.VerificationViewSet)
-# verification_router.register(
-#     r"upload", verification_views.UploadViewSet, basename="upload"
-# )
+router.register(r'regulations', regulation_views.RegulationViewSet)
+router.register(r'zones',regulation_views.ZoneViewSet)
+
+
+router.register(r'projects', project_views.ProjectViewSet)
+router.register(r'urbanistic-operations', project_views.UrbanisticOperationViewSet)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/licence/", include(regulation_router.urls)),
-    path("api/v1/users/", include("autentic.urls")),
-    path("api/", include(verification_router.urls)),
+    path("api/", include(router.urls)),
+    path("api/users/", include("autentic.urls")),
     # re_path(r"^ola/$", verification_views.MyView.as_view()),
 ]
 
