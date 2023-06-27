@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='BuildingModel',
+            name='buildingmodel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bm_ifc_file', models.FileField(upload_to='ifc_files/')),

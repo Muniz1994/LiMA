@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party apps
+    "django_extensions",
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
@@ -176,3 +177,8 @@ REST_FRAMEWORK = {
 # File storage config
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+GRAPH_MODELS = {
+  'all_applications': True,
+  'group_models': True,
+}

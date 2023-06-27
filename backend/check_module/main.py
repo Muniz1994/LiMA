@@ -1,5 +1,5 @@
 from .check.routine import ComplianceCheck
-from .conceptual_model.model_basic import Building
+from .model.api import Building
 
 
 class ModelCheck:

@@ -1,19 +1,19 @@
 from rest_framework import serializers
-from .models import Project, UrbanisticOperation, BuildingModel
+from .models import Project, UrbanisticOperation, Building
 from digital_regulation.serializers import RegulationSerializer
 
-class BuildingModelSerializer(serializers.ModelSerializer):
+class BuildingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = BuildingModel
-        fields = ['bm_urbanistic_operation', 'bm_ifc_file', 'bm_xkt_file']
+        model = Building
+        fields = ['urbanistic_operation', 'ifc_file', 'xkt_file']
 
 class UrbanisticOperationSerializer(serializers.ModelSerializer):
 
-    uo_building_models = BuildingModelSerializer( read_only=True, source='buildingmodel')
+    uo_building_models = BuildingSerializer( read_only=True, source='building')
 
     class Meta:
         model = UrbanisticOperation
-        fields = ['uo_project', 'uo_type', 'uo_adress', 'uo_building_models']
+        fields = ['project', 'type', 'adress', 'uo_building_models']
 
 class ProjectSerializer(serializers.ModelSerializer):
 
@@ -21,4 +21,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['pj_name','pj_regulations','pj_urbanistic_operation']
+        fields = ['name','regulations','pj_urbanistic_operation']

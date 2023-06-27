@@ -5,16 +5,16 @@ from .models import Regulation, Zone, Rule
 class RuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rule
-        fields = ["rl_name", "rl_text", "rl_external_reference", "rl_code"]
+        fields = ["name", "text", "external_reference", "code"]
 
 
 class ZoneSerializer(serializers.ModelSerializer):
 
-    zn_rules = RuleSerializer(many=True, read_only=True, source='rule_set')
+    rules = RuleSerializer(many=True, read_only=True, source='rule_set')
 
     class Meta:
         model = Zone
-        fields = ["zn_name", "zn_regulation", "zn_rules"]
+        fields = ["name", "regulation", "rules"]
 
 
 class RegulationSerializer(serializers.ModelSerializer):
@@ -23,6 +23,6 @@ class RegulationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Regulation
-        fields = [ "rg_name",
-            "rg_scope",
+        fields = [ "name",
+            "scope",
             "rg_zones"]

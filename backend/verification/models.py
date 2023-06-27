@@ -11,12 +11,51 @@ from django.dispatch import receiver
 from check_module.main import ModelCheck
 
 from projects.models import Project
+from digital_regulation.models import Regulation
 
 # Create your models here.
 class Verification(models.Model):
     
-    vf_project = models.OneToOneField(Project, on_delete=models.CASCADE)
-    vf_report = models.FileField(upload_to='reports/')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    report = models.CharField(max_length=200, default='')
+
+    def get_model_rules(self):
+
+        model_rules = []
+
+        for regulation in self.project.regulations.all():
+
+            for zone in regulation.zone_set.all():
+
+                for rule in zone.rules.all():
+                    
+                    model_rules.append(rule.name)
+                
+        self.vf_model_rules = str(model_rules)
+
+        self.save()
+
+        return(model_rules)
+
+    def run_verification(self):
+
+        report = {
+            "model": str(self.project.urbanisticoperation.buildingmodel.ifc_file),
+            "rules": self.get_model_rules()
+        }
+
+        self.report = report
+
+        self.save()
+
+        return(report)
+
+    def save(self, *args, **kwargs):
+
+        # self.vf_model= str(self.project.urbanisticoperation.buildingmodel.ifc_file)
+
+
+        super(Verification, self).save(*args, **kwargs)
 
 
 # @receiver(post_save, sender=Verification)

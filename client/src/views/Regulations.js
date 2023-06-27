@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MyBlocklyEditor from '../components/CodeEditor/BlockEditor';
 
-
 // React-Boostrap imports
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
@@ -14,7 +13,6 @@ import ListGroup from 'react-bootstrap/esm/ListGroup';
 import Badge from 'react-bootstrap/Badge';
 import Stack from 'react-bootstrap/Stack';
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
-import Alert from 'react-bootstrap/Alert';
 
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -24,7 +22,6 @@ import { NewRegulationModal } from '../components/NewRegulationModal';
 import { NewClauseModal } from '../components/NewClauseModal';
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
-
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
 

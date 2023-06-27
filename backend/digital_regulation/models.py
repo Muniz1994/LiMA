@@ -4,27 +4,29 @@ import datetime
 # Create your models here.
 class Regulation(models.Model):
 
-    rg_name = models.CharField(max_length=100)
-    rg_scope = models.CharField(max_length=200, default="No attributed city")
+    name = models.CharField(max_length=100)
+    scope = models.CharField(max_length=200, default="No attributed city")
+    
 
     def __str__(self) -> str:
-        return self.rg_name
+        return self.name
 
 class Rule(models.Model):
 
-    rl_name = models.CharField(max_length=100)
-    rl_text = models.CharField(max_length=1000)
-    rl_external_reference = models.CharField(max_length=100)
-    rl_code = models.CharField(max_length=1000)
+    name = models.CharField(max_length=100)
+    text = models.CharField(max_length=1000)
+    external_reference = models.CharField(max_length=100)
+    code = models.CharField(max_length=1000)
     
     def __str__(self) -> str:
-        return self.rl_name
+        return self.name
 
 class Zone(models.Model):
 
-    zn_name = models.CharField(max_length=100)
-    zn_regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
-    zn_rules = models.ManyToManyField(Rule)
+    name = models.CharField(max_length=100)
+    regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
+    rules = models.ManyToManyField(Rule)
+    zones = models.ForeignKey('self', on_delete=models.CASCADE, null=True )
 
     def __str__(self) -> str:
-        return self.zn_name
+        return self.name

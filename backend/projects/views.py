@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 
 # Create your views here.
-from .models import Project, UrbanisticOperation, BuildingModel
-from .serializers import ProjectSerializer, UrbanisticOperationSerializer, BuildingModelSerializer
+from .models import Project, UrbanisticOperation, Building
+from .serializers import ProjectSerializer, UrbanisticOperationSerializer, BuildingSerializer
 
 # Create your views here.
 
@@ -18,6 +18,6 @@ class UrbanisticOperationViewSet(viewsets.ModelViewSet):
     serializer_class = UrbanisticOperationSerializer
 
 
-class BuildingModelViewSet(viewsets.ModelViewSet):
-    queryset = BuildingModel.objects.all()
-    serializer_class = BuildingModelSerializer
+class BuildingViewSet(viewsets.ModelViewSet):
+    queryset = Building.objects.all()
+    serializer_class = BuildingSerializer

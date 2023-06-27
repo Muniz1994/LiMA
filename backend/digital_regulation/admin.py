@@ -6,14 +6,14 @@ from .models import Regulation, Zone, Rule
 
 
 class RegulationAdmin(admin.ModelAdmin):
-    list_display = ["rg_name", "rg_scope"]
+    list_display = ["name", "scope"]
 
 
 class ZoneAdmin(admin.ModelAdmin):
-    list_display = ["zn_name", "zn_regulation"]
+    list_display = ["name", "regulation"]
 
 class RuleAdmin(admin.ModelAdmin):
-    list_display = ["rl_name", "rl_text", "rl_external_reference", "rl_code"]
+    list_display = ["name", "text", "external_reference", "code"]
 
 admin.site.register(Regulation, RegulationAdmin)
 admin.site.register(Zone, ZoneAdmin)

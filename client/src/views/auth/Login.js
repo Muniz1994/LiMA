@@ -7,6 +7,7 @@ import Card from 'react-bootstrap/Card'
 import axios from 'axios';
 
 const Login = () => {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState(false);
@@ -14,13 +15,14 @@ const Login = () => {
 
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
-            window.location.replace('http://localhost:3000/dashboard');
+            window.location.replace(process.env.REACT_APP_CLIENT_ROOT + '/');
         } else {
             setLoading(false);
         }
     }, []);
 
     const onSubmit = e => {
+
         e.preventDefault();
 
         const user = {
@@ -28,12 +30,12 @@ const Login = () => {
             password: password
         };
 
-        axios.post('http://127.0.0.1:8000/api/v1/users/auth/login/', user)
+        axios.post(process.env.REACT_APP_API_ROOT + '/users/auth/login/', user)
             .then(response => {
                 if (response.data) {
                     localStorage.clear();
                     localStorage.setItem('token', response.data.key);
-                    window.location.replace('http://localhost:3000/regulations');
+                    window.location.replace(process.env.REACT_APP_CLIENT_ROOT + '/regulations');
                 }
                 else {
                     setEmail('');

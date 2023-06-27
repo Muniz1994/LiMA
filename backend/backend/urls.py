@@ -18,6 +18,7 @@ from django.urls import path, include, re_path
 from rest_framework import routers
 from digital_regulation import views as regulation_views
 from projects import views as project_views
+from verification import views as verification_views
 
 
 from django.conf import settings
@@ -33,13 +34,15 @@ router.register(r'rules', regulation_views.RuleViewSet)
 
 router.register(r'projects', project_views.ProjectViewSet)
 router.register(r'urbanistic-operations', project_views.UrbanisticOperationViewSet)
-router.register(r'building-models', project_views.BuildingModelViewSet)
+router.register(r'building-models', project_views.BuildingViewSet)
+
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api/users/", include("autentic.urls")),
+    path("api/executeverification/<int:pk>/", verification_views.VerificationExecuteView.as_view())
     # re_path(r"^ola/$", verification_views.MyView.as_view()),
 ]
 

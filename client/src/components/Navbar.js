@@ -29,13 +29,13 @@ library.add(faPuzzlePiece, faBuilding, faListCheck);
 const handleLogout = e => {
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8000/api/v1/users/auth/logout/', {
+    axios.post(process.env.REACT_APP_API_ROOT + '/users/auth/logout/', {
         headers: { Authorization: `Token ${localStorage.getItem('token')}` }
     })
         .then(response => {
             console.log(response.data)
             localStorage.clear();
-            window.location.replace('http://localhost:3000/login');
+            window.location.replace(process.env.REACT_APP_CLIENT_ROOT + '/login');
         })
 };
 

@@ -1,8 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 
-import * as THREE from "three";
-import * as OBC from "openbim-components";
-
 import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, ContextMenu, TreeViewPlugin, CityJSONLoaderPlugin, LineSet } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/xeokit-sdk.es.min.js";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
