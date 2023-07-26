@@ -17,7 +17,7 @@ export function NewClauseModal({ ShowState, HideFunction, regulationId, setUpdat
             text: clauseText,
             regulation: regulationId
         };
-        axios.post('http://127.0.0.1:8000/api/licence/clause/', newClause)
+        axios.post(process.env.REACT_APP_API_ROOT + '/rules/', newClause)
             .then(response => {
                 setUpdatedClause(response.data);
                 HideFunction();

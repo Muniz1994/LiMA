@@ -18,10 +18,7 @@ export function InfoRegulationModal({ ShowState, HideFunction, regulation, regul
                 <Modal.Title>{regulation}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>City: {modalRegulation.city}</p>
-                <p>Came into effect: {modalRegulation.came_into_effect}</p>
-                <p>Creation date: {modalRegulation.date_created}</p>
-                <p>Last modified date: {modalRegulation.date_modified}</p>
+                <p>City: {modalRegulation.scope}</p>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={HideFunction}>

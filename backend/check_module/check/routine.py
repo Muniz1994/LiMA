@@ -2,10 +2,11 @@ import ast
 import json
 
 
+
 class ComplianceCheck:
     # Constructor
-    def __init__(self, building):
-        self.regulation = None
+    def __init__(self, rule_set, building=None):
+        self.rule_set = rule_set
         self.report = []
         self.rule_verification_list = []
         self.building = building
@@ -16,28 +17,24 @@ class ComplianceCheck:
             "building": self.building,
         }
 
-    def load_regulation(self, path):
-        """Loads the json file containing the digital regulation"""
-
-        with open(path, "r") as file:
-            self.regulation = json.loads(file.read())
-
     def check_regulation(self):
         """Iterates through every rule in the digital regulation and executes the rule code"""
 
-        if self.regulation != None:
-            for clause in self.regulation["clauses"]:
-                for rule in clause["rules"]:
-                    if self.building.zone == rule["zone"]:
-                        self.exec_code(rule["code"])
-                        self.report.append(
-                            {
-                                "legal_reference": clause["legal_reference"],
-                                "rule_name": rule["name"],
-                                "result": self.rule_verification_list,
-                            }
-                        )
-                    self.restart_verification_list()
+        for rule in self.rule_set:
+
+            self.report.append(rule.name)
+        # if self.regulation != None:
+        #     for zone in self.regulation["zones"]:
+        #         for rule in zone["rules"]:
+        #             self.exec_code(rule["code"])
+        #             self.report.append(
+        #                 {
+        #                     "legal_reference": rule["legal_reference"],
+        #                     "rule_name": rule["name"],
+        #                     "result": self.rule_verification_list,
+        #                 }
+        #             )
+        #             self.restart_verification_list()
 
     def exec_code(self, code):
         parsed_code = ast.parse(code)

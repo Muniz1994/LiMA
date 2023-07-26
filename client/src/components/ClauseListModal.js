@@ -8,7 +8,7 @@ import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
-export function ClauseListModal({ ShowState, HideFunction, setClauseListModalShow, activeRegulation, regulations_list, setActiveClause, setEditorKey=null, setNewClauseModalShow=null }) {
+export function ClauseListModal({ ShowState, HideFunction, setClauseListModalShow, activeRegulation, regulations_list, setActiveClause, setEditorKey = null, setNewClauseModalShow = null }) {
 
 
     return (
@@ -18,38 +18,43 @@ export function ClauseListModal({ ShowState, HideFunction, setClauseListModalSho
             </Modal.Header>
             <Modal.Body>
                 <ListGroup className='h-100 overflow-scroll   clause-list-size'>
+
                     {regulations_list.map(reg => <>
-                        {reg.name === activeRegulation.name && reg.clauses.map(clauses => <ListGroupItem
-                            variant='light'
-                            id={clauses.name}
-                            className='d-flex justify-content-between align-items-center small'
-                            action
-                            as='button'
-                            onClick={() => {
-                                setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code });
+                        {reg.name === activeRegulation.name && reg.zones.map(zone => zone.rules.map(rule =>
 
-                                if (setEditorKey) {
-                                    setEditorKey(Math.random());
-                                };
-                                
-                                setClauseListModalShow(false);
-                            }}>
-                            <div className="ms-2 me-auto">
-                                <Stack direction='horizontal' gap={2}>
+                            <ListGroupItem
+                                variant='light'
+                                id={rule.name}
+                                className='d-flex justify-content-between align-items-center small'
+                                action
+                                as='button'
+                                onClick={() => {
+                                    setActiveClause({ id: rule.id, name: rule.name, text: rule.text, code: rule.code });
 
-                                </Stack>
-                                <div className="fw-bold">{clauses.name}</div>
-                            </div>
-                            {clauses.has_code === false ?
-                                <Badge bg="danger" pill>
-                                    No code
-                                </Badge>
-                                :
-                                <Badge bg="success" pill>
-                                    Has code
-                                </Badge>}
-                        </ListGroupItem>
-                        )}
+                                    if (setEditorKey) {
+                                        setEditorKey(Math.random());
+                                    };
+
+                                    setClauseListModalShow(false);
+                                }}>
+
+                                <div className="ms-2 me-auto">
+                                    <Stack direction='horizontal' gap={2}>
+
+                                    </Stack>
+                                    <div className="fw-bold">{rule.name}</div>
+                                </div>
+
+                                {rule.has_code === false ?
+                                    <Badge bg="danger" pill>
+                                        No code
+                                    </Badge>
+                                    :
+                                    <Badge bg="success" pill>
+                                        Has code
+                                    </Badge>}
+                            </ListGroupItem>))}
+
                     </>
                     )}
                     {activeRegulation.name !== '' &&
@@ -57,11 +62,11 @@ export function ClauseListModal({ ShowState, HideFunction, setClauseListModalSho
                             className='d-flex justify-content-between align-items-start list-group-item-action'
                             action
                             onClick={() => {
-                                if(setNewClauseModalShow){
+                                if (setNewClauseModalShow) {
                                     setNewClauseModalShow(true)
                                 };
-                                
-                                }}>
+
+                            }}>
 
                             <div className="ms-2 me-auto">
                                 <div

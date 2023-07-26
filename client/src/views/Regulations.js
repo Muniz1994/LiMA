@@ -22,6 +22,7 @@ import { NewRegulationModal } from '../components/NewRegulationModal';
 import { NewClauseModal } from '../components/NewClauseModal';
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
+import { Container } from 'react-bootstrap';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
 
@@ -68,33 +69,69 @@ const Regulations = () => {
     const [UpdatedClause, setUpdatedClause] = useState({});
 
     useEffect(() => {
-        if (activeClause.code === blockXml) {
+
+        if (activeClause.blocks === blockXml) {
             setIsClauseCodeUpdated(true);
         }
         else {
             setIsClauseCodeUpdated(false);
+
         }
     }, [UpdatedClause, blockXml]);
 
+    useEffect(() => {
+        if (localStorage.getItem('token') === null) {
+            window.location.replace('http://localhost:3000/login/');
+        } else {
 
+            // Confirm user authentication
+            axios.get(process.env.REACT_APP_API_ROOT + 'users/auth/user/',
+                {
+                    headers: {
+                        'Authorization': `Token ${localStorage.getItem('token')}`
+                    }
+                })
+                .then(data => {
+                    setLoading(false);
+                })
+                .catch(
+                    console.log
+                );
+
+            // Get regulations
+            axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
+                .then(response => {
+                    setRegulationList(response.data);
+                })
+                .catch(
+                    console.log
+                );
+        }
+    }, [updatedRegulations, UpdatedClause]);
+
+
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // Save clause 
+    //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     function SaveClauseCode(blockXml, blockPython) {
 
         const xml = '<xml xmlns="https://developers.google.com/blockly/xml"></xml>'
 
         var newCode = {
-            code: '',
-            python_code: ''
+            blocks: '',
+            code: ''
         }
         if (blockXml !== xml) {
             newCode = {
-                code: blockXml,
-                python_code: blockPython
+                blocks: blockXml,
+                code: blockPython
             }
         }
 
-        axios.patch('http://127.0.0.1:8000/api/licence/clause/' + activeClause.id + '/', newCode)
+        axios.patch(process.env.REACT_APP_API_ROOT + 'rules/' + activeClause.id + '/', newCode)
             .then(response => {
+                console.log(response);
                 setUpdatedClause(response.data);
                 setActiveClause(response.data);
             })
@@ -102,36 +139,6 @@ const Regulations = () => {
 
     };
 
-    useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            window.location.replace('http://localhost:3000/login');
-        } else {
-            fetch('http://127.0.0.1:8000/api/v1/users/auth/user/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Token ${localStorage.getItem('token')}`
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setLoading(false);
-                });
-            fetch('http://127.0.0.1:8000/api/licence/regulations/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setRegulationList(data);
-                })
-                .catch(err => {
-                    console.log("There must have been an error somewhere in your code", err.message)
-                });;
-        }
-    }, [updatedRegulations, UpdatedClause]);
 
     return (
         <>
@@ -164,196 +171,200 @@ const Regulations = () => {
                         HideFunction={() => setNewClauseModalShow(false)} />
 
                     {/* Page */}
-                    <Row className='h-100'>
-                        {/* Regulation left panel start */}
-                        <Col>
-                            {/* Regulation choose start */}
-                            <Row>
-                                <Col className='p-2'>
-                                    <h5>
-                                        Choose regulation:
-                                    </h5>
-                                    <Stack
-                                        direction='horizontal'
-                                        className='d-flex'>
-                                        <Dropdown>
-                                            <Dropdown.Toggle variant='light'>
-                                                Regulations
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                {regulations_list.map(regs =>
-                                                    <RegulationDropdownItem
-                                                        id={regs.name}
-                                                        regulation={regs.name}
-                                                        onRegulationClick={() => {
-                                                            setActiveRegulation({ id: regs.id, name: regs.name })
-                                                        }} />)}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                        <Button
-                                            onClick={() => setNewRegulationModalShow(true)}
-                                            size='sm'
-                                            className='m-2'
-                                            variant='light'>
-                                            <Stack gap={2} direction="horizontal">
-                                                <span>New regulation</span>
-                                                <FontAwesomeIcon icon="fa-plus" />
-                                            </Stack>
-                                        </Button>
-                                        <Button
-                                            onClick={() => setClauseListModalShow(true)}
-                                            size='sm'
-                                            className='ms-auto d-inline d-xl-none'
-                                            variant='light'>
-                                            <Stack gap={2} direction="horizontal">
-                                                <span>clauses list</span>
-                                                <FontAwesomeIcon icon="fa-list" />
-                                            </Stack>
-                                        </Button>
-                                    </Stack>
-                                </Col>
-                            </Row>
-                            {/* Regulation choose end */}
+                    <Container fluid className='h-100'>
+                        <Row className='h-100'>
+                            {/* Regulation left panel start */}
+                            <Col>
+                                {/* Regulation choose start */}
+                                <Row>
+                                    <Col className='p-2'>
+                                        <h5>
+                                            Choose regulation:
+                                        </h5>
+                                        <Stack
+                                            direction='horizontal'
+                                            className='d-flex'>
+                                            <Dropdown>
+                                                <Dropdown.Toggle variant='light'>
+                                                    Regulations
+                                                </Dropdown.Toggle>
+                                                <Dropdown.Menu>
+                                                    {regulations_list.map(regs =>
+                                                        <RegulationDropdownItem
+                                                            id={regs.name}
+                                                            regulation={regs.name}
+                                                            onRegulationClick={() => {
+                                                                setActiveRegulation({ id: regs.id, name: regs.name })
+                                                            }} />)}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            <Button
+                                                onClick={() => setNewRegulationModalShow(true)}
+                                                size='sm'
+                                                className='m-2'
+                                                variant='light'>
+                                                <Stack gap={2} direction="horizontal">
+                                                    <span>New regulation</span>
+                                                    <FontAwesomeIcon icon="fa-plus" />
+                                                </Stack>
+                                            </Button>
+                                            <Button
+                                                onClick={() => setClauseListModalShow(true)}
+                                                size='sm'
+                                                className='ms-auto d-inline d-xl-none'
+                                                variant='light'>
+                                                <Stack gap={2} direction="horizontal">
+                                                    <span>clauses list</span>
+                                                    <FontAwesomeIcon icon="fa-list" />
+                                                </Stack>
+                                            </Button>
+                                        </Stack>
+                                    </Col>
+                                </Row>
+                                {/* Regulation choose end */}
 
-                            {/* Clause list start */}
-                            <Row className='d-none d-xl-inline'>
-                                <Col>
-                                    <Row>
-                                        {/* Show the active regulation name */}
-                                        {activeRegulation.name !== '' &&
-                                            <>
-                                                <h5>{activeRegulation.name}
+                                {/* Clause list start */}
+                                <Row className='d-none d-xl-inline'>
+                                    <Col>
+                                        <Row>
+                                            {/* Show the active regulation name */}
+                                            {activeRegulation.name !== '' &&
+                                                <>
+                                                    <h5>{activeRegulation.name}
+                                                        <Button
+                                                            className='mx-2'
+                                                            variant='light'
+                                                            size='sm'
+                                                            onClick={() => setInfoRegulationModalShow(true)}>
+                                                            <FontAwesomeIcon icon="fa-circle-info" />
+                                                        </Button></h5>
+                                                </>
+                                            }
+                                        </Row>
+                                        <Row >
+                                            <Col className='border-bottom border-top'>
+                                                <ListGroup
+                                                    className='h-100 overflow-scroll clause-list-size'
+                                                    style={{ borderRadius: 0 }}>
+
+                                                    {regulations_list.map(reg =>
+                                                        <>
+                                                            {reg.name === activeRegulation.name && reg.zones.map(reg => reg.rules.map(rule =>
+
+                                                                <ListGroupItem
+                                                                    variant='light'
+                                                                    id={rule.name}
+                                                                    className='d-flex justify-content-between align-items-center small'
+                                                                    style={{ border: 0 }}
+                                                                    action
+                                                                    as='button'
+                                                                    onClick={() => {
+                                                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
+                                                                        setEditorKey(Math.random())
+                                                                    }}>
+                                                                    <div className="ms-2 me-auto">
+                                                                        <Stack direction='horizontal' gap={2}>
+                                                                            <FontAwesomeIcon icon="fa-section" />
+                                                                            <div className="fw-bold">{rule.name}</div>
+                                                                        </Stack>
+
+                                                                    </div>
+                                                                    {rule.has_code === false ?
+                                                                        <Badge bg="theme-e" pill>
+                                                                            No code
+                                                                        </Badge>
+                                                                        :
+                                                                        <Badge bg="theme-b" pill>
+                                                                            Has code
+                                                                        </Badge>}
+                                                                </ListGroupItem>))}
+                                                        </>
+                                                    )}
+                                                    {activeRegulation.name !== '' &&
+                                                        <ListGroupItem
+                                                            className='d-flex justify-content-between align-items-start list-group-item-action'
+                                                            style={{ border: 0 }}
+                                                            action
+                                                            onClick={() => setNewClauseModalShow(true)}>
+
+                                                            <div className="ms-2 me-auto">
+                                                                <div
+
+                                                                    className="fw-bold">
+                                                                    Add new <FontAwesomeIcon icon="fa-plus" />
+                                                                </div>
+                                                            </div>
+                                                        </ListGroupItem>}
+                                                </ListGroup>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
+                                {/* Clause list end */}
+                            </Col>
+                            {/* Regulation left panel end */}
+                            <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
+                                <Row className='h-30 d-flex align-start p-2'>
+                                    <Col className='d-flex flex-column'>
+                                        <Row className='mb-auto'>
+                                            <Col>
+                                                <h5>{activeClause.name}</h5>
+                                                <p className=''>{(activeClause.text).substring(0, 500)}...</p>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col>
+                                                <Stack
+                                                    className='d-flex'
+                                                    direction='horizontal' gap={2}>
                                                     <Button
-                                                        className='mx-2'
                                                         variant='light'
                                                         size='sm'
-                                                        onClick={() => setInfoRegulationModalShow(true)}>
-                                                        <FontAwesomeIcon icon="fa-circle-info" />
-                                                    </Button></h5>
-                                            </>
-                                        }
-                                    </Row>
-                                    <Row >
-                                        <Col className='border-bottom border-top'>
-                                            <ListGroup
-                                                className='h-100 overflow-scroll clause-list-size'
-                                                style={{ borderRadius: 0 }}>
-                                                {regulations_list.map(reg =>
-                                                    <>
-                                                        {reg.name === activeRegulation.name && reg.clauses.map(clauses =>
-                                                            <ListGroupItem
-                                                                variant='light'
-                                                                id={clauses.name}
-                                                                className='d-flex justify-content-between align-items-center small'
-                                                                style={{ border: 0 }}
-                                                                action
-                                                                as='button'
-                                                                onClick={() => {
-                                                                    setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code })
-                                                                    setEditorKey(Math.random())
-                                                                }}>
-                                                                <div className="ms-2 me-auto">
-                                                                    <Stack direction='horizontal' gap={2}>
-                                                                        <FontAwesomeIcon icon="fa-section" />
-                                                                        <div className="fw-bold">{clauses.name}</div>
-                                                                    </Stack>
+                                                        onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
+                                                    >
+                                                        <span className='p-2'>Save Code</span>
+                                                        <FontAwesomeIcon icon="fa-save" />
+                                                    </Button>
+                                                    {activeClause.blocks !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
+                                                        <span className='small'>Updated</span>
+                                                        <FontAwesomeIcon variant='success' icon="fa-check" />
+                                                    </Stack> :
+                                                        <Stack className="text-warning" direction='horizontal' gap={1}>
+                                                            <span className='small'>Not updated</span>
+                                                            <FontAwesomeIcon variant='success' icon="fa-circle-exclamation" />
+                                                        </Stack> : null}
 
-                                                                </div>
-                                                                {clauses.has_code === false ?
-                                                                    <Badge bg="theme-e" pill>
-                                                                        No code
-                                                                    </Badge>
-                                                                    :
-                                                                    <Badge bg="theme-b" pill>
-                                                                        Has code
-                                                                    </Badge>}
-                                                            </ListGroupItem>
-                                                        )}
-                                                    </>
-                                                )}
-                                                {activeRegulation.name !== '' &&
-                                                    <ListGroupItem
-                                                        className='d-flex justify-content-between align-items-start list-group-item-action'
-                                                        style={{ border: 0 }}
-                                                        action
-                                                        onClick={() => setNewClauseModalShow(true)}>
+                                                    <Button
+                                                        className='ms-auto'
+                                                        variant='dark'
+                                                        size='sm'
+                                                        onClick={() => {
+                                                            setShowCode(prevShowCode => !prevShowCode);
+                                                            setEditorKey(Math.random())
+                                                        }}
+                                                    >
+                                                        <span className='p-2'>Toggle Code</span>
+                                                        <FontAwesomeIcon icon="fa-code" />
+                                                    </Button>
+                                                </Stack>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
 
-                                                        <div className="ms-2 me-auto">
-                                                            <div
+                                <Row className='h-70'>
+                                    <MyBlocklyEditor
+                                        showCode={showCode}
+                                        key={editorKey}
+                                        initialXml={activeClause.blocks}
+                                        setBlockXml={setBlockXml}
+                                        setBlockPython={setBlockPython}
+                                        className="" />
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Container>
 
-                                                                className="fw-bold">
-                                                                Add new <FontAwesomeIcon icon="fa-plus" />
-                                                            </div>
-                                                        </div>
-                                                    </ListGroupItem>}
-                                            </ListGroup>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-                            {/* Clause list end */}
-                        </Col>
-                        {/* Regulation left panel end */}
-                        <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                            <Row className='h-30 d-flex align-start p-2'>
-                                <Col className='d-flex flex-column'>
-                                    <Row className='mb-auto'>
-                                        <Col>
-                                            <h5>{activeClause.name}</h5>
-                                            <p className=''>{(activeClause.text).substring(0, 500)}...</p>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <Stack
-                                                className='d-flex'
-                                                direction='horizontal' gap={2}>
-                                                <Button
-                                                    variant='light'
-                                                    size='sm'
-                                                    onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
-                                                >
-                                                    <span className='p-2'>Save Code</span>
-                                                    <FontAwesomeIcon icon="fa-save" />
-                                                </Button>
-                                                {activeClause.code !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
-                                                    <span className='small'>Updated</span>
-                                                    <FontAwesomeIcon variant='success' icon="fa-check" />
-                                                </Stack> :
-                                                    <Stack className="text-warning" direction='horizontal' gap={1}>
-                                                        <span className='small'>Not updated</span>
-                                                        <FontAwesomeIcon variant='success' icon="fa-circle-exclamation" />
-                                                    </Stack> : null}
-
-                                                <Button
-                                                    className='ms-auto'
-                                                    variant='dark'
-                                                    size='sm'
-                                                    onClick={() => {
-                                                        setShowCode(prevShowCode => !prevShowCode);
-                                                        setEditorKey(Math.random())
-                                                    }}
-                                                >
-                                                    <span className='p-2'>Toggle Code</span>
-                                                    <FontAwesomeIcon icon="fa-code" />
-                                                </Button>
-                                            </Stack>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-
-                            <Row className='h-70'>
-                                <MyBlocklyEditor
-                                    showCode={showCode}
-                                    key={editorKey}
-                                    initialXml={activeClause.code}
-                                    setBlockXml={setBlockXml}
-                                    setBlockPython={setBlockPython}
-                                    className="" />
-                            </Row>
-                        </Col>
-                    </Row>
                 </>
             )}
         </>

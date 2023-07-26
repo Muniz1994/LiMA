@@ -16,7 +16,6 @@ import Projects from './views/Projects';
 import ProjectsMui from './views/Projects-mui/Projects-mui';
 
 
-
 import Container from 'react-bootstrap/esm/Container';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
@@ -26,7 +25,7 @@ const App = () => {
   return (
     <div className='App'>
       <Router>
-        {/* <Navigationbar /> */}
+        <Navigationbar />
         <Routes>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/signup' element={<Signup />}></Route>

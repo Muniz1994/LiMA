@@ -14,9 +14,10 @@ class Regulation(models.Model):
 class Rule(models.Model):
 
     name = models.CharField(max_length=100)
-    text = models.CharField(max_length=1000)
+    text = models.TextField(max_length=1000)
     external_reference = models.CharField(max_length=100)
-    code = models.CharField(max_length=1000)
+    code = models.TextField(max_length=1000, blank=True)
+    blocks = models.CharField(max_length=1000, blank=True)
     
     def __str__(self) -> str:
         return self.name
@@ -26,7 +27,7 @@ class Zone(models.Model):
     name = models.CharField(max_length=100)
     regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
     rules = models.ManyToManyField(Rule)
-    zones = models.ForeignKey('self', on_delete=models.CASCADE, null=True )
+    zones = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True )
 
     def __str__(self) -> str:
         return self.name

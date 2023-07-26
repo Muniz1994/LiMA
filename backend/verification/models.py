@@ -1,27 +1,18 @@
 from django.db import models
-import ifcopenshell
-
-import os
-
-from django.conf import settings
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from check_module.main import ModelCheck
 
 from projects.models import Project
 from digital_regulation.models import Regulation
+from check_module.main import ComplianceCheck
 
 # Create your models here.
 class Verification(models.Model):
     
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    report = models.CharField(max_length=200, default='')
+    report = models.CharField(max_length=200, default='', blank=True)
 
     def get_model_rules(self):
 
-        model_rules = []
+        rule_set = []
 
         for regulation in self.project.regulations.all():
 
@@ -29,26 +20,21 @@ class Verification(models.Model):
 
                 for rule in zone.rules.all():
                     
-                    model_rules.append(rule.name)
-                
-        self.vf_model_rules = str(model_rules)
+                    rule_set.append(rule)
 
-        self.save()
-
-        return(model_rules)
+        return(rule_set)
 
     def run_verification(self):
 
-        report = {
-            "model": str(self.project.urbanisticoperation.buildingmodel.ifc_file),
-            "rules": self.get_model_rules()
-        }
+        check = ComplianceCheck(self.get_model_rules(), self.project.urbanisticoperation.building.ifc_file.path)
 
-        self.report = report
+        check.check_regulation()
+
+        self.report = check.report
 
         self.save()
 
-        return(report)
+        return(self.report)
 
     def save(self, *args, **kwargs):
 

@@ -1,8 +1,22 @@
+# %%
 from model.api import Building
-from geolab.tools import GeometricTools
+import tkinter.filedialog
 
-edificio = Building(r'backend/check_module/ifcfile.ifc')
 
-shape_list = edificio.load_geometry().values()
+# %%
+path = tkinter.filedialog.askopenfilename()
 
-print(list(shape_list)[0])
+# %%
+my_building = Building(path)
+
+
+# %%
+els = my_building.select('.IfcSite')
+
+
+# %%
+els[0].mesh.show()
+
+# %%
+for el in els:
+    print('the area of the space %s is: %s'%(el.ifc.Name,str(el.mesh.section([0,0,1],el.mesh.centroid).to_planar()[0].area)))

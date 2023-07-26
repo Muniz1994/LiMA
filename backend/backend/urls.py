@@ -21,6 +21,7 @@ from projects import views as project_views
 from verification import views as verification_views
 
 
+
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -42,7 +43,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api/users/", include("autentic.urls")),
-    path("api/executeverification/<int:pk>/", verification_views.VerificationExecuteView.as_view())
+    path("api/executeverification/<int:pk>/", verification_views.VerificationExecuteView.as_view()),
     # re_path(r"^ola/$", verification_views.MyView.as_view()),
 ]
 
