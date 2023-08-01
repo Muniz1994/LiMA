@@ -24,7 +24,7 @@ import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
 import { Container } from 'react-bootstrap';
 import { NewZoneModal } from '../components/NewZoneModal';
-import { RegulationsContext, RegulationsDispatchContext } from '../components/Context/RegulationsContext';
+
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
 
@@ -41,8 +41,6 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 
 const Regulations = () => {
 
-    const regulations = useContext(RegulationsContext);
-    const regulationsDispatch = useContext(RegulationsDispatchContext);
 
     // Page loading state
     const [loading, setLoading] = useState(true);
@@ -110,9 +108,6 @@ const Regulations = () => {
                     console.log
                 );
 
-            regulationsDispatch({
-                type: 'GET_REGULATIONS'
-            })
 
             // Get regulations
             axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
@@ -215,7 +210,7 @@ const Regulations = () => {
                                                     Regulations
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu>
-                                                    {regulations.map(regs =>
+                                                    {regulations_list.map(regs =>
                                                         <RegulationDropdownItem
                                                             id={regs.name}
                                                             regulation={regs.name}
