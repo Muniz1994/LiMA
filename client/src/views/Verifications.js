@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+import axios from 'axios';
+
 
 // React-Boostrap imports
 import Col from 'react-bootstrap/esm/Col';
@@ -19,6 +21,7 @@ import { ClauseListModal } from '../components/ClauseListModal';
 
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
+import { Container } from 'react-bootstrap';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -71,7 +74,7 @@ const Verifications = () => {
 
     // State of active regulation and clause
     const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' })
-    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', code: '', has_code: false })
+    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', blocks: '', code: '', has_code: false })
 
     // Modals States
     const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
@@ -80,37 +83,90 @@ const Verifications = () => {
     const [ifcFile, setIfcFile] = useState(null);
     const [highlightedElements, setHighlightedElements] = useState(null);
 
+    const [showLoader, setShowLoader] = useState(false)
+
+    const [showVerification, setShowVerification] = useState(false)
+
+
+    const onRunVerification = () => {
+        setShowVerification(false)
+        setShowLoader(true)
+        setTimeout(() => {
+            setShowLoader(false);
+            setShowVerification(true)
+        }, 3000)
+    }
+
+
+    const Loader = ({ className }) => (
+        <div className={className}>
+            <svg
+                width="13"
+                height="14"
+                viewBox="0 0 13 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M4.38798 12.616C3.36313 12.2306 2.46328 11.5721 1.78592 10.7118C1.10856 9.85153 0.679515 8.82231   0.545268 7.73564C0.411022 6.64897 0.576691 5.54628 1.02433 4.54704C1.47197 3.54779 2.1845 2.69009 3.08475   2.06684C3.98499 1.4436 5.03862 1.07858 6.13148 1.01133C7.22435 0.944078 8.31478 1.17716 9.28464    1.68533C10.2545 2.19349 11.0668 2.95736 11.6336 3.89419C12.2004 4.83101 12.5 5.90507 12.5 7"
+                    stroke="white"
+                />
+            </svg>
+        </div>
+    )
+
+    // const VerificationButton = ({ onSubmit, loading = false, disabled }) => {
+    //     return (
+
+    //         <Button
+    //             className='mx-2 verification-button'
+    //             variant='light'
+    //             size='sm'
+    //             onClick={onSubmit}
+    //             disabled={disabled}>
+    //             {!loading ? <FontAwesomeIcon icon="fa-play" /> : <Loader className="spinner" />}
+    //         </Button>
+
+    //     )
+    // }
+
+    const VerificationButton = ({ onSubmit, loading = false, disabled }) => {
+        return (
+            <button className="submit-btn mx-2" onClick={onSubmit} disabled={disabled}>
+                {!loading ? <FontAwesomeIcon icon="fa-play" /> : <Loader className="spinner" />}
+            </button>
+        )
+    }
 
 
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
-            window.location.replace('http://localhost:3000/login');
+            window.location.replace('http://localhost:3000/login/');
         } else {
-            fetch('http://127.0.0.1:8000/api/v1/users/auth/user/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Token ${localStorage.getItem('token')}`
-                }
-            })
-                .then(res => res.json())
+
+            // Confirm user authentication
+            axios.get(process.env.REACT_APP_API_ROOT + 'users/auth/user/',
+                {
+                    headers: {
+                        'Authorization': `Token ${localStorage.getItem('token')}`
+                    }
+                })
                 .then(data => {
                     setLoading(false);
-                });
-            fetch('http://127.0.0.1:8000/api/licence/regulations/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setRegulationList(data);
                 })
-                .catch(err => {
-                    console.log("There must have been an error somewhere in your code", err.message)
-                });;
+                .catch(
+                    console.log
+                );
+
+            // Get regulations
+            axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
+                .then(response => {
+                    setRegulationList(response.data);
+                })
+                .catch(
+                    console.log
+                );
         }
     }, []);
 
@@ -133,135 +189,140 @@ const Verifications = () => {
                         ShowState={infoRegulationModalShow}
                         HideFunction={() => setInfoRegulationModalShow(false)} />
                     {/* Page */}
-                    <Row className='h-100'>
-                        {/* Regulation left panel start */}
-                        <Col>
-                            {/* Regulation choose start */}
-                            <Row className='border-bottom'>
-                                <Col className='p-2'>
-                                    <UploadButton setIfcFile={setIfcFile} />
-                                </Col>
-                            </Row>
-                            {/* Regulation choose end */}
+                    <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
+                        <Row className='h-100'>
+                            {/* Regulation left panel start */}
+                            <Col>
+                                {/* Regulation choose start */}
+                                <Row className='border-bottom'>
+                                    <Col className='p-2'>
+                                        <UploadButton setIfcFile={setIfcFile} />
+                                    </Col>
+                                </Row>
+                                {/* Regulation choose end */}
 
-                            <Row>
-                                <Col className='p-2'>
-                                    <h6>
-                                        Choose regulation:
-                                    </h6>
-                                    <Stack
-                                        direction='horizontal'
-                                        className='d-flex'>
-                                        <Dropdown>
-                                            <Dropdown.Toggle variant='light'>
-                                                Regulations
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                {regulations_list.map(regs =>
-                                                    <RegulationDropdownItem
-                                                        id={regs.name}
-                                                        regulation={regs.name}
-                                                        onRegulationClick={() => {
-                                                            setActiveRegulation({ id: regs.id, name: regs.name })
-                                                        }} />)}
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                        <Button
-                                            onClick={() => setClauseListModalShow(true)}
-                                            size='sm'
-                                            className='ms-auto d-inline d-xl-none'
-                                            variant='light'>
-                                            <Stack gap={2} direction="horizontal">
-                                                <span>clauses list</span>
-                                                <FontAwesomeIcon icon="fa-list" />
-                                            </Stack>
-                                        </Button>
-                                    </Stack>
-                                </Col>
-                            </Row>
-                            {/* Regulation choose end */}
-
-                            {/* Clause list start */}
-                            <Row className='d-none d-xl-inline'>
-                                <Col>
-                                    <Row className='d-flex'>
-                                        {/* Show the active regulation name */}
-                                        {activeRegulation.name !== '' &&
-                                            <>
-                                                <Stack direction='horizontal'>
-                                                    <h6>{activeRegulation.name}
-                                                        <Button
-                                                            className='mx-2'
-                                                            variant='light'
-                                                            size='sm'
-                                                            onClick={() => setInfoRegulationModalShow(true)}>
-                                                            <FontAwesomeIcon icon="fa-circle-info" />
-                                                        </Button></h6>
-                                                    <h6 className='ms-auto'>
-                                                        Run
-                                                        <Button
-                                                            className='mx-2'
-                                                            variant='light'
-                                                            size='sm'
-                                                            onClick={() => setInfoRegulationModalShow(true)}>
-                                                            <FontAwesomeIcon icon="fa-play" />
-                                                        </Button>
-                                                    </h6>
-
+                                <Row>
+                                    <Col className='p-2'>
+                                        <h6>
+                                            Choose regulation:
+                                        </h6>
+                                        <Stack
+                                            direction='horizontal'
+                                            className='d-flex'>
+                                            <Dropdown>
+                                                <Dropdown.Toggle variant='light'>
+                                                    Regulations
+                                                </Dropdown.Toggle>
+                                                <Dropdown.Menu>
+                                                    {regulations_list.map(regs =>
+                                                        <RegulationDropdownItem
+                                                            id={regs.name}
+                                                            regulation={regs.name}
+                                                            onRegulationClick={() => {
+                                                                setActiveRegulation({ id: regs.id, name: regs.name });
+                                                                setShowVerification(false)
+                                                            }} />)}
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            <Button
+                                                onClick={() => setClauseListModalShow(true)}
+                                                size='sm'
+                                                className='ms-auto d-inline d-xl-none'
+                                                variant='light'>
+                                                <Stack gap={2} direction="horizontal">
+                                                    <span>clauses list</span>
+                                                    <FontAwesomeIcon icon="fa-list" />
                                                 </Stack>
+                                            </Button>
+                                        </Stack>
+                                    </Col>
+                                </Row>
+                                {/* Regulation choose end */}
 
-                                            </>
-                                        }
-                                    </Row>
-                                    <Row >
-                                        <Col className='border-bottom border-top'>
-                                            <ListGroup
-                                                className='h-100 overflow-scroll clause-list-size'
-                                                style={{ borderRadius: 0 }}>
-                                                {regulations_list.map(reg =>
-                                                    <>
-                                                        {reg.name === activeRegulation.name && reg.clauses.map(clauses =>
-                                                            <ListGroupItem
+                                {/* Clause list start */}
+                                <Row className='d-none d-xl-inline'>
+                                    <Col>
+                                        <Row className='d-flex'>
+                                            {/* Show the active regulation name */}
+                                            {activeRegulation.name !== '' &&
+                                                <>
+                                                    <Stack direction='horizontal'>
+                                                        <h6>{activeRegulation.name}
+                                                            <Button
+                                                                className='mx-2'
                                                                 variant='light'
-                                                                id={clauses.name}
-                                                                className='d-flex justify-content-between align-items-center small border'
-                                                                style={{ border: 0 }}
-                                                                action
-                                                                as='button'
-                                                                onClick={() => {
-                                                                    setActiveClause({ id: clauses.id, name: clauses.name, text: clauses.text, code: clauses.code });
-                                                                    setHighlightedElements(["2O2Fr$t4X7Zf8NOew3FLR9", "2O2Fr$t4X7Zf8NOew3FLQD"]);
-                                                                }}>
-                                                                <div className="ms-2 me-auto d-flex">
-                                                                    <Stack direction='horizontal' gap={2} >
-                                                                        <FontAwesomeIcon icon="fa-section" />
-                                                                        <div className="fw-bold">{clauses.name}</div>
-                                                                        <FontAwesomeIcon className='me-auto' icon="fa-circle-info" />
-                                                                    </Stack>
-                                                                </div>
-                                                                {clauses.has_code === false ?
-                                                                    <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
-                                                                    :
-                                                                    <FontAwesomeIcon className='text-success' icon="fa-circle-check" />}
-                                                            </ListGroupItem>
-                                                        )}
-                                                    </>
-                                                )}
-                                            </ListGroup>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
-                            {/* Clause list end */}
-                        </Col>
-                        {/* Regulation left panel end */}
-                        <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                            <Row className='h-100'>
-                                {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
-                                <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />
-                            </Row>
-                        </Col>
-                    </Row>
+                                                                size='sm'
+                                                                onClick={() => setInfoRegulationModalShow(true)}>
+                                                                <FontAwesomeIcon icon="fa-circle-info" />
+                                                            </Button></h6>
+                                                        <h6 className='ms-auto'>
+                                                            Run compliance check
+                                                            <VerificationButton
+                                                                text="Submit"
+                                                                onSubmit={onRunVerification}
+                                                                loading={showLoader}
+                                                                disabled={showLoader}
+                                                            />
+                                                        </h6>
+
+                                                    </Stack>
+
+                                                </>
+                                            }
+                                        </Row>
+                                        <Row >
+                                            <Col className='border-bottom border-top'>
+                                                <ListGroup
+                                                    className='h-100 overflow-scroll clause-list-size'
+                                                    style={{ borderRadius: 0 }}>
+
+                                                    {regulations_list.map(reg =>
+                                                        <>
+                                                            {reg.name === activeRegulation.name && reg.zones.map(reg => reg.rules.map(rule =>
+
+                                                                <ListGroupItem
+                                                                    variant='light'
+                                                                    id={rule.name}
+                                                                    className='d-flex justify-content-between align-items-center small border'
+                                                                    style={{ border: 0 }}
+                                                                    action
+                                                                    as='button'
+                                                                    onClick={() => {
+                                                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
+                                                                        setHighlightedElements(rule.result);
+                                                                    }}>
+                                                                    <div className="ms-2 me-auto d-flex">
+                                                                        <Stack direction='horizontal' gap={2} >
+                                                                            <FontAwesomeIcon icon="fa-section" />
+                                                                            <div className="fw-bold">{rule.external_reference} -- check: {rule.name}</div>
+                                                                            <FontAwesomeIcon className='me-auto' icon="fa-circle-info" />
+                                                                        </Stack>
+                                                                    </div>
+                                                                    {showVerification ? (rule.result[0].result === false ?
+                                                                        <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
+                                                                        :
+                                                                        <FontAwesomeIcon className='text-success' icon="fa-circle-check" />) : ''}
+                                                                </ListGroupItem>))}
+                                                        </>
+                                                    )}
+
+                                                </ListGroup>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
+                                {/* Clause list end */}
+                            </Col>
+                            {/* Regulation left panel end */}
+                            <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
+                                <Row className='h-100'>
+                                    {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
+                                    <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Container>
+
                 </>
             )}
         </>

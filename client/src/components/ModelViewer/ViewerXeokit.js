@@ -41,7 +41,7 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
                 canvasId: "myCanvas",
                 transparent: true,
                 saoEnabled: true,
-                pbrEnabled: false,
+                pbrEnabled: true,
                 colorTextureEnables: true
             });
 
@@ -54,11 +54,10 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
 
             // Emphasis effects
 
-            viewer.scene.xrayMaterial.fill = false;
-            viewer.scene.xrayMaterial.fillAlpha = 0.3;
+            viewer.scene.xrayMaterial.fill = true;
+            viewer.scene.xrayMaterial.fillAlpha = 0.1;
             viewer.scene.xrayMaterial.fillColor = [0, 0, 0];
-            viewer.scene.xrayMaterial.edges = true;
-            viewer.scene.xrayMaterial.edgeAlpha = 0.1;
+            viewer.scene.xrayMaterial.edgeAlpha = 0.3;
             viewer.scene.xrayMaterial.edgeColor = [0, 0, 0];
 
             viewer.scene.highlightMaterial.edges = true;
@@ -107,6 +106,11 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
             sao.kernelRadius = 100;
             sao.bias = 0.5;
 
+            const treeView = new TreeViewPlugin(viewer, {
+                containerElement: document.getElementById("treeViewContainer"),
+                autoExpandDepth: 3 // Initially expand tree three nodes deep
+            });
+
 
 
             //------------------------------------------------------------------------------------------------------------------
@@ -141,9 +145,11 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
             const sceneModel =
                 ifcLoader.load({
                     src: ifcFile,
-                    excludeTypes: ["IfcSpace"],
-                    edges: true
+                    edges: true,
+                    excludeUnclassifiedObjects: false
                 });
+
+
 
             // 2
             // const sceneModel = xktLoader.load({          // Returns an Entity that represents the model
@@ -171,7 +177,23 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
         if (sceneModel && viewer && highlightedElements) {
             sceneModel.on("loaded", () => {
 
-                viewer.scene.setObjectsSelected(highlightedElements, true);
+                viewer.scene.setObjectsVisible(viewer.scene.objectIds, true);
+                viewer.scene.setObjectsXRayed(viewer.scene.objectIds, true);
+
+
+                highlightedElements.forEach(element => {
+                    viewer.scene.setObjectsXRayed(element.id, false);
+
+                    console.log(element.id, element.result)
+                    if (element.result) {
+                        viewer.scene.setObjectsCulled(element.id, false);
+                        viewer.scene.setObjectsColorized(element.id, [0, 1, 0]);
+                    }
+                    else {
+                        viewer.scene.setObjectsCulled(element.id, false);
+                        viewer.scene.setObjectsColorized(element.id, [1, 0, 0]);
+                    }
+                })
 
 
             });
@@ -183,7 +205,7 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
     return (
         <>
 
-            <div id="myToolbar" ref={toolbarRef}>
+            {/* <div id="myToolbar" ref={toolbarRef}>
                 <div className='xeokit-btn-group'>
                     <button type="button" class="  xeokit-btn"><FontAwesomeIcon icon="fa-cube" /></button>
                     <button type="button" class="  xeokit-btn"><FontAwesomeIcon icon="fa-square" /></button>
@@ -196,7 +218,7 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
                     <button type="button" class="  xeokit-btn"><FontAwesomeIcon icon="fa-mouse-pointer" /></button>
                     <button type="button" class="  xeokit-btn"><FontAwesomeIcon icon="fa-object-group" /></button>
                 </div>
-            </div>
+            </div> */}
             <div id='myViewer'>
 
                 <canvas id='myCanvas' className='full-screen' ref={inputRef}></canvas>

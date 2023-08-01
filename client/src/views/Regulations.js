@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 // Import general tools
 import axios from 'axios';
@@ -23,6 +23,8 @@ import { NewClauseModal } from '../components/NewClauseModal';
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
 import { Container } from 'react-bootstrap';
+import { NewZoneModal } from '../components/NewZoneModal';
+import { RegulationsContext, RegulationsDispatchContext } from '../components/Context/RegulationsContext';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
 
@@ -39,27 +41,32 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 
 const Regulations = () => {
 
+    const regulations = useContext(RegulationsContext);
+    const regulationsDispatch = useContext(RegulationsDispatchContext);
+
     // Page loading state
     const [loading, setLoading] = useState(true);
 
     // All regulations data
-    const [regulations_list, setRegulationList] = useState([])
+    const [regulations_list, setRegulationList] = useState([]);
 
     // State of active regulation and clause
-    const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' })
-    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', code: '', has_code: false })
+    const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' });
+    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', code: '', has_code: false });
+    const [activeZone, setActiveZone] = useState({ id: '', name: '' });
 
     // Modals States
     const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
     const [newRegulationModalShow, setNewRegulationModalShow] = useState(false);
     const [newClauseModalShow, setNewClauseModalShow] = useState(false);
+    const [newZoneModalShow, setNewZoneModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
     const [showCode, setShowCode] = useState(true);
 
 
     // Controls the state of the block editor
     const [blockXml, setBlockXml] = useState('<xml xmlns="http://www.w3.org/1999/xhtml"><block type="text" x="70" y="30"><field name="TEXT"></field></block></xml>');
-    const [blockPython, setBlockPython] = useState('')
+    const [blockPython, setBlockPython] = useState('');
     const [editorKey, setEditorKey] = useState(Math.random()); // used to execute a hard update on the editor 
     const [isClauseCodeUpdated, setIsClauseCodeUpdated] = useState(false);
 
@@ -67,7 +74,10 @@ const Regulations = () => {
     // set state changes in the DB
     const [updatedRegulations, setUpdatedRegulations] = useState({});
     const [UpdatedClause, setUpdatedClause] = useState({});
+    const [UpdatedZone, setUpdatedZone] = useState({});
 
+
+    // Verify if the active clause has the same code as the editor
     useEffect(() => {
 
         if (activeClause.blocks === blockXml) {
@@ -79,6 +89,8 @@ const Regulations = () => {
         }
     }, [UpdatedClause, blockXml]);
 
+
+    // The main loading process of the page
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
             window.location.replace('http://localhost:3000/login/');
@@ -98,6 +110,10 @@ const Regulations = () => {
                     console.log
                 );
 
+            regulationsDispatch({
+                type: 'GET_REGULATIONS'
+            })
+
             // Get regulations
             axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
                 .then(response => {
@@ -107,7 +123,7 @@ const Regulations = () => {
                     console.log
                 );
         }
-    }, [updatedRegulations, UpdatedClause]);
+    }, [updatedRegulations, UpdatedClause, UpdatedZone]);
 
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -121,7 +137,10 @@ const Regulations = () => {
         var newCode = {
             blocks: '',
             code: ''
-        }
+        };
+
+        console.log(newCode);
+
         if (blockXml !== xml) {
             newCode = {
                 blocks: blockXml,
@@ -165,13 +184,20 @@ const Regulations = () => {
                         ShowState={newRegulationModalShow}
                         HideFunction={() => setNewRegulationModalShow(false)} />
                     <NewClauseModal
-                        regulationId={activeRegulation.id}
+                        ZoneId={activeZone.id}
                         setUpdatedClause={setUpdatedClause}
                         ShowState={newClauseModalShow}
                         HideFunction={() => setNewClauseModalShow(false)} />
+                    <NewZoneModal
+                        regulationId={activeRegulation.id}
+                        setUpdatedZone={setUpdatedZone}
+                        ShowState={newZoneModalShow}
+                        HideFunction={() => setNewZoneModalShow(false)}
+
+                    />
 
                     {/* Page */}
-                    <Container fluid className='h-100'>
+                    <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
                         <Row className='h-100'>
                             {/* Regulation left panel start */}
                             <Col>
@@ -189,7 +215,7 @@ const Regulations = () => {
                                                     Regulations
                                                 </Dropdown.Toggle>
                                                 <Dropdown.Menu>
-                                                    {regulations_list.map(regs =>
+                                                    {regulations.map(regs =>
                                                         <RegulationDropdownItem
                                                             id={regs.name}
                                                             regulation={regs.name}
@@ -249,52 +275,83 @@ const Regulations = () => {
 
                                                     {regulations_list.map(reg =>
                                                         <>
-                                                            {reg.name === activeRegulation.name && reg.zones.map(reg => reg.rules.map(rule =>
+                                                            {reg.name === activeRegulation.name && reg.zones.map(zone =>
 
-                                                                <ListGroupItem
-                                                                    variant='light'
-                                                                    id={rule.name}
-                                                                    className='d-flex justify-content-between align-items-center small'
-                                                                    style={{ border: 0 }}
-                                                                    action
-                                                                    as='button'
-                                                                    onClick={() => {
-                                                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
-                                                                        setEditorKey(Math.random())
-                                                                    }}>
-                                                                    <div className="ms-2 me-auto">
-                                                                        <Stack direction='horizontal' gap={2}>
-                                                                            <FontAwesomeIcon icon="fa-section" />
-                                                                            <div className="fw-bold">{rule.name}</div>
-                                                                        </Stack>
+                                                                <>
+                                                                    <h5>
+                                                                        {zone.name}
+                                                                    </h5>
+                                                                    {zone.rules.map(rule =>
 
-                                                                    </div>
-                                                                    {rule.has_code === false ?
-                                                                        <Badge bg="theme-e" pill>
-                                                                            No code
-                                                                        </Badge>
-                                                                        :
-                                                                        <Badge bg="theme-b" pill>
-                                                                            Has code
-                                                                        </Badge>}
-                                                                </ListGroupItem>))}
+                                                                        <ListGroupItem
+                                                                            variant='light'
+                                                                            id={rule.name}
+                                                                            className='d-flex justify-content-between align-items-center small'
+                                                                            style={{ border: 0 }}
+                                                                            action
+                                                                            as='button'
+                                                                            onClick={() => {
+                                                                                setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
+
+                                                                                setEditorKey(Math.random())
+                                                                            }}>
+                                                                            <div className="ms-2 me-auto">
+                                                                                <Stack direction='horizontal' gap={2}>
+                                                                                    <FontAwesomeIcon icon="fa-section" />
+                                                                                    <div className="fw-bold">{rule.name}</div>
+                                                                                </Stack>
+
+                                                                            </div>
+                                                                            {rule.has_code === false ?
+                                                                                <Badge bg="theme-e" pill>
+                                                                                    No code
+                                                                                </Badge>
+                                                                                :
+                                                                                <Badge bg="theme-b" pill>
+                                                                                    Has code
+                                                                                </Badge>}
+                                                                        </ListGroupItem>)}
+                                                                    {activeRegulation.name !== '' &&
+                                                                        <ListGroupItem
+                                                                            className='d-flex justify-content-between align-items-start list-group-item-action'
+                                                                            style={{ border: 0 }}
+                                                                            action
+                                                                            onClick={() => {
+                                                                                setActiveZone({ id: zone.id, name: zone.name })
+                                                                                console.log(activeZone.id)
+                                                                                setNewClauseModalShow(true)
+                                                                            }}>
+
+                                                                            <div className="ms-2 me-auto">
+                                                                                <div
+
+                                                                                    className="fw-bold">
+                                                                                    Add new rule <FontAwesomeIcon icon="fa-plus" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </ListGroupItem>}
+
+                                                                </>
+                                                            )}
+
+
                                                         </>
                                                     )}
                                                     {activeRegulation.name !== '' &&
                                                         <ListGroupItem
-                                                            className='d-flex justify-content-between align-items-start list-group-item-action'
+                                                            className='d-flex justify-content-between align-items-start list-group-item-action p-0'
                                                             style={{ border: 0 }}
                                                             action
-                                                            onClick={() => setNewClauseModalShow(true)}>
+                                                            onClick={() => setNewZoneModalShow(true)}>
 
-                                                            <div className="ms-2 me-auto">
-                                                                <div
-
-                                                                    className="fw-bold">
-                                                                    Add new <FontAwesomeIcon icon="fa-plus" />
-                                                                </div>
+                                                            <div className="">
+                                                                <h5>
+                                                                    Add new zone <FontAwesomeIcon icon="fa-plus" />
+                                                                </h5>
                                                             </div>
                                                         </ListGroupItem>}
+
+
                                                 </ListGroup>
                                             </Col>
                                         </Row>
@@ -309,7 +366,7 @@ const Regulations = () => {
                                         <Row className='mb-auto'>
                                             <Col>
                                                 <h5>{activeClause.name}</h5>
-                                                <p className=''>{(activeClause.text).substring(0, 500)}...</p>
+                                                <p className=''>{(activeClause.text).substring(0, 500)}</p>
                                             </Col>
                                         </Row>
                                         <Row>

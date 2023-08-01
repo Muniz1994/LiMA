@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+import random
 
 # Create your models here.
 class Regulation(models.Model):
@@ -17,7 +18,18 @@ class Rule(models.Model):
     text = models.TextField(max_length=1000)
     external_reference = models.CharField(max_length=100)
     code = models.TextField(max_length=1000, blank=True)
-    blocks = models.CharField(max_length=1000, blank=True)
+    blocks = models.CharField(max_length=10000, blank=True)
+    has_code = models.BooleanField(default=False)
+    result=models.JSONField(default={"id":[], "result":random.choice([True,False])})
+
+    def save(self, *args, **kwargs):
+        if (self.code != None) and (self.code != ""):
+            self.has_code = True
+        else:
+            self.has_code = False
+
+        super(Rule, self).save(*args, **kwargs)
+
     
     def __str__(self) -> str:
         return self.name
@@ -26,7 +38,7 @@ class Zone(models.Model):
 
     name = models.CharField(max_length=100)
     regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
-    rules = models.ManyToManyField(Rule)
+    rules = models.ManyToManyField(Rule, blank=True)
     zones = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True )
 
     def __str__(self) -> str:

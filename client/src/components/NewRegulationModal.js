@@ -14,9 +14,9 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
         event.preventDefault();
         const newRegulation = {
             name: regulationName,
-            city: regulationCity
+            scope: regulationCity
         };
-        axios.post('http://127.0.0.1:8000/api/licence/regulations/', newRegulation)
+        axios.post(process.env.REACT_APP_API_ROOT + 'regulations/', newRegulation)
             .then(response => {
                 console.log(response.data);
                 setUpdatedRegulations(response.data);
@@ -41,16 +41,17 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
                             placeholder="Insert the name of the regulation" />
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>City</Form.Label>
+                        <Form.Label>Scope</Form.Label>
                         <Form.Control
                             onChange={(e) => setRegulationCity(e.target.value)}
                             type="text"
-                            placeholder="Insert the city" />
+                            placeholder="Insert the scope" />
                     </Form.Group>
                     <Stack direction='horizontal' gap={2}>
-                        <input className="btn btn-theme-b text-white" type="submit">
-                        </input>
-                        <Button onClick={HideFunction} variant="theme-e text-white">
+                        <Button variant="dark" type="submit">
+                            Save
+                        </Button>
+                        <Button onClick={HideFunction} variant="light">
                             Cancel
                         </Button>
                     </Stack>

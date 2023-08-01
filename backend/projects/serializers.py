@@ -9,16 +9,16 @@ class BuildingSerializer(serializers.ModelSerializer):
 
 class UrbanisticOperationSerializer(serializers.ModelSerializer):
 
-    uo_building_models = BuildingSerializer( read_only=True, source='building')
+    building_models = BuildingSerializer( read_only=True, source='building')
 
     class Meta:
         model = UrbanisticOperation
-        fields = ['project', 'type', 'adress', 'uo_building_models']
+        fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
 
-    pj_urbanistic_operation = UrbanisticOperationSerializer( read_only=True, source='urbanisticoperation')
+    urbanistic_operation = UrbanisticOperationSerializer(read_only=True, source='urbanisticoperation')
 
     class Meta:
         model = Project
-        fields = ['name','regulations','pj_urbanistic_operation']
+        fields = '__all__'

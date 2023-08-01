@@ -98,8 +98,16 @@ const Navigationbar = props => {
                 <Navbar.Brand
                     href="/">
                     <Logo
-                        height="40"
+                        className="logo-app"
                         width="auto" />
+
+                    {/* <img
+                        src="/chek_logo.png"
+                        width="auto"
+                        height="60"
+                        className="d-inline-block align-top"
+                        alt="React Bootstrap logo"
+                    /> */}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
