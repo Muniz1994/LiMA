@@ -1,29 +1,47 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { Form, Stack, Button } from 'react-bootstrap'
+import { Form, Stack, Button, Spinner } from 'react-bootstrap'
 
 import { new_regulation } from '../context/regulationSlice'
 
-const Test = () => {
+import { useAddNewRegMutation, useGetRegsQuery } from '../context/regSliceAPI'
 
-    const [newReg, setNewReg] = useState({ name: '', scope: '' });
+const Test2 = () => {
 
-    const dispatch = useDispatch()
+    const [newReg, setNewReg] = useState({ name: null, scope: null });
 
-    const regulations = useSelector((state) => state.regulation.value)
+    const {
+        data: Regs,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+        refetch
+    } = useGetRegsQuery();
+
+    const [addNewReg, { isLoadingReg }] = useAddNewRegMutation();
+
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(new_regulation(newReg));
-    };
+
+        const canSave = Object.values(newReg).every(Boolean) && !isLoadingReg
+
+        if (canSave) {
+            addNewReg(newReg);
+
+            refetch();
+        }
+    }
 
 
     return (
 
+
         <>
-            {regulations.map(reg => reg.name
-            )}
+
+            {isLoading ? <Spinner text="Loading..." /> : (isSuccess ? Regs.map(reg => reg.name) : (isError ? error.toString() : 'dsad'))}
 
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
@@ -52,4 +70,4 @@ const Test = () => {
     )
 }
 
-export default Test;
+export default Test2;

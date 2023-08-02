@@ -16,6 +16,7 @@ import Verifications from './views/Verifications';
 import Regulations from './views/Regulations';
 import Projects from './views/Projects';
 import Test from './views/test';
+import Test2 from './views/test2';
 
 
 
@@ -34,6 +35,7 @@ const App = () => {
           {/* Sign in routes */}
           <Route path='/regulations' element={<Regulations />}></Route>
           <Route path='/test' element={<Test />}></Route>
+          <Route path='/test2' element={<Test2 />}></Route>
           <Route path='/projects' element={<Projects />}></Route>
           <Route path='/verifications' element={<Verifications />}></Route>
         </Routes>
