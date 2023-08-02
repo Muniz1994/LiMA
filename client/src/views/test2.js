@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Form, Stack, Button, Spinner } from 'react-bootstrap'
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import { new_regulation } from '../context/regulationSlice'
 
-import { useAddNewRegMutation, useGetRegsQuery } from '../context/regSliceAPI'
+import { useAddNewRegMutation, useDeleteRegMutation, useRegulationsQuery } from '../context/SliceAPI'
 
 const Test2 = () => {
 
@@ -18,9 +19,11 @@ const Test2 = () => {
         isError,
         error,
         refetch
-    } = useGetRegsQuery();
+    } = useRegulationsQuery();
 
     const [addNewReg, { isLoadingReg }] = useAddNewRegMutation();
+
+    const [deleteReg, { isLoading: isDeletingReg }] = useDeleteRegMutation();
 
 
     const handleSubmit = e => {
@@ -30,18 +33,18 @@ const Test2 = () => {
 
         if (canSave) {
             addNewReg(newReg);
-
-            refetch();
         }
     }
-
 
     return (
 
 
         <>
 
-            {isLoading ? <Spinner text="Loading..." /> : (isSuccess ? Regs.map(reg => reg.name) : (isError ? error.toString() : 'dsad'))}
+            <ListGroup>
+                {isLoading ? <Spinner text="Loading..." /> : (isSuccess ? Regs.map(reg => <ListGroup.Item key={reg.id} className='d-flex'><span className='me-auto'>{reg.name}</span> {!isDeletingReg ? <Button variant='danger' onClick={() => { deleteReg(reg.id) }}>delete</Button> : <Spinner text="Loading..." />}</ListGroup.Item>) : (isError ? error.toString() : 'dsad'))}
+            </ListGroup>
+
 
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">

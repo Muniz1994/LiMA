@@ -1,86 +1,96 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
-import { useSelector, useDispatch } from 'react-redux'
 
 // React-Boostrap imports
-import { Container, Row, Col, Button, Card, Stack } from 'react-bootstrap';
+import { Stack } from 'react-bootstrap';
+
+import {
+    MDBContainer,
+    MDBCol,
+    MDBRow,
+} from 'mdb-react-ui-kit';
+
+import { MDBSpinner, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { get_projects } from '../context/projectSlice';
+import { useProjectsQuery } from '../context/SliceAPI'
+
 
 
 library.add(faCog, faPlus);
 
 const Projects = () => {
 
-    const dispatch = useDispatch();
-
-    const projects = useSelector((state) => state.project.value);
+    const {
+        data: Projects,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+    } = useProjectsQuery();
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
             window.location.replace('http://localhost:3000/login/');
         } else {
 
-            dispatch(get_projects());
-
         }
     }, []);
 
     return (
         <>
-            <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
-                <Row className='h-100'>
+            <MDBContainer fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
+                <MDBRow className='h-100'>
                     {/* Regulation left panel start */}
-                    <Col>
+                    <MDBCol>
                         {/* Regulation choose start */}
-                        <Row className=''>
-                            <Col className='p-2'>
-                                <Button
+                        <MDBRow className=''>
+                            <MDBCol className='p-2'>
+                                <MDBBtn
                                     size='sm'
                                     className='m-2'
-                                    variant='light'>
+                                    color='dark'>
                                     <Stack gap={2} direction="horizontal">
                                         <span>New project</span>
                                         <FontAwesomeIcon icon="fa-plus" />
                                     </Stack>
-                                </Button>
-                            </Col>
-                        </Row>
-                        <Row className=''>
-                            <Col className='p-2'>
-                                dasd
-                            </Col>
-                        </Row>
-                    </Col>
+                                </MDBBtn>
+                            </MDBCol>
+                        </MDBRow>
+                    </MDBCol>
                     {/* Regulation left panel end */}
-                    <Col xs={12} xl={10} xxl={10} className="h-100 border border-left max-h-100">
-                        <Row className='d-flex align-items-center'>
-
-                            {projects.map(project =>
-
-
-                                <Card className='mb-2' style={{ width: '30rem' }}>
-                                    <Card.Header>Project</Card.Header>
-                                    <Card.Body>
-                                        <Card.Title>{project.name}</Card.Title>
-                                        <Card.Text>
-                                        </Card.Text>
-                                        <Button variant="light">More info</Button>
-                                    </Card.Body>
-                                </Card>
-
-                            )}
-
-
-                        </Row>
-                    </Col>
-                </Row>
-            </Container>
+                    <MDBCol xs={12} xl={10} xxl={10} className="d-flex justify-content-center ">
+                        <div className='d-flex align-items-start flex-fill mt-4'>
+                            <MDBTable align='middle' bordered>
+                                <MDBTableHead>
+                                    <tr>
+                                        <th scope='col'>Project Name</th>
+                                        <th scope='col'>Type</th>
+                                        <th scope='col'>Adress</th>
+                                        <th scope='col' className='d-flex justify-content-center'>Actions</th>
+                                    </tr>
+                                </MDBTableHead>
+                                <MDBTableBody>
+                                    {isLoading ? <MDBSpinner text="Loading..." />
+                                        : Projects.map(project =>
+                                            <tr key={project.id} >
+                                                <td>{project.name}</td>
+                                                <td>{project.urbanistic_operation.type}</td>
+                                                <td>{project.urbanistic_operation.adress}</td>
+                                                <td className='d-flex justify-content-center'><MDBBtn rounded size='sm'>More info</MDBBtn></td>
+                                            </tr>
+                                        )
+                                    }
+                                </MDBTableBody>
+                            </MDBTable>
+                        </div>
+                    </MDBCol>
+                </MDBRow>
+            </MDBContainer>
         </>
     );
 };

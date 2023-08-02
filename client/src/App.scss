@@ -96,10 +96,15 @@ $theme-colors: (
   }
 }
 
+body {
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
 
 // Include any default variable overrides here (though functions won't be available)
 
-@import '~bootstrap/scss/bootstrap';
+@import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
 // Then add additional custom code here
 
@@ -193,9 +198,6 @@ div::-webkit-scrollbar {
 
 
 
-a.nav-link:hover {
-  border-bottom: thick white;
-}
 
 .clause-list-size {
   max-height: 600px;
@@ -299,40 +301,6 @@ $color in (default, #777),
       color: $color;
     }
   }
-}
-
-.nav-link {
-  color: $white;
-}
-
-.nav-link:hover {
-  border-bottom: 3px solid $white !important;
-}
-
-.nav-link.active {
-  border-bottom: 3px solid $white !important;
-}
-
-@media only screen and (min-width: 992px) {
-  .navbar {
-    padding: 0;
-  }
-
-  .navbar .navbar-brand {
-    padding: 0 0.7em;
-  }
-
-  .navbar .navbar-nav .nav-link {
-    padding: 1em 0.5em;
-  }
-
-  .navbar .navbar-nav .nav-item {
-    margin: 0 1em;
-  }
-}
-
-.navbar .navbar-nav .nav-item:hover {
-  transition: all 0.5s;
 }
 
 .full-screen {

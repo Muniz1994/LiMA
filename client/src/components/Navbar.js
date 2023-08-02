@@ -17,6 +17,19 @@ import Button from 'react-bootstrap/Button';
 
 import Stack from 'react-bootstrap/Stack';
 
+import {
+    MDBContainer,
+    MDBNavbar,
+    MDBNavbarBrand,
+    MDBNavbarToggler,
+    MDBNavbarNav,
+    MDBNavbarItem,
+    MDBNavbarLink,
+    MDBIcon,
+    MDBCollapse,
+    MDBBtn
+} from 'mdb-react-ui-kit';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPuzzlePiece, faBuilding, faListCheck } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -67,21 +80,32 @@ const LogoutModal = ({ ShowState, HideFunction }) => {
 const InternalLinks = () => {
     return (
         <>
-            <Nav.Link as={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Code</span></Stack></Nav.Link>
-            <Nav.Link as={Link} to='/projects'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Projects</span></Stack></Nav.Link>
-            <Nav.Link as={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></Nav.Link>
+            <MDBNavbarItem>
+                <MDBNavbarLink tag={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Code</span></Stack></MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+                <MDBNavbarLink tag={Link} to='/projects'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Projects</span></Stack></MDBNavbarLink>
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+                <MDBNavbarLink tag={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></MDBNavbarLink>
+            </MDBNavbarItem>
         </>
     )
 }
 
 const publicLink = <Nav className="ms-auto">
-    <Nav.Link as={Link} to='/login'>Login</Nav.Link>
-    <Nav.Link as={Link} to='/signup'>Signup</Nav.Link>
+    <MDBNavbarItem>
+        <MDBNavbarLink tag={Link} to='/login'>Login</MDBNavbarLink>
+    </MDBNavbarItem>
+    <MDBNavbarItem>
+        <MDBNavbarLink tag={Link} to='/signup'>Signup</MDBNavbarLink>
+    </MDBNavbarItem>
 </Nav>;
 
 const Navigationbar = props => {
     const [isAuth, setIsAuth] = useState(false);
     const [logoutState, setLogoutState] = useState(false);
+    const [showNav, setShowNav] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
@@ -90,12 +114,12 @@ const Navigationbar = props => {
     }, []);
 
     return (
-        <Navbar className='shadow text-white' bg='dark' sticky='top' variant='dark' expand="lg">
-            <Container >
+        <MDBNavbar dark bgColor='dark' sticky='top' variant='dark' expand="lg">
+            <MDBContainer >
                 <LogoutModal
                     ShowState={logoutState}
                     HideFunction={() => setLogoutState(false)} />
-                <Navbar.Brand
+                <MDBNavbarBrand
                     href="/">
                     <Logo
                         className="logo-app"
@@ -108,26 +132,36 @@ const Navigationbar = props => {
                         className="d-inline-block align-top"
                         alt="React Bootstrap logo"
                     /> */}
-                </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+                </MDBNavbarBrand>
+                <MDBNavbarToggler
+                    type='button'
+                    data-target='#navbarColor02'
+                    aria-controls='navbarColor02'
+                    aria-expanded='false'
+                    aria-label='Toggle navigation'
+                    onClick={() => setShowNav(!showNav)}
+                >
+                    <MDBIcon icon='bars' fas />
+                </MDBNavbarToggler>
+                <MDBCollapse show={showNav} className='' navbar>
                     {isAuth === true ? (
                         <>
-                            <Nav activeKey={props.pathname} className="ms-auto text-white"><InternalLinks /></Nav>
-                            <Nav className="ms-auto"><Button onClick={() => setLogoutState(true)} variant='light'>Logout</Button></Nav>
-
+                            <MDBNavbarNav className='d-flex justify-content-center'>
+                                <InternalLinks />
+                            </MDBNavbarNav>
+                            <MDBBtn className='ms-auto' color='light' onClick={() => setLogoutState(true)}>Logout</MDBBtn>
                         </>
                     ) : (
                         <>
-                            <Nav className="ms-auto">
+                            <MDBNavbarNav className='d-flex justify-content-end'>
                                 {publicLink}
-                            </Nav>
+                            </MDBNavbarNav>
 
                         </>
                     )}
-                </Navbar.Collapse>
-            </Container>
-        </Navbar>
+                </MDBCollapse>
+            </MDBContainer>
+        </MDBNavbar>
     );
 };
 
