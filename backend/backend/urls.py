@@ -42,7 +42,7 @@ router.register(r'building-models', project_views.BuildingViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
-    path("api/users/", include("autentic.urls")),
+    path("api/", include("autentic.urls")),
     path("api/executeverification/<int:pk>/", verification_views.VerificationExecuteView.as_view()),
     # re_path(r"^ola/$", verification_views.MyView.as_view()),
 ]

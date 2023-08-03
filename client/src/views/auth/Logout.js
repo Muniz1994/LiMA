@@ -14,7 +14,7 @@ const Logout = () => {
     const handleLogout = e => {
         e.preventDefault();
 
-        fetch(process.env.REACT_APP_API_ROOT + '/users/auth/logout/', {
+        fetch(process.env.REACT_APP_API_ROOT + '/auth/logout/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

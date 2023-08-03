@@ -146,7 +146,7 @@ const Verifications = () => {
         } else {
 
             // Confirm user authentication
-            axios.get(process.env.REACT_APP_API_ROOT + 'users/auth/user/',
+            axios.get(process.env.REACT_APP_API_ROOT + 'auth/user/',
                 {
                     headers: {
                         'Authorization': `Token ${localStorage.getItem('token')}`
@@ -192,7 +192,7 @@ const Verifications = () => {
                     <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
                         <Row className='h-100'>
                             {/* Regulation left panel start */}
-                            <Col>
+                            <Col style={{ zIndex: 10010, backgroundColor: '#ffffff' }}>
                                 {/* Regulation choose start */}
                                 <Row className='border-bottom'>
                                     <Col className='p-2'>

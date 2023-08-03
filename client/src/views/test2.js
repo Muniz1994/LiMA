@@ -42,7 +42,11 @@ const Test2 = () => {
         <>
 
             <ListGroup>
-                {isLoading ? <Spinner text="Loading..." /> : (isSuccess ? Regs.map(reg => <ListGroup.Item key={reg.id} className='d-flex'><span className='me-auto'>{reg.name}</span> {!isDeletingReg ? <Button variant='danger' onClick={() => { deleteReg(reg.id) }}>delete</Button> : <Spinner text="Loading..." />}</ListGroup.Item>) : (isError ? error.toString() : 'dsad'))}
+                {isLoading ? <Spinner text="Loading..." />
+                    : (isSuccess ? Regs.map(reg => <ListGroup.Item key={reg.id} className='d-flex'><span className='me-auto'>{reg.name}</span> {!isDeletingReg ? <Button variant='danger' onClick={() => { deleteReg(reg.id) }}>delete</Button>
+                        : <Spinner text="Loading..." />}</ListGroup.Item>)
+                        : (isError ? error.toString()
+                            : 'dsad'))}
             </ListGroup>
 
 

@@ -114,7 +114,7 @@ const Navigationbar = props => {
     }, []);
 
     return (
-        <MDBNavbar dark bgColor='dark' sticky='top' variant='dark' expand="lg">
+        <MDBNavbar style={{ zIndex: 10010 }} dark bgColor='dark' sticky='top' variant='dark' expand="lg">
             <MDBContainer >
                 <LogoutModal
                     ShowState={logoutState}

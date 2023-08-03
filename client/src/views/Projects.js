@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 
 // React-Boostrap imports
-import { Stack } from 'react-bootstrap';
+import { Spinner, Stack } from 'react-bootstrap';
 
 import {
     MDBContainer,
@@ -18,8 +18,21 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { useProjectsQuery } from '../context/SliceAPI'
+import { useGetUserQuery } from '../context/userSliceAPI';
 
+const ProjectUser = ({ userID }) => {
+    const {
+        data: User,
+        error,
+        isLoading: isLoadingUser,
+    } = useGetUserQuery(userID);
 
+    return (
+        <>
+            {error ? console.log(error) : isLoadingUser ? <MDBSpinner text="Loading..." /> : User.username}
+        </>
+    )
+}
 
 library.add(faCog, faPlus);
 
@@ -32,6 +45,8 @@ const Projects = () => {
         isError,
         error,
     } = useProjectsQuery();
+
+
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
@@ -71,6 +86,7 @@ const Projects = () => {
                                         <th scope='col'>Project Name</th>
                                         <th scope='col'>Type</th>
                                         <th scope='col'>Adress</th>
+                                        <th scope='col'>User</th>
                                         <th scope='col' className='d-flex justify-content-center'>Actions</th>
                                     </tr>
                                 </MDBTableHead>
@@ -81,6 +97,7 @@ const Projects = () => {
                                                 <td>{project.name}</td>
                                                 <td>{project.urbanistic_operation.type}</td>
                                                 <td>{project.urbanistic_operation.adress}</td>
+                                                <td><ProjectUser userID={project.user} /></td>
                                                 <td className='d-flex justify-content-center'><MDBBtn rounded size='sm'>More info</MDBBtn></td>
                                             </tr>
                                         )

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 
-import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, ContextMenu, TreeViewPlugin, CityJSONLoaderPlugin, LineSet } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/xeokit-sdk.es.min.js";
+import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, ContextMenu, TreeViewPlugin, CityJSONLoaderPlugin, DistanceMeasurementsPlugin, LineSet, AnnotationsPlugin } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/xeokit-sdk.es.min.js";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -8,11 +8,12 @@ import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faChec
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup);
 
-export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
+export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
 
     const [container, setContainer] = useState(null);
     const [toolbar, setToolbar] = useState(null);
     const [viewer, setViewer] = useState(null);
+    const [annotations, setAnnotations] = useState(null);
     const [sceneModel, setSceneModel] = useState(null);
     const [ifcLoader, setIfcLoader] = useState(null);
     const [xktLoader, setXktLoader] = useState(null);
@@ -111,6 +112,141 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
                 autoExpandDepth: 3 // Initially expand tree three nodes deep
             });
 
+            const annotations = new AnnotationsPlugin(viewer, {
+
+                markerHTML: "<div class='annotation-marker' style='background-color: {{markerBGColor}};'>{{glyph}}</div>",
+                labelHTML: "<div class='annotation-label' style='background-color: {{labelBGColor}};'>\
+                    <div class='annotation-title'>{{title}}</div>\
+                    <div class='annotation-desc'>{{description}}</div>\
+                    </div>",
+
+                values: {
+                    markerBGColor: "red",
+                    labelBGColor: "white",
+                    glyph: "X",
+                    title: "Untitled",
+                    description: "No description"
+                }
+            });
+
+            annotations.on("markerClicked", (annotation) => {
+                annotation.setLabelShown(!annotation.getLabelShown());
+            });
+
+            setAnnotations(annotations);
+
+            //------------------------------------------------------------------------------------------------------------------
+            // DistanceMeasurementsPlugin
+            //------------------------------------------------------------------------------------------------------------------
+
+            const distanceMeasurements = new DistanceMeasurementsPlugin(viewer, {});
+
+            //------------------------------------------------------------------------------------------------------------------
+            // Create a context menu to activate and deactivate the control
+            //------------------------------------------------------------------------------------------------------------------
+
+            const canvasContextMenu = new ContextMenu({
+                enabled: true,
+                context: {
+                    viewer: viewer
+                },
+                items: [
+                    [
+                        {
+                            getTitle: (context) => {
+                                return distanceMeasurements.control.active ? "Deactivate Control" : "Activate Control";
+                            },
+                            doAction: function (context) {
+                                distanceMeasurements.control.active
+                                    ? distanceMeasurements.control.deactivate()
+                                    : distanceMeasurements.control.activate();
+                            }
+                        }
+                    ]
+                ]
+            });
+
+            viewer.cameraControl.on("rightClick", function (e) {
+                canvasContextMenu.show(e.pagePos[0], e.pagePos[1]);
+                e.event.preventDefault();
+            });
+
+            // //------------------------------------------------------------------------------------------------------------------
+            // // Create a context menu to delete and configure measurements
+            // //------------------------------------------------------------------------------------------------------------------
+
+            // const distanceMeasurementsContextMenu = new ContextMenu({
+            //     items: [
+            //         [
+            //             {
+            //                 title: "Clear",
+            //                 doAction: function (context) {
+            //                     context.distanceMeasurement.destroy();
+            //                 }
+            //             },
+            //             {
+            //                 getTitle: (context) => {
+            //                     return context.distanceMeasurement.axisVisible ? "Hide Axis" : "Show Axis";
+            //                 },
+            //                 doAction: function (context) {
+            //                     context.distanceMeasurement.axisVisible = !context.distanceMeasurement.axisVisible;
+            //                 }
+            //             },
+            //             {
+            //                 getTitle: (context) => {
+            //                     return context.distanceMeasurement.labelsVisible ? "Hide Labels" : "Show Labels";
+            //                 },
+            //                 doAction: function (context) {
+            //                     context.distanceMeasurement.labelsVisible = !context.distanceMeasurement.labelsVisible;
+            //                 }
+            //             }
+            //         ], [
+            //             {
+            //                 title: "Clear All",
+            //                 getEnabled: function (context) {
+            //                     return (Object.keys(context.distanceMeasurementsPlugin.measurements).length > 0);
+            //                 },
+            //                 doAction: function (context) {
+            //                     context.distanceMeasurementsPlugin.clear();
+            //                 }
+            //             }
+            //         ]
+            //     ]
+            // });
+
+            // distanceMeasurementsContextMenu.on("hidden", () => {
+            //     if (distanceMeasurementsContextMenu.context.distanceMeasurement) {
+            //         distanceMeasurementsContextMenu.context.distanceMeasurement.setHighlighted(false);
+            //     }
+            // });
+
+            // //------------------------------------------------------------------------------------------------------------------
+            // // Create an DistanceMeasurementsPlugin, activate its DistanceMeasuremntsControl
+            // //------------------------------------------------------------------------------------------------------------------
+
+            // distanceMeasurements.on("mouseOver", (e) => {
+            //     e.distanceMeasurement.setHighlighted(true);
+            // });
+
+            // distanceMeasurements.on("mouseLeave", (e) => {
+            //     if (distanceMeasurementsContextMenu.shown && distanceMeasurementsContextMenu.context.distanceMeasurement.id === e.distanceMeasurement.id) {
+            //         return;
+            //     }
+            //     e.distanceMeasurement.setHighlighted(false);
+            // });
+
+            // distanceMeasurements.on("contextMenu", (e) => {
+            //     distanceMeasurementsContextMenu.context = { // Must set context before showing menu
+            //         viewer: viewer,
+            //         distanceMeasurementsPlugin: distanceMeasurements,
+            //         distanceMeasurement: e.distanceMeasurement
+            //     };
+            //     distanceMeasurementsContextMenu.show(e.event.clientX, e.event.clientY);
+            //     e.event.preventDefault();
+            // });
+
+            // distanceMeasurements.control.activate();
+
 
 
             //------------------------------------------------------------------------------------------------------------------
@@ -180,6 +316,7 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
                 viewer.scene.setObjectsVisible(viewer.scene.objectIds, true);
                 viewer.scene.setObjectsXRayed(viewer.scene.objectIds, true);
 
+                console.log(viewer);
 
                 highlightedElements.forEach(element => {
                     viewer.scene.setObjectsXRayed(element.id, false);
@@ -195,6 +332,69 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements, annotations }) => {
                     }
                 })
 
+                annotations.createAnnotation({
+                    id: "myAnnotation1",
+                    entity: viewer.scene.objects["2K8zFEPrzBfgkpngTRI6y8"],
+                    worldPos: [0, 0, 0],
+                    occludable: true,
+                    markerShown: true,
+                    labelShown: false,
+
+                    values: {
+                        glyph: "A1",
+                        title: "Front wall",
+                        description: "This is the front wall",
+                        markerBGColor: "green"
+                    }
+                });
+
+                annotations.createAnnotation({
+                    id: "myAnnotation2",
+                    entity: viewer.scene.objects["2K8zFEPrzBfgkpngTRI6y8"],
+                    worldPos: [25.69967884, 3.79496244, -2.36148381],
+                    occludable: true,
+                    markerShown: true,
+                    labelShown: false,
+
+                    values: {
+                        glyph: "A2",
+                        title: "Front wall",
+                        description: "This is the front wall",
+                        markerBGColor: "green"
+                    }
+                });
+
+                annotations.createAnnotation({
+                    id: "myAnnotation3",
+                    entity: viewer.scene.objects["2K8zFEPrzBfgkpngTRI6y8"],
+                    worldPos: [3.79496244, 25.69967884, 2.36148381],
+                    occludable: true,
+                    markerShown: true,
+                    labelShown: false,
+
+                    values: {
+                        glyph: "A3",
+                        title: "Front wall",
+                        description: "This is the front wall",
+                        markerBGColor: "green"
+                    }
+                });
+
+                annotations.createAnnotation({
+                    id: "myAnnotation4",
+                    entity: viewer.scene.objects["2K8zFEPrzBfgkpngTRI6y8"],
+                    worldPos: [-2.36148381, 3.79496244, -25.69967884],
+                    occludable: true,
+                    markerShown: true,
+                    labelShown: false,
+
+                    values: {
+                        glyph: "A4",
+                        title: "Front wall",
+                        description: "This is the front wall",
+                        markerBGColor: "green"
+                    }
+                });
 
             });
         }

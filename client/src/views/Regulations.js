@@ -95,7 +95,7 @@ const Regulations = () => {
         } else {
 
             // Confirm user authentication
-            axios.get(process.env.REACT_APP_API_ROOT + 'users/auth/user/',
+            axios.get(process.env.REACT_APP_API_ROOT + 'auth/user/',
                 {
                     headers: {
                         'Authorization': `Token ${localStorage.getItem('token')}`

@@ -1,14 +1,12 @@
-import ifcopenshell
+from model.api import Building
 
-from ifcopenshell.util.selector import Selector
-
-query = Selector()
-
-ifc_file = ifcopenshell.open(r'C:\Users\engbr\Documents\GitHub\LiMA\backend\check_module\AC-20-Smiley-West-10-Bldg_6QhTq7E_2o1e6Nj.ifc')
+building = Building(r'C:\Users\engbr\Documents\GitHub\LiMA\backend\check_module\AC-20-Smiley-West-10-Bldg_6QhTq7E_2o1e6Nj.ifc')
 
 
-all = query.parse(ifc_file,'.IfcDoor')
+all = building.select('#2K8zFEPrzBfgkpngTRI6y8')
 
 
-print([el.GlobalId for el in all])
+print(all[0].mesh.centroid)
+print(all[0].ifc.GlobalId)
+print(all[0].ifc.Name)
 
