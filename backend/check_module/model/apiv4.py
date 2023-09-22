@@ -15,6 +15,10 @@ from itertools import combinations
 from ifcopenshell.ifcopenshell_wrapper import TriangulationElement
 
 
+# ---------------------------------------------------------------------------------------------------------
+#  Abstraction Data Processing Classes
+# ---------------------------------------------------------------------------------------------------------
+
 class Geometry:
 
     def __init__ (self, geometry):
@@ -76,7 +80,6 @@ class Element:
         self.mesh = mesh
         
     
-    
 class Model:
     def __init__(self, path):
 
@@ -84,7 +87,7 @@ class Model:
 
         self.parser = Selector()
 
-        self.ifc.geometry = self.load_geometry()
+        self.geometry = self.load_geometry()
         
     def has_valid_representation(self,element):
         
@@ -125,7 +128,7 @@ class Model:
 
         query_result = self.parser.parse(self.ifc, query)
 
-        return([Element(res, self.ifc.geometry[res.GlobalId].geometry.mesh) if self.has_valid_representation(res) is not None else Element(res) for res in query_result] if query_result else None)
+        return([Element(res, self.geometry[res.GlobalId].geometry.mesh) if self.has_valid_representation(res) is not None else Element(res) for res in query_result] if query_result else None)
 
     def load_geometry(self):
 
@@ -143,9 +146,7 @@ class Model:
 
                 shape = iterator.get()
 
-
                 geometry_dict[shape.guid] = Shape(shape)
-
 
                 if not iterator.next():
                     break
@@ -226,10 +227,13 @@ def distance_perpendicular_point_to_line(point,path):
     
     return distance
 
-# Permit Classes ------------------------------------------------------------------------------------------------------------------------------- 
+# ---------------------------------------------------------------------------------------------------------
+#  Permit Object Model
+# ---------------------------------------------------------------------------------------------------------
 
 @dataclass
 class PermitObject:
+    
     data: object
     model: object = None
     
@@ -354,10 +358,18 @@ class Parcel(PermitObject):
         self.frontStreet: FrontStreet = self.model.select('.IfcGeographicElement[classification.Identification ="EF_30_60_95"]')[0]
 
     def depth(self):
-        pass
+        
+        point = most_distant_point_in_axis(self.data.mesh,'Y')
+        
+        depth = distance_perpendicular_point_to_line(point,self.alignment())
+        
+        return depth
 
     def area(self):
-        pass
+        
+        terrain_area = project_mesh(self.data.mesh,most_distant_point_in_axis(self.data.mesh,'Z')).area/2
+        
+        building_projection_area = self.model.select
 
     def buildabilityIndex(self):
         pass
