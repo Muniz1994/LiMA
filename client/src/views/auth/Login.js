@@ -30,7 +30,7 @@ const Login = () => {
             password: password
         };
 
-        axios.post(process.env.REACT_APP_API_ROOT + '/auth/login/', user)
+        axios.post(process.env.REACT_APP_API_ROOT + 'auth/login/', user)
             .then(response => {
                 if (response.data) {
                     localStorage.clear();

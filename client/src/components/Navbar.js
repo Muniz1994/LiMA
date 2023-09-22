@@ -42,7 +42,7 @@ library.add(faPuzzlePiece, faBuilding, faListCheck);
 const handleLogout = e => {
     e.preventDefault();
 
-    axios.post(process.env.REACT_APP_API_ROOT + '/users/auth/logout/', {
+    axios.post(process.env.REACT_APP_API_ROOT + 'auth/logout/', {
         headers: { Authorization: `Token ${localStorage.getItem('token')}` }
     })
         .then(response => {
@@ -88,6 +88,11 @@ const InternalLinks = () => {
             </MDBNavbarItem>
             <MDBNavbarItem>
                 <MDBNavbarLink tag={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></MDBNavbarLink>
+
+            </MDBNavbarItem>
+            <MDBNavbarItem>
+                <MDBNavbarLink href='/verifications2'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check2</span></Stack></MDBNavbarLink>
+
             </MDBNavbarItem>
         </>
     )
@@ -115,15 +120,14 @@ const Navigationbar = props => {
 
     return (
         <MDBNavbar style={{ zIndex: 10010 }} dark bgColor='dark' sticky='top' variant='dark' expand="lg">
-            <MDBContainer >
+            <MDBContainer fluid className='mx-3'>
                 <LogoutModal
                     ShowState={logoutState}
                     HideFunction={() => setLogoutState(false)} />
                 <MDBNavbarBrand
                     href="/">
                     <Logo
-                        className="logo-app"
-                        width="auto" />
+                        className="logo-app" />
 
                     {/* <img
                         src="/chek_logo.png"
@@ -149,7 +153,7 @@ const Navigationbar = props => {
                             <MDBNavbarNav className='d-flex justify-content-center'>
                                 <InternalLinks />
                             </MDBNavbarNav>
-                            <MDBBtn className='ms-auto' color='light' onClick={() => setLogoutState(true)}>Logout</MDBBtn>
+                            <MDBBtn className='ms-auto shadow-0' color='light' onClick={() => setLogoutState(true)}>Logout</MDBBtn>
                         </>
                     ) : (
                         <>

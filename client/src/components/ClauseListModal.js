@@ -24,7 +24,7 @@ export function ClauseListModal({ ShowState, HideFunction, setClauseListModalSho
 
                             <ListGroupItem
                                 variant='light'
-                                id={rule.name}
+                                id={rule.id}
                                 className='d-flex justify-content-between align-items-center small'
                                 action
                                 as='button'

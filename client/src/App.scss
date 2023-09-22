@@ -100,13 +100,42 @@ body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
+//-------------------------------------------------------------------------------------------------
+// Viewer
+
+#MyNavCubeCanvas {
+
+  z-index: 20000;
+}
+
+#myCanvas {
+  background-color: #868784;
+}
+
+#viewer-tools {
+  position: absolute;
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  left: 5px;
+  top: 20px;
+  max-height: 80%;
+}
+
+.viewer-tool-btn {
+  margin: 5px;
+  height: 40px;
+  width: 40px;
+  padding: 4px;
+}
 
 
 
+//-------------------------------------------------------------------------------------------------
 // Include any default variable overrides here (though functions won't be available)
-
 @import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 @import "@fortawesome/fontawesome-free/css/all.min.css";
+
 
 // Then add additional custom code here
 .annotation-marker {
@@ -457,7 +486,6 @@ $color in (default, #777),
   width: 100%;
   height: 100%;
   align-items: stretch;
-  z-index: 10000;
   /*overflow: hidden;*/
   position: relative;
   left: 0;
@@ -1749,5 +1777,6 @@ $color in (default, #777),
 }
 
 .logo-app {
-  height: 50px;
+  height: 35px;
+  width: 100%;
 }

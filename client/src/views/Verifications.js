@@ -189,18 +189,17 @@ const Verifications = () => {
                         ShowState={infoRegulationModalShow}
                         HideFunction={() => setInfoRegulationModalShow(false)} />
                     {/* Page */}
-                    <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
+                    <Container fluid className='h-100 max-h-100 overflow-hidden'>
                         <Row className='h-100'>
                             {/* Regulation left panel start */}
-                            <Col style={{ zIndex: 10010, backgroundColor: '#ffffff' }}>
+                            <Col>
                                 {/* Regulation choose start */}
-                                <Row className='border-bottom'>
+                                <Row className='border-bottom p-2'>
                                     <Col className='p-2'>
                                         <UploadButton setIfcFile={setIfcFile} />
                                     </Col>
                                 </Row>
                                 {/* Regulation choose end */}
-
                                 <Row>
                                     <Col className='p-2'>
                                         <h6>
@@ -216,7 +215,7 @@ const Verifications = () => {
                                                 <Dropdown.Menu>
                                                     {regulations_list.map(regs =>
                                                         <RegulationDropdownItem
-                                                            id={regs.name}
+                                                            id={regs.id}
                                                             regulation={regs.name}
                                                             onRegulationClick={() => {
                                                                 setActiveRegulation({ id: regs.id, name: regs.name });
@@ -282,7 +281,7 @@ const Verifications = () => {
 
                                                                 <ListGroupItem
                                                                     variant='light'
-                                                                    id={rule.name}
+                                                                    id={rule.id}
                                                                     className='d-flex justify-content-between align-items-center small border'
                                                                     style={{ border: 0 }}
                                                                     action
@@ -314,8 +313,8 @@ const Verifications = () => {
                                 {/* Clause list end */}
                             </Col>
                             {/* Regulation left panel end */}
-                            <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                                <Row className='h-100'>
+                            <Col xs={12} xl={8} xxl={9} className="h-100 max-h-100 p-0">
+                                <Row className='h-100 p-0'>
                                     {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
                                     <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />
                                 </Row>
