@@ -1,13 +1,14 @@
 import ifcopenshell
-from ifcopenshell.util.selector import Selector
-from ifcopenshell.util.element import get_pset, get_classification
+from ifcopenshell.util.selector import Selector,get_classification
+from ifcopenshell.util.element import get_pset
+import ifcopenshell.util.shape
 import ifcopenshell.geom
 import multiprocessing
 from trimesh import Trimesh
 import trimesh
 import sys
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Any, Optional, List
 import numpy as np
 from scipy.spatial import cKDTree
 from itertools import combinations
@@ -15,79 +16,39 @@ from itertools import combinations
 from ifcopenshell.ifcopenshell_wrapper import TriangulationElement
 
 
+
 # ---------------------------------------------------------------------------------------------------------
 #  Abstraction Data Processing Classes
 # ---------------------------------------------------------------------------------------------------------
 
-class Geometry:
+class CheckElement:
+    
+    ''' classe definida de forma a propiciar as capacidades de processamento de malhas da bilbioteca trimesh
+    para os elementos obtidos através do IfcOpenShell'''
 
-    def __init__ (self, geometry):
+    def __init__(self, ifcOS_element, mesh=None):
 
-        self.box_project_uvs = geometry.box_project_uvs
-        self.edges = geometry.edges
-        self.faces = geometry.faces
-        self.id = geometry.id
-        self.material_ids = geometry.material_ids
-        self.materials = geometry.materials
-        self.normals = geometry.normals
-        self.settings = geometry.settings
-        self.this = geometry.this
-        self.uvs = geometry.uvs
-        self.verts = geometry.verts
-        self.mesh = self.get_mesh()
-
-    def get_mesh(self):
-
-        verts = self.verts
-
-        grouped_verts = [
-            [verts[i], verts[i + 1], verts[i + 2]] for i in range(0, len(verts), 3)
-        ]
-
-        faces = self.faces
-
-        grouped_faces = [
-            [faces[i], faces[i + 1], faces[i + 2]] for i in range(0, len(faces), 3)
-        ]
-
-        mesh =Trimesh(grouped_verts,grouped_faces)
-
-        return mesh
-
-class Shape:
-
-    def __init__(self, shape):
-
-        self.context = shape.context
-        self.geometry = Geometry(shape.geometry)
-        self.geometry_pointer = shape.geometry_pointer
-        self.guid = shape.guid
-        self.id = shape.id
-        self.name = shape.name
-        self.parent_id = shape.parent_id
-        self.parents = shape.parents
-        self.product = shape.product
-        self.this = shape.this
-        self.transformation = shape.transformation
-        self.type = shape.type
-        self.unique_id = shape.unique_id
-
-class Element:
-
-    def __init__(self, ifc_element, mesh=None):
-
-        self.ifc = ifc_element
+        self.ifc = ifcOS_element
         self.mesh = mesh
         
+    def __getattr__(self, attr):
+        
+        ''' a classe utiliza do método mágico getattr de forma a obter todas as propriedades do elemento do IfcOpenshell atribuído ao atributo ifc'''
+        return getattr(self.ifc,attr)
+        
     
-class Model:
+class CheckModel:
     def __init__(self, path):
 
         self.ifc = ifcopenshell.open(path)
 
         self.parser = Selector()
 
-        self.geometry = self.load_geometry()
+        self.geometry_settings = ifcopenshell.geom.settings()
+        
+        self.geometry_settings.set(self.geometry_settings.USE_WORLD_COORDS, True)
+        
+        self.mesh_dict = self.load_geometry()
         
     def has_valid_representation(self,element):
         
@@ -128,45 +89,93 @@ class Model:
 
         query_result = self.parser.parse(self.ifc, query)
 
-        return([Element(res, self.geometry[res.GlobalId].geometry.mesh) if self.has_valid_representation(res) is not None else Element(res) for res in query_result] if query_result else None)
+        return([CheckElement(element, self.mesh_dict[element.GlobalId]) if self.has_valid_representation(element) is not None else CheckElement(element) for element in query_result] if query_result else None)
 
     def load_geometry(self):
 
-        settings = ifcopenshell.geom.settings()
+        iterator = ifcopenshell.geom.iterator(self.geometry_settings, self.ifc, multiprocessing.cpu_count())
 
-        settings.set(settings.USE_WORLD_COORDS, True)
-
-        iterator = ifcopenshell.geom.iterator(settings, self.ifc, multiprocessing.cpu_count())
-
-        geometry_dict = {}
+        mesh_dict = {}
 
         if iterator.initialize():
 
             while True:
 
                 shape = iterator.get()
+                
 
-                geometry_dict[shape.guid] = Shape(shape)
+                mesh =Trimesh(ifcopenshell.util.shape.get_vertices(shape.geometry),ifcopenshell.util.shape.get_faces(shape.geometry))
 
+
+                mesh_dict[shape.guid] = mesh
+                
+        
                 if not iterator.next():
                     break
 
 
-        return(geometry_dict)
+        return(mesh_dict)
     
 # geometric functions ------------------------------------------------------------------------------------------------------------------------------- 
 
-def project_mesh(mesh, plane_point):
+def get_angle_of_normal(normal, axis="Z"):
+    
+    if axis == "Z":
+        # Define a reference vector (e.g., [0, 0, 1] for the positive Z-axis)
+        reference_vector = [0,0,1]
+    elif axis == "Y":
+        # Define a reference vector (e.g., [0, 0, 1] for the positive Z-axis)
+        reference_vector = [0,1,0]
+    elif axis == "X":
+        # Define a reference vector (e.g., [0, 0, 1] for the positive Z-axis)
+        reference_vector = [1,0,0]
+
+
+    # Normalize the normal vector (ensure it has unit length)
+    normalized_normal = normal / np.linalg.norm(normal)
+
+    
+
+    # Calculate the dot product between the normalized normal and the reference vector
+    dot_product = np.dot(normalized_normal, reference_vector)
+
+    # Calculate the angle in radians using the arccosine function
+    angle_rad = np.arccos(np.clip(dot_product, -1.0, 1.0))
+
+    # Convert the angle from radians to degrees if needed
+    angle_deg = np.degrees(angle_rad)
+
+    return angle_deg
+
+def get_rotated_mesh_in_z_axis(mesh, degrees):
+    # Convert degrees to radians
+    radians = np.radians(degrees)
+    
+    new_mesh = mesh.copy()
+    
+    
+    rotation_matrix = np.array([
+    [np.cos(radians), -np.sin(radians), 0, 0],
+    [np.sin(radians), np.cos(radians), 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1]
+])
+
+    # Apply the rotation matrix to the vertices of the mesh
+    new_mesh.apply_transform(rotation_matrix.T)
+    
+    return new_mesh
+
+def get_projected_mesh(mesh, plane_point):
     
     '''Returns a mesh projection of a mesh 
     in a plane normal to Y-Axis defined by a specific point'''
     
     new_mesh = mesh.copy()
-    new_mesh.apply_transform(trimesh.transformations.projection_matrix(plane_point, [0,0,1]))
-    
+    new_mesh.apply_transform(trimesh.transformations.projection_matrix(plane_point, [0,0,1], pseudo=True))
     return new_mesh
 
-def projected_meshes(element_list, plane_point):
+def get_projected_meshes(element_list, plane_point):
     
     '''Returns a mesh projection of a list of api Elements 
     in a plane normal to Y-Axis defined by a specific point'''
@@ -174,20 +183,20 @@ def projected_meshes(element_list, plane_point):
     if len(element_list)>1:
         
         
-        projected_meshes = project_mesh(element_list[0].mesh, plane_point)
+        projected_meshes = get_projected_mesh(element_list[0].mesh, plane_point)
     
         for element in element_list[1:]:
             
             if element.mesh is not None:
-                projected_meshes +=  project_mesh(element.mesh, plane_point)
+                projected_meshes +=  get_projected_mesh(element.mesh, plane_point)
             
     else:
         
-        projected_meshes = project_mesh(element_list[0].mesh, plane_point)
+        projected_meshes = get_projected_mesh(element_list[0].mesh, plane_point)
         
     return projected_meshes
 
-def most_distant_point_in_axis(mesh,axis):
+def get_most_distant_point_in_axis(mesh,axis):
     
     '''Returns the most distant point from a mesh in a specified axis
     -- the axis should be 'Y', 'X' or 'Z' '''
@@ -201,7 +210,7 @@ def most_distant_point_in_axis(mesh,axis):
         
     return point
 
-def distance_perpendicular_point_to_line(point,path):
+def get_perpendicular_distance_point_to_line(point,path):
     
     '''Returns the perpendicular distance from a point to a path line'''
     
@@ -227,9 +236,80 @@ def distance_perpendicular_point_to_line(point,path):
     
     return distance
 
+def get_footprint_area(mesh):
+    
+    return mesh.section([0,0,1],mesh.bounds[1]-0.1).to_planar()[0].area
+
+def get_depth(mesh, front_mesh):
+    
+    # Determine the direction based on the centroids of the front mesh and the mesh's oriented bounding box
+    direction_to_other_object = front_mesh.centroid - mesh.bounding_box_oriented.centroid
+    
+    # Initiate auxiliary variables
+    max_dot_product = -float('inf')
+    front_face_normal = None
+
+    # Iterate through faces of the oriented bounding box and analizes how aligned they are based on its dot product
+    for normal in mesh.bounding_box_oriented.face_normals:
+        dot_product = np.dot(normal, direction_to_other_object)
+        
+        if dot_product > max_dot_product:
+            max_dot_product = dot_product
+            front_face_normal = normal
+
+    # get rotation of the front face normal in relation to the axis-X        
+    rotation_angle = 90 - get_angle_of_normal(front_face_normal, "X")
+    
+    
+    # Rotate the mesh and gets it y component
+    return((get_rotated_mesh_in_z_axis(mesh.bounding_box_oriented, rotation_angle).extents)[1])
+
+def get_projected_area_of_element(element):
+            
+    return trimesh.path.polygons.projected(element,normal=[0,0,1]).area
+
+def get_projected_area_of_elements(elements):
+    
+    return sum([get_projected_area_of_element(el.mesh) for el in elements])
+
+def get_distance_object_to_point(obj,point,axis="Y"): 
+      
+    axis_dict = {
+        "X":0,
+        "Y":1,
+        "Z":2
+    }
+        
+    # Get the vertices of the path3d object
+    path_vertices = obj.vertices
+
+    # Calculate the distance in the y-axis
+    # Find the closest vertex on the path to the point
+    closest_vertex_idx = np.argmin(np.abs(path_vertices[:, axis_dict[axis]] - point[axis_dict[axis]]))
+
+    # Calculate the y-axis distance between the original point and the closest vertex
+    distance = np.abs(point[axis_dict[axis]] - path_vertices[closest_vertex_idx, axis_dict[axis]])
+        
+
+    return distance
+
 # ---------------------------------------------------------------------------------------------------------
 #  Permit Object Model
 # ---------------------------------------------------------------------------------------------------------
+
+room_types = {
+    "vestibulo":"SL_40_65_94",
+    "corredor":"SL_90_10_36",
+    "instalacaoSanitaria":"SL_35_80",
+    "despensa":"SL_90_50_46",
+    "arrecadacao":"SL_90_50_39",
+    "sala":"SL_45_10_49",
+    "cozinha":"SL_45_10_23",
+    "quartoCasal":"SL_45_10_10",
+    "quartoDuplo":"SL_45_10_11",
+    "quartoSimples":"SL_45_10_07",
+    "varanda":"SL_45_10_06",
+}
 
 @dataclass
 class PermitObject:
@@ -241,6 +321,8 @@ class PermitObject:
         return PermitObject(getattr(self.data,attr)).data
     
     def get_connection(self,ifc_class,model_obj_type):
+        
+        #
         
         query = self.model.select('@ #%s & .%s'%(str(self.data.ifc.GlobalId),ifc_class))
 
@@ -263,11 +345,9 @@ class Stair(PermitObject):
     def __init__(self,data,model):
         super().__init__(data,model)
         
-        self.treadLength: self.get_property("Pset_StairCommon","treadLength")
-        self.riserHeight: self.get_property("Pset_StairCommon","riserHeight")
+        self.treadLength = self.get_property("Pset_StairCommon","TreadLength")
+        self.riserHeight = self.get_property("Pset_StairCommon","RiserHeight")
 
-    def runLength(self):
-        pass
 
 @dataclass
 class Space(PermitObject):
@@ -275,13 +355,20 @@ class Space(PermitObject):
     def __init__(self,data,model):
         super().__init__(data,model)
         
-        self.objectClass: Optional[object] = None
+        self.objectClass: Optional[object] = self.get_class()
+        
+    def get_class(self):
+        
+        classification = get_classification(self.data)
+        if classification:
+            
+            return classification.Identification
 
     def area(self):
-        pass
+        return get_footprint_area(self.data.mesh)
     
     def ceilingHeight(self):
-        pass
+        return self.data.mesh.bounding_box_oriented.extents[2]
     
     
 @dataclass
@@ -289,11 +376,19 @@ class Dwelling(PermitObject):
     
     def __init__(self,data,model):
         super().__init__(data,model)
-        self.name = self.get_property("Permit","AboveGround")
-        self.relatedSpaces: List[Space] = None
+        self.name = self.data.LongName
+        self.relatedSpaces: List[Space] = [Space(space, self.model) for space in self.model.select('.IfcSpace[PermitCheck.AssociatedDwelling="%s"]'%self.name)]
 
-    def area(self):
-        pass            
+    def gross_area(self):
+        return get_footprint_area(self.data.mesh) 
+    
+    def habitable_area(self):
+        
+        habitable_spaces = [space for space in self.relatedSpaces if space.objectClass not in [room_types["vestibulo"], room_types["corredor"],room_types["instalacaoSanitaria"]]] 
+        
+        return sum([space.area() for space in habitable_spaces])
+    
+         
             
 @dataclass
 class BuildingStorey(PermitObject):
@@ -303,10 +398,13 @@ class BuildingStorey(PermitObject):
 
         self.spaces: List[Space] = self.get_connection('IfcSpace',Space) 
         self.isAboveGround: Optional[bool] = self.get_property("Pset_BuildingStoreyCommon","AboveGround")
-        self.dwellings: List[Dwelling] = self.get_connection('IfcSpace[Permit.ContainedInDwelling=True]', Dwelling)
 
-    def floorToFloorHeight(self):
-        pass
+    
+    def gross_area(self):
+        
+        storey = self.model.select('@ #%s & (.IfcWall | .IfcSpace[classification.Identification!="SL_45_10_06"]) ! (.IfcSpace[classification.Identification="SL_22_05"] | .IfcSpace[classification.Identification="SL_22_15"]| .IfcSpace[classification.Identification="SL_22_10"]| .IfcSpace[classification.Identification="SL_22_10_05"])'%self.data.GlobalId)
+        
+        return get_projected_area_of_elements(storey)
 
 @dataclass
 class Elevator:
@@ -318,35 +416,60 @@ class Building(PermitObject):
         
         super().__init__(data,model)
         
-        self.category: Optional[object] = self.get_property("Permit","Category")
-        self.uses: Optional[object] = self.get_property("Permit","Uses")
-        self.isNewConstruction: Optional[object] = self.get_property("Permit","IsNewConstruction")
+        self.category: Optional[object] = self.get_property("PermitCheck","Category")
+        self.uses: Optional[object] = self.get_property("PermitCheck","Uses")
+        self.isNewConstruction: Optional[object] = self.get_property("PermitCheck","IsNewConstruction")
         self.elevators: List[Elevator] = self.get_connection('IfcTransportElement[PredefinedType = "ELEVATOR"]', Elevator) 
         self.buildingStoreys: List[BuildingStorey] = self.get_connection('IfcBuildingStorey', BuildingStorey) 
         self.stairs: List[Stair] = self.get_connection('IfcStair', Stair) 
+        self.dwellings: List[Dwelling] = self.get_connection('IfcSpace[classification.Identification="SL_22_15"]', Dwelling)
+        self.building_mesh = self.get_building_mesh()
+        self.thresholdLevel = self.model.select('.IfcBuildingStorey[classification.Identification="En_95_05"]')[0].Elevation
+        
+    def floor_to_floor_height(self):
+        
+        storeys = self.buildingStoreys
 
-    def footprint(self):
-        pass
+        sorted_storeys= sorted(storeys, key=lambda x: x.Elevation)
+            
+        difference = []
+        
+        for i in range(len(sorted_storeys) - 1):
+            # Calculate the difference between the current number and the next number
+            diff = sorted_storeys[i + 1].Elevation - sorted_storeys[i].Elevation
+            difference.append(diff)
+            
+        return min(difference)
 
-    def depth(self):
-        pass
+    def depth(self,front_mesh):
+        
+        return get_depth(self.get_empena(),front_mesh.mesh)
 
     def height(self):
 
-        building_elements = self.model.select('@ #%s'%str(self.data.ifc.GlobalId))
-
-        building_elements = trimesh.util.concatenate([b.mesh for b in building_elements])
-
-        height = most_distant_point_in_axis(building_elements,'Z')
+        elements_highest_elevation = get_most_distant_point_in_axis(self.building_mesh,'Z')[2]
         
-        return height[2]
+        return elements_highest_elevation - self.thresholdLevel
+    
+    def heighest_point(self):
+        
+        return get_most_distant_point_in_axis(self.building_mesh,'Z')[2]
+    
+    def get_building_mesh(self):
+        building_elements = self.model.select('@ #%s ! (.IfcSpace[classification.Identification="SL_22_05"] | .IfcSpace[classification.Identification="SL_22_10_05"] |.IfcSpace[classification.Identification="SL_22_10"] | .IfcSite)'%str(self.data.ifc.GlobalId))
 
+        return sum([b.mesh for b in building_elements])
+    def get_empena(self):
+        building_elements = self.model.select('@ #%s & .IfcWall'%str(self.data.ifc.GlobalId))
+
+        return sum([b.mesh for b in building_elements])
+    
 
 class FrontStreet(PermitObject):
     def __init__(self,data,model):
         super().__init__(data,model)
     
-        self.axis:object = None
+        self.axis:object = self.data.mesh.centroid
     
 
 class Parcel(PermitObject):
@@ -355,33 +478,44 @@ class Parcel(PermitObject):
         super().__init__(data,model)
         
         self.buildings: List[Building] =  [Building(self.model.select('.IfcBuilding')[0],self.model)]
-        self.frontStreet: FrontStreet = self.model.select('.IfcGeographicElement[classification.Identification ="EF_30_60_95"]')[0]
+        self.frontStreet: FrontStreet = FrontStreet(self.model.select('.IfcSpace[classification.Identification ="SL_22_10_05"]')[0],self.model)
 
     def depth(self):
         
-        point = most_distant_point_in_axis(self.data.mesh,'Y')
-        
-        depth = distance_perpendicular_point_to_line(point,self.alignment())
-        
-        return depth
+        return get_depth(self.data.mesh,self.frontStreet.mesh)
 
     def area(self):
         
-        terrain_area = project_mesh(self.data.mesh,most_distant_point_in_axis(self.data.mesh,'Z')).area/2
-        
-        building_projection_area = self.model.select
+        return(get_projected_area_of_element(self.data.mesh))
 
     def buildabilityIndex(self):
-        pass
+        
+        all_gfa = 0
+        
+        for building in self.buildings:
+            for bs in building.buildingStoreys:
+                
+                all_gfa += bs.gross_area()
+                
+        return all_gfa/self.area()        
+                
 
     def grossFloorArea(self):
-        pass
+        
+        gfa = 0
+         
+        for building in self.buildings:
+            for bs in building.buildingStoreys:
+                
+                gfa += bs.gross_area()
+                
+        return gfa
     
     def alignment(self):
         
-        terrainp = projected_meshes([self.data],self.frontStreet.mesh.vertices[np.argmax(self.frontStreet.mesh.vertices[:, 2])])
+        terrainp = get_projected_meshes([self.data],self.frontStreet.mesh.vertices[np.argmax(self.frontStreet.mesh.vertices[:, 2])])
 
-        streetp = projected_meshes([self.frontStreet],self.frontStreet.mesh.vertices[np.argmax(self.frontStreet.mesh.vertices[:, 2])])
+        streetp = get_projected_meshes([self.frontStreet],self.frontStreet.mesh.vertices[np.argmax(self.frontStreet.mesh.vertices[:, 2])])
 
         # Create a KD-Tree for the first mesh vertices
         tree = cKDTree(terrainp.vertices)
@@ -408,14 +542,25 @@ class Parcel(PermitObject):
         line = trimesh.load_path(segments)
         
         return line
+    
+    def building_implantation_range(self):
+        
+        ranges = []
+        
+        for building in self.buildings:
+            
+            
+            
+            ranges.append(get_distance_object_to_point(self.alignment(),get_most_distant_point_in_axis(building.building_mesh,"Y")))
+        return max(ranges)
 
 
 class PermitModel(PermitObject):
     
     def __init__(self, model):
         
-        self.model:Model = model
-        self.parcels:List[Parcel] = [Parcel(site, self.model) for site in self.model.select('.IfcGeographicElement[classification.Identification ="Co_45"]')]
+        self.model:CheckModel = model
+        self.parcels:List[Parcel] = [Parcel(site, self.model) for site in self.model.select('.IfcSpace[classification.Identification ="SL_22_05"]')]
 
 
 
