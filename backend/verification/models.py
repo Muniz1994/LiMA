@@ -1,24 +1,23 @@
 from django.db import models
 
-from projects.models import Project
 from digital_regulation.models import Regulation
 from check_module.main import ComplianceCheck
 
 # Create your models here.
 class Verification(models.Model):
     
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    time_executed = models.DateTimeField(auto_now_add=True)
+    ifc_file = models.FileField(upload_to='ifc_files/')
     report = models.CharField(max_length=200, default='', blank=True)
+    regulations = models.ManyToManyField(Regulation, blank=True)
 
     def get_model_rules(self):
 
         rule_set = []
 
-        for regulation in self.project.regulations.all():
+        for regulation in self.regulations.all():
 
-            for zone in regulation.zone_set.all():
-
-                for rule in zone.rules.all():
+            for rule in regulation.rules.all():
                     
                     rule_set.append(rule)
 
@@ -26,7 +25,7 @@ class Verification(models.Model):
 
     def run_verification(self):
 
-        check = ComplianceCheck(self.get_model_rules(), self.project.urbanisticoperation.building.ifc_file.path)
+        check = ComplianceCheck(self.get_model_rules(), self.ifc_file.path)
 
         check.check_regulation()
 
@@ -42,15 +41,12 @@ class Verification(models.Model):
 
 
         super(Verification, self).save(*args, **kwargs)
+        
+class RuleResult(models.Model):
+    
+    object_ids = models.TextField(max_length=20000)
+    result = models.BooleanField()
+    verification = models.ForeignKey(Verification, on_delete=models.CASCADE)
+    
 
-
-# @receiver(post_save, sender=Verification)
-# def parse_ifc(sender, instance, **kwargs):
-#     if not getattr(instance, "processed", False):
-#         ifc_file = ifcopenshell.open(str(instance.model.file))
-
-#         verification = ModelCheck(str(instance.regulation.file))
-
-#         instance.result = verification.execute()
-#         instance.processed = True
-#         instance.save()
+    

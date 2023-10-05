@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Regulation, Zone, Rule
+from .models import Regulation,  Rule
 
 # Register your models here.
 
@@ -16,5 +16,4 @@ class RuleAdmin(admin.ModelAdmin):
     list_display = ["name", "text", "external_reference", "code"]
 
 admin.site.register(Regulation, RegulationAdmin)
-admin.site.register(Zone, ZoneAdmin)
 admin.site.register(Rule, RuleAdmin)

@@ -25,7 +25,7 @@ class ComplianceCheck:
         # Here is the namespace for the python code execution
         self.local_vars = {
             "add_verification": self.add_verification,
-            "permit_model": self.permit_model,
+            "my_permit": self.permit_model,
         }
 
     def check_regulation(self):

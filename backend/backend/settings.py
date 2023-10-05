@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     "digital_regulation",
     "verification",
     "check_module",
-    "projects"
 ]
 
 MIDDLEWARE = [

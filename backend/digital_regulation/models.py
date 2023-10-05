@@ -3,15 +3,6 @@ import datetime
 import random
 
 # Create your models here.
-class Regulation(models.Model):
-
-    name = models.CharField(max_length=100)
-    scope = models.CharField(max_length=200, default="No attributed city")
-    
-
-    def __str__(self) -> str:
-        return self.name
-
 class Rule(models.Model):
 
     name = models.CharField(max_length=100)
@@ -20,7 +11,7 @@ class Rule(models.Model):
     code = models.TextField(max_length=1000, blank=True)
     blocks = models.CharField(max_length=10000, blank=True)
     has_code = models.BooleanField(default=False)
-    result=models.JSONField(default={"id":[], "result":random.choice([True,False])})
+
 
     def save(self, *args, **kwargs):
         if (self.code != None) and (self.code != ""):
@@ -33,13 +24,13 @@ class Rule(models.Model):
     
     def __str__(self) -> str:
         return self.name
-
-class Zone(models.Model):
+    
+class Regulation(models.Model):
 
     name = models.CharField(max_length=100)
-    regulation = models.ForeignKey(Regulation, on_delete=models.CASCADE)
+    scope = models.CharField(max_length=200, default="No attributed city")
     rules = models.ManyToManyField(Rule, blank=True)
-    zones = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True )
 
     def __str__(self) -> str:
         return self.name
+
