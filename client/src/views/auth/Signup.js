@@ -24,7 +24,7 @@ const Signup = () => {
             password2: password2
         };
 
-        fetch(process.env.REACT_APP_API_ROOT + '/auth/register/', {
+        fetch(process.env.REACT_APP_API_ROOT + 'auth/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
