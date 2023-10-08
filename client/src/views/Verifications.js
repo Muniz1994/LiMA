@@ -277,7 +277,7 @@ const Verifications = () => {
 
                                                     {regulations_list.map(reg =>
                                                         <>
-                                                            {reg.name === activeRegulation.name && reg.zones.map(reg => reg.rules.map(rule =>
+                                                            {reg.name === activeRegulation.name && reg.rules.map(rule =>
 
                                                                 <ListGroupItem
                                                                     variant='light'
@@ -293,7 +293,7 @@ const Verifications = () => {
                                                                     <div className="ms-2 me-auto d-flex">
                                                                         <Stack direction='horizontal' gap={2} >
                                                                             <FontAwesomeIcon icon="fa-section" />
-                                                                            <div className="fw-bold">{rule.external_reference} -- check: {rule.name}</div>
+                                                                            <div className="fw-bold">{rule.external_reference}</div>
                                                                             <FontAwesomeIcon className='me-auto' icon="fa-circle-info" />
                                                                         </Stack>
                                                                     </div>
@@ -301,7 +301,7 @@ const Verifications = () => {
                                                                         <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
                                                                         :
                                                                         <FontAwesomeIcon className='text-success' icon="fa-circle-check" />) : ''}
-                                                                </ListGroupItem>))}
+                                                                </ListGroupItem>)}
                                                         </>
                                                     )}
 

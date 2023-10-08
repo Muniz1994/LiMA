@@ -19,44 +19,42 @@ export function ClauseListModal({ ShowState, HideFunction, setClauseListModalSho
             <Modal.Body>
                 <ListGroup className='h-100 overflow-scroll   clause-list-size'>
 
-                    {regulations_list.map(reg => <>
-                        {reg.name === activeRegulation.name && reg.zones.map(zone => zone.rules.map(rule =>
+                    {regulations_list.map(reg =>
+                        <>
+                            {reg.name === activeRegulation.name && reg.rules.map(rule =>
 
-                            <ListGroupItem
-                                variant='light'
-                                id={rule.id}
-                                className='d-flex justify-content-between align-items-center small'
-                                action
-                                as='button'
-                                onClick={() => {
-                                    setActiveClause({ id: rule.id, name: rule.name, text: rule.text, code: rule.code });
+                                <ListGroupItem
+                                    variant='light'
+                                    id={rule.name}
+                                    className='d-flex justify-content-between align-items-center small'
+                                    style={{ border: 0 }}
+                                    action
+                                    as='button'
+                                    onClick={() => {
+                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
 
-                                    if (setEditorKey) {
-                                        setEditorKey(Math.random());
-                                    };
+                                        setEditorKey(Math.random())
+                                    }}>
+                                    <div className="ms-2 me-auto">
+                                        <Stack direction='horizontal' gap={2}>
+                                            <FontAwesomeIcon icon="fa-section" />
+                                            <div className="fw-bold">{rule.name}</div>
+                                        </Stack>
 
-                                    setClauseListModalShow(false);
-                                }}>
+                                    </div>
+                                    {rule.has_code === false ?
+                                        <Badge bg="theme-e" pill>
+                                            No code
+                                        </Badge>
+                                        :
+                                        <Badge bg="theme-b" pill>
+                                            Has code
+                                        </Badge>}
+                                </ListGroupItem>)}
 
-                                <div className="ms-2 me-auto">
-                                    <Stack direction='horizontal' gap={2}>
-
-                                    </Stack>
-                                    <div className="fw-bold">{rule.name}</div>
-                                </div>
-
-                                {rule.has_code === false ?
-                                    <Badge bg="danger" pill>
-                                        No code
-                                    </Badge>
-                                    :
-                                    <Badge bg="success" pill>
-                                        Has code
-                                    </Badge>}
-                            </ListGroupItem>))}
-
-                    </>
+                        </>
                     )}
+
                     {activeRegulation.name !== '' &&
                         <ListGroupItem
                             className='d-flex justify-content-between align-items-start list-group-item-action'

@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Stack from 'react-bootstrap/Stack';
 
-export function NewClauseModal({ ShowState, HideFunction, ZoneId, setUpdatedClause }) {
+export function NewClauseModal({ ShowState, HideFunction, RegulationId, setUpdatedClause }) {
 
     const [clauseName, setClauseName] = useState('');
     const [externalRef, setExternalRef] = useState('');
@@ -17,7 +17,7 @@ export function NewClauseModal({ ShowState, HideFunction, ZoneId, setUpdatedClau
             name: clauseName,
             external_reference: externalRef,
             text: clauseText,
-            zone: ZoneId
+            regulation: RegulationId
         };
 
         console.log(newClause);
