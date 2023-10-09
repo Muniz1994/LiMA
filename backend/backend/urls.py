@@ -29,6 +29,8 @@ router = routers.DefaultRouter()
 
 router.register(r'regulations', regulation_views.RegulationViewSet)
 router.register(r'rules', regulation_views.RuleViewSet)
+router.register(r'verifications', verification_views.VerificationViewSet)
+
 
 
 urlpatterns = [

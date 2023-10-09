@@ -33,5 +33,9 @@ class VerificationExecuteView(APIView):
         report = verification.run_verification()
 
         return Response(report)
+    
+class VerificationViewSet(viewsets.ModelViewSet):
+    queryset = Verification.objects.all()
+    serializer_class = VerificationSerializer
 
 

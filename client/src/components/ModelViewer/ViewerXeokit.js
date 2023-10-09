@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 
-import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, Mesh, PhongMaterial, buildGridGeometry, VBOGeometry, ContextMenu, NavCubePlugin, TreeViewPlugin, CityJSONLoaderPlugin, DistanceMeasurementsPlugin, LineSet, AnnotationsPlugin } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/xeokit-sdk.es.min.js";
+import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, Mesh, PhongMaterial, buildGridGeometry, VBOGeometry, ContextMenu, NavCubePlugin, TreeViewPlugin, CityJSONLoaderPlugin, DistanceMeasurementsPlugin, LineSet, AnnotationsPlugin } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@2.3.9/dist/xeokit-sdk.es.min.js";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -29,10 +29,10 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
         //------------------------------------------------------------------------------------------------------------------
         const viewer = new Viewer({
             canvasId: "myCanvas",
-            transparent: true,
-            saoEnabled: true,
-            pbrEnabled: true,
-            colorTextureEnables: true
+            // transparent: true,
+            // saoEnabled: true,
+            // pbrEnabled: true,
+            // colorTextureEnables: true
         });
 
 
@@ -201,24 +201,24 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
 
         if (ifcFile && ifcLoader && sceneViewer) {
 
-            const sceneModel =
-                ifcLoader.load({
-                    src: ifcFile,
-                    edges: true,
-                    excludeUnclassifiedObjects: false
-                });
+            // const sceneModel =
+            //     ifcLoader.load({
+            //         src: ifcFile,
+            //         edges: true,
+            //         excludeUnclassifiedObjects: false
+            //     });
 
             // 2
-            // const sceneModel = xktLoader.load({          // Returns an Entity that represents the model
-            //     id: "myModel",
-            //     src: ifcFile,
-            //     edges: true
-            // });
+            const sceneModel = xktLoader.load({          // Returns an Entity that represents the model
+                id: "myModel",
+                xkt: ifcFile,
+                edges: true
+            });
 
             setSceneModel(sceneModel);
 
             sceneModel.on("loaded", () => { // This synchronizes camera.ortho.scale to the model boundary
-                sceneViewer.cameraFlight.flyTo(sceneModel);
+                sceneViewer.cameraFlight.flyTo(sceneViewer.scene);
             });
 
         }

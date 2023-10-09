@@ -52,31 +52,41 @@ export const apiSlice = createApi({
             })
         }),
         //-----------------------------------------------------------------------------------------------------------------------
-        // Projects endpoints
+        // Verifications endpoints
         //-----------------------------------------------------------------------------------------------------------------------
-        projects: builder.query({
-            query: () => 'projects/',
-            providesTags: ['Projects']
+        verifications: builder.query({
+            query: () => 'verifications/',
+            providesTags: ['Verifications']
         }),
-        addNewProject: builder.mutation({
-            query: newProject => ({
-                url: 'projects/',
+        addNewVerification: builder.mutation({
+            query: newVerification => ({
+                url: 'verifications/',
                 method: 'POST',
-                body: newProject
+                body: newVerification,
+                headers: { 'Content-type': 'multipart/form-data' },
+                formData: true
             })
         }),
-        getProject: builder.query({
-            query: projectID => `projects/${projectID}`
+        updateVerification: builder.mutation({
+            query: ({ id, ...patch }) => ({
+                url: `verification/${id}`,
+                method: 'PATCH',
+                body: patch,
+            })
+        }),
+        getVerification: builder.query({
+            query: projectID => `verifications/${projectID}`
         }),
     })
 })
 
 export const {
+    useUpdateVerificationMutation,
     useRegulationsQuery,
     useGetRegulationQuery,
     useAddNewRegMutation,
     useDeleteRegMutation,
-    useProjectsQuery,
-    useGetProjectQuery,
-    useAddNewProjectMutation, } = apiSlice
+    useVerificationsQuery,
+    useGetVerificationQuery,
+    useAddNewVerificationMutation, } = apiSlice
 

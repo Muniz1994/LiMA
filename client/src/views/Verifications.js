@@ -19,6 +19,9 @@ import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faChec
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
 
+import { XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer } from 'https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert@1.1.10/dist/xeokit-convert.es.js'
+import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api.js";
+
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
 import { Container } from 'react-bootstrap';
@@ -37,10 +40,11 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 }
 
 
-function UploadButton({ setIfcFile }) {
+function UploadButton({ setIfcFile, setXktFile }) {
 
 
     const [uploadedFileName, setInputFileName] = useState(null);
+    const [upFile, setUpFile] = useState(null);
 
 
     const inputRef = useRef(null);
@@ -49,11 +53,48 @@ function UploadButton({ setIfcFile }) {
         inputRef.current?.click()
     }
 
+    var xktModel = new XKTModel();
+
     const handleDisplayFileDetails = async () => {
         inputRef.current?.files && setInputFileName(inputRef.current.files[0].name);
         setIfcFile(URL.createObjectURL(inputRef.current.files[0]));
+        var data = await inputRef.current.files[0].arrayBuffer();
 
+        parseIFCIntoXKTModel({
+            WebIFC,
+            data,
+            xktModel,
+            wasmPath: "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/",
+            autoNormals: true,
+            log: (msg) => { console.log(msg); }
+        }).then(() => {
+            xktModel.finalize().then(() => {
+
+                console.log(xktModel);
+                const arr = writeXKTModelToArrayBuffer(xktModel);
+                const fil = new Blob([arr]);
+                setXktFile(arr);
+
+            });
+
+
+            // // Create an anchor element
+            // const downloadLink = document.createElement('a');
+            // downloadLink.href = URL.createObjectURL(fil);
+            // downloadLink.download = 'file.xkt'; // Set the desired filename
+
+            // // Trigger a click event to initiate the download
+            // downloadLink.click();
+
+        },
+            (msg) => {
+                console.error(msg);
+            });
     }
+
+
+
+
 
     return (
         <div className="">
@@ -81,6 +122,8 @@ const Verifications = () => {
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
 
     const [ifcFile, setIfcFile] = useState(null);
+    const [xktFile, setXktFile] = useState(null);
+
     const [highlightedElements, setHighlightedElements] = useState(null);
 
     const [showLoader, setShowLoader] = useState(false)
@@ -170,6 +213,10 @@ const Verifications = () => {
         }
     }, []);
 
+    useEffect(() => {
+        console.log(xktFile);
+    }, [xktFile])
+
     return (
         <>
             {loading === false && (
@@ -196,7 +243,7 @@ const Verifications = () => {
                                 {/* Regulation choose start */}
                                 <Row className='border-bottom p-2'>
                                     <Col className='p-2'>
-                                        <UploadButton setIfcFile={setIfcFile} />
+                                        <UploadButton setIfcFile={setIfcFile} setXktFile={setXktFile} />
                                     </Col>
                                 </Row>
                                 {/* Regulation choose end */}
@@ -316,7 +363,7 @@ const Verifications = () => {
                             <Col xs={12} xl={8} xxl={9} className="h-100 max-h-100 p-0">
                                 <Row className='h-100 p-0'>
                                     {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
-                                    <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />
+                                    <ViewerXeokit ifcFile={xktFile} highlightedElements={highlightedElements} />
                                 </Row>
                             </Col>
                         </Row>
