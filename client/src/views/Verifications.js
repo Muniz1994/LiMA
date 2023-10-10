@@ -19,7 +19,7 @@ import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faChec
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
 
-import { XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer } from 'https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert@1.1.10/dist/xeokit-convert.es.js'
+import { XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer } from '@xeokit/xeokit-convert/dist/xeokit-convert.es'
 import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api.js";
 
 
@@ -64,7 +64,7 @@ function UploadButton({ setIfcFile, setXktFile }) {
             WebIFC,
             data,
             xktModel,
-            wasmPath: "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/",
+            wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/",
             autoNormals: true,
             log: (msg) => { console.log(msg); }
         }).then(() => {

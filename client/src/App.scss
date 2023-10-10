@@ -110,6 +110,11 @@ body {
 
 #myCanvas {
   background-color: #868784;
+  overflow: hidden;
+}
+
+#myViewer {
+  overflow: hidden;
 }
 
 #viewer-tools {
@@ -211,6 +216,7 @@ body {
 
 body {
   height: 100vh;
+  overflow: hidden;
 }
 
 body::-webkit-scrollbar {
@@ -218,7 +224,7 @@ body::-webkit-scrollbar {
 }
 
 body {
-  -ms-overflow-style: none;
+  -ms-overflow-style: hidden;
   /* IE and Edge */
   scrollbar-width: none;
   /* Firefox */
