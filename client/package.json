@@ -27,7 +27,7 @@
     "material-design-icons-iconfont": "^6.7.0",
     "mdb-react-ui-kit": "^6.1.0",
     "mime": "^3.0.0",
-    "openbim-components": "^0.0.51",
+    "openbim-components": "1.1.1",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-blockly": "^7.1.0",
