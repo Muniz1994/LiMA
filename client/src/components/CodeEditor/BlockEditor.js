@@ -20,6 +20,37 @@ const CodeBlock = ({ codeString }) => {
     );
 };
 
+var options = {
+    toolbox: toolbox,
+    collapse: true,
+    comments: true,
+    disable: false,
+    maxBlocks: Infinity,
+    trashcan: true,
+    horizontalLayout: false,
+    toolboxPosition: 'start',
+    css: true,
+    media: 'https://blockly-demo.appspot.com/static/media/',
+    rtl: false,
+    scrollbars: false,
+    sounds: true,
+    oneBasedIndex: true,
+    grid: {
+        spacing: 20,
+        length: 1,
+        colour: '#0004ff',
+        snap: true
+    },
+    zoom: {
+        controls: true,
+        wheel: true,
+        startScale: 1,
+        maxScale: 1.2,
+        minScale: 0.3,
+        scaleSpeed: 1.01
+    }
+};
+
 function MyBlocklyEditor({ initialXml, setBlockXml, setBlockPython, showCode }) {
     const [pythonDisplayCode, setPythonDisplayCode] = useState('');
 
@@ -41,16 +72,7 @@ function MyBlocklyEditor({ initialXml, setBlockXml, setBlockPython, showCode }) 
                     toolboxConfiguration={toolbox} // this must be a JSON toolbox definition
                     initialXml={initialXml}
                     onWorkspaceChange={workspaceDidChange}
-                    workspaceConfiguration={{
-                        scrollbars: false,
-                        grid: {
-                            spacing: 20,
-                            length: 0,
-                            colour: "#ccc",
-                            snap: true,
-
-                        },
-                    }}
+                    workspaceConfiguration={options}
                 />
             </Col>
             {showCode ? <Col className="max-h-100 overfow-scroll border p-0">
