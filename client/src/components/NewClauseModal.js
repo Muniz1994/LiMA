@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Stack from 'react-bootstrap/Stack';
+import { MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalHeader } from 'mdb-react-ui-kit';
 
 export function NewClauseModal({ ShowState, HideFunction, RegulationId, setUpdatedClause }) {
 
@@ -31,47 +32,54 @@ export function NewClauseModal({ ShowState, HideFunction, RegulationId, setUpdat
     };
 
     return (
-        <Modal show={ShowState} onHide={HideFunction} className='modal-lg'>
-            <Modal.Header closeButton>
-                <Modal.Title><p>New rule</p></Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={HandleSubmit}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Rule name: </Form.Label>
-                        <Form.Control
-                            onChange={(e) => setClauseName(e.target.value)}
-                            type="text"
-                            placeholder="Insert the name of the clause" />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>External reference: </Form.Label>
-                        <Form.Control
-                            onChange={(e) => setExternalRef(e.target.value)}
-                            type="text"
-                            placeholder="Insert the legal reference of the rule" />
-                    </Form.Group>
+        <MDBModal show={ShowState} onHide={HideFunction} className='modal-lg'>
+            <MDBModalDialog centered>
+                <MDBModalContent>
+                    <MDBModalHeader closeButton>
+                        <Modal.Title><p>New rule</p></Modal.Title>
+                    </MDBModalHeader>
+                    <MDBModalBody>
+                        <Form onSubmit={HandleSubmit}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Rule name: </Form.Label>
+                                <Form.Control
+                                    onChange={(e) => setClauseName(e.target.value)}
+                                    type="text"
+                                    placeholder="Insert the name of the clause" />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>External reference: </Form.Label>
+                                <Form.Control
+                                    onChange={(e) => setExternalRef(e.target.value)}
+                                    type="text"
+                                    placeholder="Insert the legal reference of the rule" />
+                            </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Rule text</Form.Label>
-                        <Form.Control
-                            onChange={(e) => setClauseText(e.target.value)}
-                            className='text-area-rule'
-                            as="textarea"
-                            placeholder="Insert the text" />
-                    </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Rule text</Form.Label>
+                                <Form.Control
+                                    onChange={(e) => setClauseText(e.target.value)}
+                                    className='text-area-rule'
+                                    as="textarea"
+                                    placeholder="Insert the text" />
+                            </Form.Group>
 
-                    <Stack direction='horizontal' gap={2}>
-                        <Button variant="dark" type="submit">
-                            Save
-                        </Button>
-                        <Button onClick={HideFunction} variant="light">
-                            Cancel
-                        </Button>
-                    </Stack>
+                            <Stack direction='horizontal' gap={2}>
+                                <Button variant="dark" type="submit">
+                                    Save
+                                </Button>
+                                <Button onClick={HideFunction} variant="light">
+                                    Cancel
+                                </Button>
+                            </Stack>
 
-                </Form>
-            </Modal.Body>
-        </Modal>
+                        </Form>
+                    </MDBModalBody>
+
+                </MDBModalContent>
+
+            </MDBModalDialog>
+
+        </MDBModal>
     );
 }

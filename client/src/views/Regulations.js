@@ -14,6 +14,8 @@ import Badge from 'react-bootstrap/Badge';
 import Stack from 'react-bootstrap/Stack';
 import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 
+import { MDBBadge, MDBBtn, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBListGroup, MDBListGroupItem } from 'mdb-react-ui-kit';
+
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -199,17 +201,17 @@ const Regulations = () => {
                                 {/* Regulation choose start */}
                                 <Row>
                                     <Col className='p-2'>
-                                        <h5>
-                                            Choose regulation:
-                                        </h5>
+
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Choose regulation:</h6>
                                         <Stack
                                             direction='horizontal'
                                             className='d-flex'>
-                                            <Dropdown>
-                                                <Dropdown.Toggle variant='light'>
-                                                    Regulations
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
+                                            <MDBDropdown group>
+                                                <MDBBtn outline color='dark'>Regulations</MDBBtn>
+                                                <MDBDropdownToggle split color='dark'>
+
+                                                </MDBDropdownToggle>
+                                                <MDBDropdownMenu>
                                                     {regulations_list.map(regs =>
                                                         <RegulationDropdownItem
                                                             id={regs.name}
@@ -217,18 +219,19 @@ const Regulations = () => {
                                                             onRegulationClick={() => {
                                                                 setActiveRegulation({ id: regs.id, name: regs.name })
                                                             }} />)}
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-                                            <Button
+                                                </MDBDropdownMenu>
+                                            </MDBDropdown>
+                                            <MDBBtn
+                                                outline
                                                 onClick={() => setNewRegulationModalShow(true)}
                                                 size='sm'
                                                 className='m-2'
-                                                variant='light'>
+                                                color='dark'>
                                                 <Stack gap={2} direction="horizontal">
                                                     <span>New regulation</span>
                                                     <FontAwesomeIcon icon="fa-plus" />
                                                 </Stack>
-                                            </Button>
+                                            </MDBBtn>
                                             <Button
                                                 onClick={() => setClauseListModalShow(true)}
                                                 size='sm'
@@ -251,20 +254,20 @@ const Regulations = () => {
                                             {/* Show the active regulation name */}
                                             {activeRegulation.name !== '' &&
                                                 <>
-                                                    <h5>{activeRegulation.name}
-                                                        <Button
-                                                            className='mx-2'
-                                                            variant='light'
-                                                            size='sm'
-                                                            onClick={() => setInfoRegulationModalShow(true)}>
-                                                            <FontAwesomeIcon icon="fa-circle-info" />
-                                                        </Button></h5>
+                                                    <h6 className='bg-light p-2 border-top border-bottom'>{activeRegulation.name}<Button
+                                                        className='mx-2'
+                                                        variant='light'
+                                                        size='sm'
+                                                        onClick={() => setInfoRegulationModalShow(true)}>
+                                                        <FontAwesomeIcon icon="fa-circle-info" />
+                                                    </Button></h6>
+
                                                 </>
                                             }
                                         </Row>
                                         <Row >
                                             <Col className='border-bottom border-top'>
-                                                <ListGroup
+                                                <MDBListGroup
                                                     className='h-100 overflow-scroll clause-list-size'
                                                     style={{ borderRadius: 0 }}>
 
@@ -272,13 +275,9 @@ const Regulations = () => {
                                                         <>
                                                             {reg.name === activeRegulation.name && reg.rules.map(rule =>
 
-                                                                <ListGroupItem
-                                                                    variant='light'
-                                                                    id={rule.name}
-                                                                    className='d-flex justify-content-between align-items-center small'
-                                                                    style={{ border: 0 }}
-                                                                    action
-                                                                    as='button'
+                                                                <MDBListGroupItem
+                                                                    tag='button'
+                                                                    action noBorders type='button' className='px-3 shadow-4'
                                                                     onClick={() => {
                                                                         setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
 
@@ -292,22 +291,20 @@ const Regulations = () => {
 
                                                                     </div>
                                                                     {rule.has_code === false ?
-                                                                        <Badge bg="theme-e" pill>
+                                                                        <MDBBadge color="warning" light>
                                                                             No code
-                                                                        </Badge>
+                                                                        </MDBBadge>
                                                                         :
-                                                                        <Badge bg="theme-b" pill>
+                                                                        <MDBBadge color="success" light>
                                                                             Has code
-                                                                        </Badge>}
-                                                                </ListGroupItem>)}
+                                                                        </MDBBadge>}
+                                                                </MDBListGroupItem>)}
 
                                                         </>
                                                     )}
                                                     {activeRegulation.name !== '' &&
-                                                        <ListGroupItem
-                                                            className='d-flex justify-content-between align-items-center small'
-                                                            style={{ border: 0 }}
-                                                            action
+                                                        <MDBListGroupItem
+                                                            action noBorders type='button' className='px-3'
                                                             onClick={() => setNewClauseModalShow(true)}>
 
                                                             <div className="ms-2 me-auto">
@@ -315,8 +312,8 @@ const Regulations = () => {
                                                                     <div className="fw-bold">New rule</div> <FontAwesomeIcon icon="fa-plus" />
                                                                 </Stack>
                                                             </div>
-                                                        </ListGroupItem>}
-                                                </ListGroup>
+                                                        </MDBListGroupItem>}
+                                                </MDBListGroup>
                                             </Col>
                                         </Row>
                                     </Col>
@@ -338,14 +335,15 @@ const Regulations = () => {
                                                 <Stack
                                                     className='d-flex'
                                                     direction='horizontal' gap={2}>
-                                                    <Button
-                                                        variant='light'
+                                                    <MDBBtn
+                                                        outline
+                                                        color='dark'
                                                         size='sm'
                                                         onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
                                                     >
                                                         <span className='p-2'>Save Code</span>
                                                         <FontAwesomeIcon icon="fa-save" />
-                                                    </Button>
+                                                    </MDBBtn>
                                                     {activeClause.blocks !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
                                                         <span className='small'>Updated</span>
                                                         <FontAwesomeIcon variant='success' icon="fa-check" />
