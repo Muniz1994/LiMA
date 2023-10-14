@@ -7,7 +7,7 @@ import Col from "react-bootstrap/esm/Col";
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { isblEditorLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { toolbox } from "./ToolBox";
+import { toolbox } from "./ToolBox2";
 
 const CodeBlock = ({ codeString }) => {
     return (
@@ -19,6 +19,7 @@ const CodeBlock = ({ codeString }) => {
         </SyntaxHighlighter>
     );
 };
+
 
 var options = {
     toolbox: toolbox,
@@ -32,7 +33,7 @@ var options = {
     css: true,
     media: 'https://blockly-demo.appspot.com/static/media/',
     rtl: false,
-    scrollbars: false,
+    scrollbars: true,
     sounds: true,
     oneBasedIndex: true,
     grid: {
@@ -50,6 +51,8 @@ var options = {
         scaleSpeed: 1.01
     }
 };
+
+
 
 function MyBlocklyEditor({ initialXml, setBlockXml, setBlockPython, showCode }) {
     const [pythonDisplayCode, setPythonDisplayCode] = useState('');

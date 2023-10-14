@@ -14,6 +14,10 @@ export var toolbox = {
                 },
                 {
                     "kind": "block",
+                    "type": "bl_building"
+                },
+                {
+                    "kind": "block",
                     "type": "get_prop_value"
                 },
                 {
@@ -41,6 +45,10 @@ export var toolbox = {
             "name": "Building",
             "categorystyle": "logic_category",
             "contents": [
+                {
+                    "kind": "block",
+                    "type": "bl_parcel"
+                },
                 {
                     "kind": "block",
                     "type": "building"
