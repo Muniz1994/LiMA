@@ -90,10 +90,6 @@ const InternalLinks = () => {
                 <MDBNavbarLink tag={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></MDBNavbarLink>
 
             </MDBNavbarItem>
-            <MDBNavbarItem>
-                <MDBNavbarLink href='/verifications2'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check2</span></Stack></MDBNavbarLink>
-
-            </MDBNavbarItem>
         </>
     )
 }

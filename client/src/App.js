@@ -35,7 +35,6 @@ const App = () => {
           <Route path='/regulations' element={<Regulations />}></Route>
           <Route path='/checkhub' element={<CheckHub />}></Route>
           <Route path='/verifications' element={<Verifications />}></Route>
-          <Route path='/verifications2' element={<Verifications2 />}></Route>
         </Routes>
       </Router>
 
