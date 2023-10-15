@@ -62,23 +62,15 @@ export function NewVerificationModal({ basicModal, setBasicModal, toggleShow }) 
     const HandleSubmit = (event) => {
         event.preventDefault();
 
-        // const formData = new FormData();
-
-        // formData.append('ifc_file', ifcFile);
-
-        // for (let i = 0; i < regulations.length; i++) {
-        //     // Use a unique key for each number, for example, "numbers[]"
-        //     formData.append('regulations[]', regulations[i]);
-        // }
-
         const data = {
-            ifc_file: ifcFile,
             regulations: regulations
         }
 
         addVerification(data);
 
         console.log(result);
+
+        setBasicModal(false);
     };
 
     return (

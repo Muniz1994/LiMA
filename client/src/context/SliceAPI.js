@@ -63,16 +63,18 @@ export const apiSlice = createApi({
                 url: 'verifications/',
                 method: 'POST',
                 body: newVerification,
-                headers: { 'Content-type': 'multipart/form-data' },
-                formData: true
-            })
+                formData: true,
+            }),
+            invalidatesTags: ['Verifications']
         }),
         updateVerification: builder.mutation({
-            query: ({ id, ...patch }) => ({
-                url: `verification/${id}`,
+            query: ({ id, patch }) => ({
+                url: `verifications/${id}/`,
                 method: 'PATCH',
                 body: patch,
-            })
+                formData: true
+            }),
+            invalidatesTags: ['Verifications']
         }),
         getVerification: builder.query({
             query: projectID => `verifications/${projectID}`
