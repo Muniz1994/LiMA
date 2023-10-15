@@ -27,6 +27,12 @@ import { ClauseListModal } from '../components/ClauseListModal';
 import { Container } from 'react-bootstrap';
 import { NewZoneModal } from '../components/NewZoneModal';
 
+import { useSelector, useDispatch } from 'react-redux'
+
+import { setRegulationList } from '../context/regulationSlice';
+import { setActiveRegulation } from '../context/activeRegulationSlice';
+import { setActiveClause } from '../context/activeClauseSlice';
+
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
 
@@ -43,16 +49,17 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 
 const Regulations = () => {
 
+    const regulations_list = useSelector((state) => state.regulations_list.value);
+    const activeRegulation = useSelector((state) => state.activeRegulation.value);
+    const activeClause = useSelector((state) => state.activeClause.value);
+    const dispatch = useDispatch();
+
 
     // Page loading state
     const [loading, setLoading] = useState(true);
 
-    // All regulations data
-    const [regulations_list, setRegulationList] = useState([]);
 
     // State of active regulation and clause
-    const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' });
-    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', code: '', has_code: false });
     const [activeZone, setActiveZone] = useState({ id: '', name: '' });
 
     // Modals States
@@ -61,7 +68,7 @@ const Regulations = () => {
     const [newClauseModalShow, setNewClauseModalShow] = useState(false);
     const [newZoneModalShow, setNewZoneModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
-    const [showCode, setShowCode] = useState(true);
+    const [showCode, setShowCode] = useState(false);
 
 
     // Controls the state of the block editor
@@ -114,7 +121,7 @@ const Regulations = () => {
             // Get regulations
             axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
                 .then(response => {
-                    setRegulationList(response.data);
+                    dispatch(setRegulationList((response.data)));
                 })
                 .catch(
                     console.log
@@ -149,7 +156,7 @@ const Regulations = () => {
             .then(response => {
                 console.log(response);
                 setUpdatedClause(response.data);
-                setActiveClause(response.data);
+                dispatch(setActiveClause(response.data));
             })
             .catch(err => console.log(err));
 
@@ -167,7 +174,7 @@ const Regulations = () => {
                         setClauseListModalShow={setClauseListModalShow}
                         activeRegulation={activeRegulation}
                         regulations_list={regulations_list}
-                        setActiveClause={setActiveClause}
+                        setActiveClause={dispatch(setActiveClause)}
                         setEditorKey={setEditorKey}
                         setNewClauseModalShow={setNewClauseModalShow}
                     />
@@ -202,14 +209,13 @@ const Regulations = () => {
                                 <Row>
                                     <Col className='p-2'>
 
-                                        <h6 className='bg-light p-2 border-top border-bottom'>Choose regulation:</h6>
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Selecione regulamento:</h6>
                                         <Stack
                                             direction='horizontal'
                                             className='d-flex'>
                                             <MDBDropdown group>
-                                                <MDBBtn outline color='dark'>Regulations</MDBBtn>
+                                                <MDBBtn outline color='dark'>Regulamentos</MDBBtn>
                                                 <MDBDropdownToggle split color='dark'>
-
                                                 </MDBDropdownToggle>
                                                 <MDBDropdownMenu>
                                                     {regulations_list.map(regs =>
@@ -217,7 +223,7 @@ const Regulations = () => {
                                                             id={regs.name}
                                                             regulation={regs.name}
                                                             onRegulationClick={() => {
-                                                                setActiveRegulation({ id: regs.id, name: regs.name })
+                                                                dispatch(setActiveRegulation({ id: regs.id, name: regs.name }))
                                                             }} />)}
                                                 </MDBDropdownMenu>
                                             </MDBDropdown>
@@ -228,7 +234,7 @@ const Regulations = () => {
                                                 className='m-2'
                                                 color='dark'>
                                                 <Stack gap={2} direction="horizontal">
-                                                    <span>New regulation</span>
+                                                    <span>Novo regulamento</span>
                                                     <FontAwesomeIcon icon="fa-plus" />
                                                 </Stack>
                                             </MDBBtn>
@@ -279,7 +285,7 @@ const Regulations = () => {
                                                                     tag='button'
                                                                     action noBorders type='button' className='px-3 shadow-4'
                                                                     onClick={() => {
-                                                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
+                                                                        dispatch(setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks }))
 
                                                                         setEditorKey(Math.random())
                                                                     }}>
@@ -309,7 +315,7 @@ const Regulations = () => {
 
                                                             <div className="ms-2 me-auto">
                                                                 <Stack direction='horizontal' gap={2}>
-                                                                    <div className="fw-bold">New rule</div> <FontAwesomeIcon icon="fa-plus" />
+                                                                    <div className="fw-bold">Nova regra</div> <FontAwesomeIcon icon="fa-plus" />
                                                                 </Stack>
                                                             </div>
                                                         </MDBListGroupItem>}
@@ -341,7 +347,7 @@ const Regulations = () => {
                                                         size='sm'
                                                         onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
                                                     >
-                                                        <span className='p-2'>Save Code</span>
+                                                        <span className='p-2'>Salvar regra</span>
                                                         <FontAwesomeIcon icon="fa-save" />
                                                     </MDBBtn>
                                                     {activeClause.blocks !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
@@ -362,7 +368,7 @@ const Regulations = () => {
                                                             setEditorKey(Math.random())
                                                         }}
                                                     >
-                                                        <span className='p-2'>Toggle Code</span>
+                                                        <span className='p-2'>Mostrar código</span>
                                                         <FontAwesomeIcon icon="fa-code" />
                                                     </Button>
                                                 </Stack>

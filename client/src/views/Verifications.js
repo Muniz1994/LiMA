@@ -59,38 +59,38 @@ function UploadButton({ setIfcFile, setXktFile }) {
     const handleDisplayFileDetails = async () => {
         inputRef.current?.files && setInputFileName(inputRef.current.files[0].name);
         setIfcFile(inputRef.current.files[0]);
-        // var data = await inputRef.current.files[0].arrayBuffer();
+        var data = await inputRef.current.files[0].arrayBuffer();
 
-        // parseIFCIntoXKTModel({
-        //     WebIFC,
-        //     data,
-        //     xktModel,
-        //     wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/",
-        //     autoNormals: true,
-        //     log: (msg) => { console.log(msg); }
-        // }).then(() => {
-        //     xktModel.finalize().then(() => {
+        parseIFCIntoXKTModel({
+            WebIFC,
+            data,
+            xktModel,
+            wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/",
+            autoNormals: true,
+            log: (msg) => { console.log(msg); }
+        }).then(() => {
+            xktModel.finalize().then(() => {
 
-        //         console.log(xktModel);
-        //         const arr = writeXKTModelToArrayBuffer(xktModel);
-        //         const fil = new Blob([arr]);
-        //         setXktFile(arr);
+                console.log(xktModel);
+                const arr = writeXKTModelToArrayBuffer(xktModel);
+                const fil = new Blob([arr]);
+                setXktFile(arr);
 
-        //     });
+            });
 
 
-        // // Create an anchor element
-        // const downloadLink = document.createElement('a');
-        // downloadLink.href = URL.createObjectURL(fil);
-        // downloadLink.download = 'file.xkt'; // Set the desired filename
+            // // Create an anchor element
+            // const downloadLink = document.createElement('a');
+            // downloadLink.href = URL.createObjectURL(fil);
+            // downloadLink.download = 'file.xkt'; // Set the desired filename
 
-        // // Trigger a click event to initiate the download
-        // downloadLink.click();
+            // // Trigger a click event to initiate the download
+            // downloadLink.click();
 
-        // },
-        //     (msg) => {
-        //         console.error(msg);
-        //     });
+        },
+            (msg) => {
+                console.error(msg);
+            });
     }
 
 
@@ -364,7 +364,7 @@ const Verifications = () => {
                             <Col xs={12} xl={8} xxl={9} className="h-100 max-h-100 p-0">
                                 <Row className='h-100 p-0'>
                                     {/* <ViewerXeokit ifcFile={ifcFile} highlightedElements={highlightedElements} />  */}
-                                    <ViewerIFCJS ifcFile={ifcFile} />
+                                    <ViewerXeokit ifcFile={xktFile} />
                                 </Row>
                             </Col>
                         </Row>
