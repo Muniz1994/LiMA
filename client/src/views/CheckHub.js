@@ -12,6 +12,7 @@ import {
 
 import { MDBSpinner, MDBBtn, MDBTable, MDBTableHead, MDBTableBody } from 'mdb-react-ui-kit';
 
+
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -20,6 +21,9 @@ import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useVerificationsQuery } from '../context/SliceAPI'
 import { useGetUserQuery } from '../context/userSliceAPI';
 import { NewVerificationModal } from '../components/NewVerificationModal';
+import { AddFileModal } from '../components/AddFileModal';
+
+library.add(faCog, faPlus);
 
 const ProjectUser = ({ userID }) => {
     const {
@@ -35,11 +39,13 @@ const ProjectUser = ({ userID }) => {
     )
 }
 
-library.add(faCog, faPlus);
-
 const CheckHub = () => {
 
     const [showNewVerficationModal, setShowNewVerificationModal] = useState(false);
+    const [addIfcModal, setAddIfcModal] = useState(false);
+    const [activeVerificationID, setActiveVerificationID] = useState(null);
+
+    const hideIfcModal = () => setAddIfcModal(false);
 
     const toggleNewVerificationModal = () => setShowNewVerificationModal(!showNewVerficationModal);
 
@@ -50,8 +56,6 @@ const CheckHub = () => {
         isError,
         error,
     } = useVerificationsQuery();
-
-
 
     useEffect(() => {
         if (localStorage.getItem('token') === null) {
@@ -67,6 +71,11 @@ const CheckHub = () => {
                 toggleShow={toggleNewVerificationModal}
                 basicModal={showNewVerficationModal}
                 setBasicModal={setShowNewVerificationModal} />
+            <AddFileModal
+                ShowState={addIfcModal}
+                HideFunction={hideIfcModal}
+                verificationId={activeVerificationID} />
+
             <MDBContainer fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
                 <MDBRow className='h-100'>
                     {/* Regulation left panel start */}
@@ -78,7 +87,8 @@ const CheckHub = () => {
                                     size='sm'
                                     className='m-2'
                                     color='dark'
-                                    onClick={toggleNewVerificationModal}>
+                                    onClick={toggleNewVerificationModal}
+                                    outline>
                                     <Stack gap={2} direction="horizontal">
                                         <span>New verification</span>
                                         <FontAwesomeIcon icon="fa-plus" />
@@ -90,19 +100,32 @@ const CheckHub = () => {
                     {/* Regulation left panel end */}
                     <MDBCol xs={12} xl={10} xxl={10} className="d-flex justify-content-center ">
                         <div className='d-flex align-items-start flex-fill mt-4'>
-                            <MDBTable align='middle' bordered>
-                                <MDBTableHead>
+                            <MDBTable align='middle'>
+                                <MDBTableHead className='bg-light p-2 border-top border-bottom'>
                                     <tr>
+                                        <th scope='col'>Time created</th>
                                         <th scope='col'>File</th>
-                                        <th scope='col'>Regulations</th>
+                                        <th scope='col'></th>
                                     </tr>
                                 </MDBTableHead>
                                 <MDBTableBody>
                                     {isLoading ? <MDBSpinner text="Loading..." />
                                         : Verifications.map(verification =>
                                             <tr key={verification.id} >
-                                                <td>{verification.file}</td>
-                                                <td>{verification.regulations}</td>
+                                                <td>{verification.time_executed}</td>
+                                                {verification.ifc_file ?
+                                                    <td>{verification.ifc_file}</td> :
+                                                    <td>
+                                                        <MDBBtn
+                                                            color='dark'
+                                                            onClick={() => {
+                                                                setAddIfcModal(true);
+                                                                setActiveVerificationID(verification.id);
+                                                            }}>Add file
+                                                        </MDBBtn>
+                                                    </td>}
+
+                                                <td><MDBBtn outline color='dark'>info</MDBBtn></td>
                                             </tr>
                                         )
                                     }
