@@ -5,7 +5,7 @@ from .models import Verification
 
 # Register your models here.
 class VerificationAdmin(admin.ModelAdmin):
-    list_display = ["report"]
+    list_display = ['time_executed','ifc_file']
 
 
 admin.site.register(Verification, VerificationAdmin)

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from digital_regulation.models import Regulation
 from check_module.main import ComplianceCheck
@@ -7,7 +9,7 @@ from check_module.main import ComplianceCheck
 class Verification(models.Model):
     
     time_executed = models.DateTimeField(auto_now_add=True)
-    ifc_file = models.FileField(upload_to='ifc_files/')
+    ifc_file = models.FileField(upload_to='ifc_files/', blank=True)
     report = models.CharField(max_length=200, default='', blank=True)
     regulations = models.ManyToManyField(Regulation, blank=True)
 
