@@ -190,3 +190,6 @@ sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/django,react
 
+client/public/model.xkt
+client/public/geometry.xkt
+client/public/BuildingTeste.v52.ifc.xkt
