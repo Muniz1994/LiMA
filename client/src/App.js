@@ -3,9 +3,6 @@ import './App.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
-import axios from 'axios';
-
-
 import Navigationbar from './components/Navbar'; // import navbar
 
 
@@ -15,7 +12,6 @@ import Logout from './views/auth/Logout';
 import Verifications from './views/Verifications';
 import Regulations from './views/Regulations';
 import CheckHub from './views/CheckHub';
-import Verifications2 from './views/Verifications2';
 
 
 
