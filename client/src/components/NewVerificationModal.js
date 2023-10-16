@@ -82,7 +82,6 @@ export function NewVerificationModal({ basicModal, setBasicModal, toggleShow }) 
                         <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
                     </MDBModalHeader>
                     <MDBModalBody>
-                        <UploadButton setIfcFile={setIfcFile} />
                         <Form.Group as={Col} controlId="my_multiselect_field" className='my-2'>
                             <Form.Label>Regulamentos</Form.Label>
                             <Form.Control as="select" multiple value={regulations} onChange={e => {
