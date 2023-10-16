@@ -10,6 +10,7 @@ class Verification(models.Model):
     
     time_executed = models.DateTimeField(auto_now_add=True)
     ifc_file = models.FileField(upload_to='ifc_files/', blank=True)
+    xkt_file = models.FileField(upload_to='xkt_files/', blank=True)
     report = models.CharField(max_length=200, default='', blank=True)
     regulations = models.ManyToManyField(Regulation, blank=True)
 
