@@ -81,13 +81,13 @@ const InternalLinks = () => {
     return (
         <>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Code</span></Stack></MDBNavbarLink>
+                <MDBNavbarLink tag={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Regulamento Digital</span></Stack></MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/checkhub'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Check Hub</span></Stack></MDBNavbarLink>
+                <MDBNavbarLink tag={Link} to='/checkhub'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Hub de Verificação</span></Stack></MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Check</span></Stack></MDBNavbarLink>
+                <MDBNavbarLink tag={Link} to='/verifications'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Relatório</span></Stack></MDBNavbarLink>
 
             </MDBNavbarItem>
         </>
