@@ -90,7 +90,7 @@ const CheckHub = () => {
                                     onClick={toggleNewVerificationModal}
                                     outline>
                                     <Stack gap={2} direction="horizontal">
-                                        <span>New verification</span>
+                                        <span>Nova verificação</span>
                                         <FontAwesomeIcon icon="fa-plus" />
                                     </Stack>
                                 </MDBBtn>
@@ -103,8 +103,8 @@ const CheckHub = () => {
                             <MDBTable align='middle'>
                                 <MDBTableHead className='bg-light p-2 border-top border-bottom'>
                                     <tr>
-                                        <th scope='col'>Time created</th>
-                                        <th scope='col'>File</th>
+                                        <th scope='col'>Data de criação</th>
+                                        <th scope='col'>Ficheiro IFC</th>
                                         <th scope='col'></th>
                                     </tr>
                                 </MDBTableHead>
