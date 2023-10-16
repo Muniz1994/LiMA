@@ -103,6 +103,11 @@ body {
 //-------------------------------------------------------------------------------------------------
 // Viewer
 
+.verification-panel {
+  z-index: 20000;
+  background-color: white;
+}
+
 #MyNavCubeCanvas {
 
   z-index: 20000;
@@ -129,6 +134,7 @@ body {
 
 .viewer-tool-btn {
   margin: 5px;
+  margin-left: 20px;
   height: 40px;
   width: 40px;
   padding: 4px;
