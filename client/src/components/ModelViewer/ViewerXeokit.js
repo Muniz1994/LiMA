@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup } from '@fortawesome/free-solid-svg-icons'
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
-import { setViewer } from '../../context/viewerSlice';
+import { setViewer, cleanViewer } from '../../context/viewerSlice';
 import { constants } from 'blockly';
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -33,6 +33,8 @@ class XeokitViewer {
             colorTextureEnables: true,
             backgroundColor: [0.6392156862745098, 0.6392156862745098, 0.6392156862745098]
         });
+
+        this.spacesEnabled = true;
 
         this.setupCamera();
         this.setupScene();
@@ -160,8 +162,8 @@ class XeokitViewer {
             canvasId: "myNavCubeCanvas",
             visible: true,           // Initially visible (default)
             size: 200,               // NavCube size in pixels (default is 200)
-            alignment: "topRight",   // Align NavCube to top-left of Viewer canvas
-            topMargin: 170,          // 170 pixels margin from top of Viewer canvas
+            alignment: "bottomRight",   // Align NavCube to top-left of Viewer canvas
+            bottomMargin: 100,          // 170 pixels margin from top of Viewer canvas
             cameraFly: true,       // Fly camera to each selected axis/diagonal
             cameraFitFOV: 45,        // How much field-of-view the scene takes once camera has fitted it to view
             cameraFlyDuration: 0.5, // How long (in seconds) camera takes to fly to each new axis/diagonal
@@ -174,7 +176,7 @@ class XeokitViewer {
 
         this.grid = new Mesh(this.viewer.scene, {
             geometry: new VBOGeometry(this.viewer.scene, buildGridGeometry({
-                size: 300,
+                size: 400,
                 divisions: 60
             })),
             material: new PhongMaterial(this.viewer.scene, {
@@ -197,10 +199,10 @@ class XeokitViewer {
         });
     }
 
-    loadXkt() {
-        const sceneModel = this.xktLoader.load({          // Returns an Entity that represents the model
+    loadXkt(path) {
+        this.sceneModel = this.xktLoader.load({          // Returns an Entity that represents the model
             id: "myModel",
-            src: 'model.xkt',
+            src: path,
             edges: true,
             excludeUnclassifiedObjects: true,
             objectDefaults: {
@@ -210,7 +212,7 @@ class XeokitViewer {
             }
         });
 
-        sceneModel.on("loaded", () => { // This synchronizes camera.ortho.scale to the model boundary
+        this.sceneModel.on("loaded", () => { // This synchronizes camera.ortho.scale to the model boundary
             this.viewer.cameraFlight.flyTo(this.viewer.scene);
         });
 
@@ -238,6 +240,35 @@ class XeokitViewer {
     clearMeasurements() {
         this.distanceMeasurements.destroy();
     }
+
+    highlightElements() {
+        this.viewer.scene.setObjectsHighlighted(['2VqlKGzpbEYfMhQ83V14NK'], true);
+    }
+
+    toggleSpaces() {
+        if (this.spacesEnabled) {
+            const objectIds = this.viewer.metaScene.getObjectIDsByType("IfcSpace");
+            this.viewer.scene.setObjectsVisible(objectIds, false);
+            this.spacesEnabled = false;
+        }
+        else {
+            const objectIds = this.viewer.metaScene.getObjectIDsByType("IfcSpace");
+            this.viewer.scene.setObjectsVisible(objectIds, true);
+            this.spacesEnabled = true;
+        }
+
+    }
+
+    clean() {
+        this.navCube.destroy()
+        this.grid.destroy()
+    }
+
+    cleanModel() {
+        this.sceneModel.destroy();
+    }
+
+
 }
 
 export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
@@ -249,9 +280,17 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
     useEffect(() => {
 
 
+
         if (!viewer) {
-            console.log('dasdasjdbsadnasjkdbaskdja');
+
             dispatch(setViewer(new XeokitViewer('myCanvas', 'myNavCubeCanvas')))
+
+        }
+
+        return () => {
+
+            dispatch(cleanViewer())
+            dispatch(setViewer(null))
 
         }
 
@@ -262,15 +301,15 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
     return (
         <>
 
-            <div id='myViewer' className='p-0'>
+            <div id='myViewer' className=''>
                 <canvas id='myCanvas' className='full-screen p-0'></canvas>
                 <canvas id="myNavCubeCanvas"></canvas>
                 <div id='viewer-tools'>
                     <MDBBtn size='sm' color='dark' onClick={() => viewer.loadXkt()} className='viewer-tool-btn'><MDBIcon color='warning' fas size='lg' icon="bars" /></MDBBtn>
                     <MDBBtn size='sm' color='dark' onClick={() => viewer.toggleMeasurements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="ruler" /></MDBBtn>
                     <MDBBtn size='sm' color='warning' onClick={() => viewer.clearMeasurements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="recycle" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' className='viewer-tool-btn'><MDBIcon fas size='lg' icon="layer-group" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' className='viewer-tool-btn'><MDBIcon fas size='lg' icon="cut" /></MDBBtn>
+                    <MDBBtn size='sm' color='dark' onClick={() => viewer.highlightElements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="layer-group" /></MDBBtn>
+                    <MDBBtn size='sm' color='dark' onClick={() => viewer.toggleSpaces()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="cube" /></MDBBtn>
                     <MDBBtn size='sm' color='dark' className='viewer-tool-btn'><MDBIcon fas size='lg' icon="save" /></MDBBtn>
                 </div>
             </div>
