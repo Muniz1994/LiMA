@@ -15,10 +15,18 @@ export const viewerSlice = createSlice({
             // Also, no return statement is required from these functions.
             state.value = action.payload
         },
+        cleanViewer: (state, action) => {
+
+            if (state.value) {
+
+            }
+
+            state.value.clean()
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setViewer } = viewerSlice.actions
+export const { setViewer, cleanViewer } = viewerSlice.actions
 
 export default viewerSlice.reducer

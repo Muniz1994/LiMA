@@ -6,6 +6,34 @@ import activeClauseReducer from './activeClauseSlice'
 import { userApiSlice } from './userSliceAPI'
 import viewerReducer from './viewerSlice'
 
+import { useSelector, useDispatch } from 'react-redux'
+
+const myMiddleware = store => next => action => {
+    switch (action.type) {
+
+        case 'LOAD_MODEL':
+            var viewer = action.object; // Assuming 'object' is passed as part of the action
+            const path = action.value;
+            viewer.loadXkt(path); // Call the object's method
+            break;
+        case 'CLEAN_MODEL':
+            var viewer = action.object; // Assuming 'object' is passed as part of the action
+            if (viewer.sceneModel) {
+                viewer.cleanModel();
+            }
+
+            break;
+        case 'CLEAN_VIEWER':
+            var viewer = action.object;
+            viewer.navCube.destroy();
+            break;
+
+    }
+    return next(action);
+};
+
+
+
 export default configureStore({
     reducer: {
         regulations_list: regulationReducer,
@@ -16,5 +44,8 @@ export default configureStore({
         [userApiSlice.reducerPath]: userApiSlice.reducer
     },
     middleware: getDefaultMiddleware =>
-        (getDefaultMiddleware().concat(apiSlice.middleware)).concat(userApiSlice.middleware)
+        ((getDefaultMiddleware({
+            serializableCheck: false
+        }).concat(apiSlice.middleware)).concat(userApiSlice.middleware)).concat(myMiddleware)
 })
+
