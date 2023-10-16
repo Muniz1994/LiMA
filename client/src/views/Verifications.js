@@ -26,6 +26,11 @@ import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
 import { Container } from 'react-bootstrap';
 import { ViewerIFCJS } from '../components/ModelViewer/ViewerJs';
+import { MDBListGroup, MDBListGroupItem, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBBtn, MDBSpinner } from 'mdb-react-ui-kit';
+
+import { useSelector, useDispatch } from 'react-redux';
+
+import { useVerificationsQuery } from '../context/SliceAPI';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -41,72 +46,11 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
 }
 
 
-function UploadButton({ setIfcFile, setXktFile }) {
-
-
-    const [uploadedFileName, setInputFileName] = useState(null);
-    const [upFile, setUpFile] = useState(null);
-
-
-    const inputRef = useRef(null);
-
-    const handleUpload = () => {
-        inputRef.current?.click()
-    }
-
-    var xktModel = new XKTModel();
-
-    const handleDisplayFileDetails = async () => {
-        inputRef.current?.files && setInputFileName(inputRef.current.files[0].name);
-        setIfcFile(inputRef.current.files[0]);
-        var data = await inputRef.current.files[0].arrayBuffer();
-
-        parseIFCIntoXKTModel({
-            WebIFC,
-            data,
-            xktModel,
-            wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/",
-            autoNormals: true,
-            log: (msg) => { console.log(msg); }
-        }).then(() => {
-            xktModel.finalize().then(() => {
-
-                console.log(xktModel);
-                const arr = writeXKTModelToArrayBuffer(xktModel);
-                const fil = new Blob([arr]);
-                setXktFile(arr);
-
-            });
-
-
-            // // Create an anchor element
-            // const downloadLink = document.createElement('a');
-            // downloadLink.href = URL.createObjectURL(fil);
-            // downloadLink.download = 'file.xkt'; // Set the desired filename
-
-            // // Trigger a click event to initiate the download
-            // downloadLink.click();
-
-        },
-            (msg) => {
-                console.error(msg);
-            });
-    }
-
-
-
-
-
-    return (
-        <div className="">
-            <label className="">Upload IFC: </label>
-            <input id="input-file" onChange={handleDisplayFileDetails} className="d-none" ref={inputRef} type="file" />
-            <button className={`btn btn-${uploadedFileName ? "secondary" : "light"} mx-2`} onClick={handleUpload}>{uploadedFileName ? uploadedFileName : "Upload"}</button>
-        </div>
-    );
-}
-
 const Verifications = () => {
+
+    const { data: verifications_list, error, isLoading } = useVerificationsQuery()
+    const viewer = useSelector((state) => state.viewer.value);
+    const dispatch = useDispatch();
 
     // Page loading state
     const [loading, setLoading] = useState(true);
@@ -158,21 +102,6 @@ const Verifications = () => {
             </svg>
         </div>
     )
-
-    // const VerificationButton = ({ onSubmit, loading = false, disabled }) => {
-    //     return (
-
-    //         <Button
-    //             className='mx-2 verification-button'
-    //             variant='light'
-    //             size='sm'
-    //             onClick={onSubmit}
-    //             disabled={disabled}>
-    //             {!loading ? <FontAwesomeIcon icon="fa-play" /> : <Loader className="spinner" />}
-    //         </Button>
-
-    //     )
-    // }
 
     const VerificationButton = ({ onSubmit, loading = false, disabled }) => {
         return (
@@ -240,37 +169,31 @@ const Verifications = () => {
                     <Container fluid className='h-100 max-h-100 overflow-hidden'>
                         <Row className='h-100'>
                             {/* Regulation left panel start */}
-                            <Col>
-                                {/* Regulation choose start */}
-                                <Row className='border-bottom p-2'>
-                                    <Col className='p-2'>
-                                        <UploadButton setIfcFile={setIfcFile} setXktFile={setXktFile} />
-                                    </Col>
-                                </Row>
-                                {/* Regulation choose end */}
+                            <Col className='verification-panel'>
                                 <Row>
                                     <Col className='p-2'>
-                                        <h6>
-                                            Choose regulation:
-                                        </h6>
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Selecione verificação:</h6>
                                         <Stack
                                             direction='horizontal'
                                             className='d-flex'>
-                                            <Dropdown>
-                                                <Dropdown.Toggle variant='light'>
-                                                    Regulations
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
-                                                    {regulations_list.map(regs =>
+                                            <MDBDropdown group>
+                                                <MDBBtn outline color='dark'>Verificações</MDBBtn>
+                                                <MDBDropdownToggle split color='dark'>
+                                                </MDBDropdownToggle>
+                                                <MDBDropdownMenu>
+
+                                                    {isLoading ? <MDBSpinner></MDBSpinner> : verifications_list.map(ver =>
                                                         <RegulationDropdownItem
-                                                            id={regs.id}
-                                                            regulation={regs.name}
+                                                            id={ver.id}
+                                                            regulation={ver.id}
                                                             onRegulationClick={() => {
-                                                                setActiveRegulation({ id: regs.id, name: regs.name });
-                                                                setShowVerification(false)
+                                                                if (viewer && ver.xkt_file) {
+                                                                    dispatch({ type: 'CLEAN_MODEL', object: viewer })
+                                                                    dispatch({ type: 'LOAD_MODEL', object: viewer, value: ver.xkt_file })
+                                                                }
                                                             }} />)}
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                                </MDBDropdownMenu>
+                                            </MDBDropdown>
                                             <Button
                                                 onClick={() => setClauseListModalShow(true)}
                                                 size='sm'
@@ -293,15 +216,10 @@ const Verifications = () => {
                                             {/* Show the active regulation name */}
                                             {activeRegulation.name !== '' &&
                                                 <>
+                                                    <h6 className='bg-light p-2 border-top border-bottom'>{activeRegulation.name}
+                                                    </h6>
                                                     <Stack direction='horizontal'>
-                                                        <h6>{activeRegulation.name}
-                                                            <Button
-                                                                className='mx-2'
-                                                                variant='light'
-                                                                size='sm'
-                                                                onClick={() => setInfoRegulationModalShow(true)}>
-                                                                <FontAwesomeIcon icon="fa-circle-info" />
-                                                            </Button></h6>
+
                                                         <h6 className='ms-auto'>
                                                             Run compliance check
                                                             <VerificationButton
@@ -319,7 +237,7 @@ const Verifications = () => {
                                         </Row>
                                         <Row >
                                             <Col className='border-bottom border-top'>
-                                                <ListGroup
+                                                <MDBListGroup
                                                     className='h-100 overflow-scroll clause-list-size'
                                                     style={{ borderRadius: 0 }}>
 
@@ -327,13 +245,10 @@ const Verifications = () => {
                                                         <>
                                                             {reg.name === activeRegulation.name && reg.rules.map(rule =>
 
-                                                                <ListGroupItem
-                                                                    variant='light'
+                                                                <MDBListGroupItem
+                                                                    tag='button'
+                                                                    action noBorders type='button' className='px-3'
                                                                     id={rule.id}
-                                                                    className='d-flex justify-content-between align-items-center small border'
-                                                                    style={{ border: 0 }}
-                                                                    action
-                                                                    as='button'
                                                                     onClick={() => {
                                                                         setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
                                                                         setHighlightedElements(rule.result);
@@ -349,11 +264,11 @@ const Verifications = () => {
                                                                         <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
                                                                         :
                                                                         <FontAwesomeIcon className='text-success' icon="fa-circle-check" />) : ''}
-                                                                </ListGroupItem>)}
+                                                                </MDBListGroupItem>)}
                                                         </>
                                                     )}
 
-                                                </ListGroup>
+                                                </MDBListGroup>
                                             </Col>
                                         </Row>
                                     </Col>
