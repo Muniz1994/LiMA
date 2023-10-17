@@ -159,6 +159,7 @@ class Building(PermitObject):
         self.dwellings: List[Dwelling] = self.get_connection('IfcSpace[classification.Identification="SL_22_15"]', Dwelling)
         self.building_mesh = self.get_building_mesh()
         self.thresholdLevel = self.model.select('.IfcBuildingStorey[classification.Identification="En_95_05"]')[0].Elevation
+        self.front_mesh = self.model.select('.IfcSpace[classification.Identification ="SL_22_10_05"]')[0].mesh
         
     def floor_to_floor_height(self):
         
@@ -175,9 +176,9 @@ class Building(PermitObject):
             
         return min(difference)
 
-    def depth(self,front_mesh):
+    def depth(self):
         
-        return get_depth(self.get_empena(),front_mesh.mesh)
+        return get_depth(self.get_empena(),self.front_mesh)
 
     def height(self):
 

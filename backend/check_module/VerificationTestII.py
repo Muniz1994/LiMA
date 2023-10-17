@@ -7,6 +7,77 @@ from model.PermitModel import *
 # Start timer
 start_time = time.time()
 
+def add_check(object, attribute_or_method, comparison, compared_value):
+    # Ensure that the comparison parameter is one of "=, >, >=, <, <="
+    if comparison not in {'=', '>', '>=', '<', '<='}:
+        raise ValueError("Invalid comparison operator")
+
+    try:
+        # Split the attribute_or_method into attribute and potential '__len__'
+        property = attribute_or_method.rsplit(".")
+        
+        if len(property) > 1:
+            attr, attr2 = property
+        else:
+            attr = property[0]
+        
+        # Get the attribute or method value from the object
+        value = getattr(object, attr)
+
+        # If it's a callable (method), call it to get the value
+        if callable(value):
+            value = value()
+
+        # Handle the special case of comparing the length
+        if attribute_or_method.endswith('.__len__'):
+            length = len(value)
+            value = length
+        else:
+            length = None
+
+        # Perform the specified comparison
+        if comparison == '=':
+            result = value == compared_value
+        elif comparison == '>':
+            result = value > compared_value
+        elif comparison == '>=':
+            result = value >= compared_value
+        elif comparison == '<':
+            result = value < compared_value
+        elif comparison == '<=':
+            result = value <= compared_value
+            
+        if hasattr(object,'GlobalId'):
+            
+            if object.is_a('IfcSpatialStructureElement'):
+                
+                name = object.LongName
+                
+            else:
+                name= object.Name
+            
+            result_dict ={
+                "result":result,
+                "object_id": object.GlobalId,
+                "object_name": name,
+                "value":round(value,1)
+            }
+            
+        else:
+            
+            result_dict ={
+                "result":result,
+                "object_name": object.Name,
+                "value":round(value,1)
+            }
+            
+        
+        print(result_dict)
+        
+        return result_dict
+    except AttributeError:
+        raise AttributeError(f"'{object.__class__.__name__}' object has no attribute '{attribute_or_method}'")
+
 class Report:
     
     def __init__(self) -> None:
@@ -90,17 +161,17 @@ for parcel in my_permit.parcels:
             
             for stair in building.stairs:
                 
-                print(stair.treadLength >= 0.25)
+                add_check(stair, 'treadLength', '>=', 0.25)
                 
-                print(stair.riserHeight >= 0.193)
+                add_check(stair, 'riserHeight', '>=', 0.193)
                 
         if building.category == "habitação coletiva" and building.buildingStoreys.__len__() >= 3 and building.buildingStoreys.__len__() <= 5 and building.elevators == None:
             
             for stair in building.stairs:
                 
-                print(stair.treadLength >= 0.28)
+                add_check(stair, 'treadLength', '>=', 0.28)
                 
-                print(stair.riserHeight >= 0.175)
+                add_check(stair, 'riserHeight', '>=', 0.175)
 
 # ------------------------------------------------------------------------------
 # RGEU, Artigo 65.º 1 e 2 
@@ -114,13 +185,13 @@ for parcel in my_permit.parcels:
     for building in parcel.buildings:
         if building.category == "habitação coletiva" or building.category == "moradia unifamiliar":
             
-            print(building.floor_to_floor_height() >= 2.7)
+            add_check(building, 'floor_to_floor_height', '>=', 2.7)
             
             for storey in building.buildingStoreys:
                 
                 for space in storey.spaces:
                 
-                    print(space.ceilingHeight()  >= 2.4)
+                    add_check(space, 'ceilingHeight', '>=', 2.4)
                     
         if building.category == "habitação coletiva" or building.category == "moradia unifamiliar":
             
@@ -130,7 +201,7 @@ for parcel in my_permit.parcels:
           
                     if space.objectClass in ["SL_40_65_94","SL_90_10_36","SL_35_80","SL_90_50_46","SL_90_50_39"]:
                 
-                        print(space.ceilingHeight() >= 2.4)
+                        add_check(space, 'ceilingHeight', '>=', 2.2)
                         
 # ------------------------------------------------------------------------------
 # RGEU, Artigo 66.º 1 
@@ -145,11 +216,11 @@ for parcel in my_permit.parcels:
             
             if dwelling.num_of_bedrooms() == 0:
                 
-                print(dwelling.relatedSpaces.__len__() >= 2) 
+                add_check(dwelling, 'relatedSpaces.__len__', '>=', 2) 
 
-                print(dwelling.num_of_living_rooms() >= 1)
+                add_check(dwelling, 'num_of_living_rooms', '>=', 1)
                 
-                print(dwelling.num_of_kitchens() >= 1)
+                add_check(dwelling, 'num_of_kitchens', '>=', 1)
 
 # -------------------------------------------------------------------           
 # RGEU, Artigo 67.º 1 
@@ -162,35 +233,35 @@ for parcel in my_permit.parcels:
              
             if dwelling.num_of_bedrooms() == 0:
                 
-                print(dwelling.gross_area() >= 35)
+                add_check(dwelling, 'gross_area', '>=', 35)
           
             if dwelling.num_of_bedrooms() == 1:
                     
-                print(dwelling.gross_area() >= 52)
+                add_check(dwelling, 'gross_area', '>=', 52)
                 
             if dwelling.num_of_bedrooms() == 2:
                 
-                print(dwelling.gross_area() >= 72)
+                add_check(dwelling, 'gross_area', '>=', 72)
                 
             if dwelling.num_of_bedrooms() == 3:
                 
-                print(dwelling.gross_area() >= 91)
+                add_check(dwelling, 'gross_area', '>=', 91)
                 
             if dwelling.num_of_bedrooms() == 4:
                 
-                print(dwelling.gross_area() >= 105)
+                add_check(dwelling, 'gross_area', '>=', 105)
                 
             if dwelling.num_of_bedrooms() == 5:
                 
-                print(dwelling.gross_area() >= 122)
+                add_check(dwelling, 'gross_area', '>=', 122)
                 
             if dwelling.num_of_bedrooms() == 6:
                 
-                print(dwelling.gross_area() >= 134)
+                add_check(dwelling, 'gross_area', '>=', 134)
                 
             if dwelling.num_of_bedrooms() > 6:
                 
-                print((dwelling.habitable_area() * 1.6) >= 134)
+                add_check(dwelling, 'habitable_area', '>=', 83.75)
 
 # -------------------------------------------------------------------           
 # PDM de Vila Nova de Gaia, Artigo 24.º 1 a) 
@@ -205,9 +276,9 @@ for parcel in my_permit.parcels:
         
         if set(["exploração agrícola", "exploração pecuária", "exploração florestal"]) & set(building.uses):
             
-            print(building.buildingStoreys.__len__() <= 6.5)
+            add_check(building, 'buildingStoreys.__len__', '<=', 6.5)
             
-            print(building.height() <= 2)
+            add_check(building, 'height', '<=', 2)
 
 # ------------------------------------------------------------------- 
 # PDM de Vila Nova de Gaia, Artigo 42.º 1 
@@ -217,7 +288,7 @@ for parcel in my_permit.parcels:
 
 for parcel in my_permit.parcels:
 
-    print(parcel.building_implantation_range() <= 35)
+    add_check(parcel, 'building_implantation_range', '<=', 35)
 
     
 # ------------------------------------------------------------------- 
@@ -235,13 +306,13 @@ for parcel in my_permit.parcels:
         
         if parcel.area() < 150:
             
-            print(parcel.buildabilityIndex() <=  1)
+            add_check(parcel, 'buildabilityIndex', '<=', 1)
                 
         if parcel.area() >= 150:
             
-            print(parcel.buildabilityIndex() <= 0.7)
+            add_check(parcel, 'buildabilityIndex', '<=', 0.7)
                 
-            print(parcel.grossFloorArea() >= 150)
+            add_check(parcel, 'grossFloorArea', '>=', 150)
             
 # -------------------------------------------------------------------          
 # RPDML Artigo 43.º 1 
@@ -254,9 +325,9 @@ for parcel in my_permit.parcels:
             
         if building.category in ["estabelecimento hoteleiro", "equipamento coletivo"]:
             
-            print(building.depth(parcel.frontStreet) <= 18)   
+            add_check(building, 'depth', '<=', 18)   
         else:
-            print(building.depth(parcel.frontStreet) <= 15)
+            add_check(building, 'depth', '<=', 15)
             
 # End timer
 end_time = time.time()
