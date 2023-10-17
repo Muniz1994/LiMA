@@ -141,40 +141,15 @@ for parcel in my_permit.parcels:
 
             
         for dwelling in building.dwellings:
+        
             
-            num_of_bedrooms = 0
-            
-            for space in dwelling.relatedSpaces:
+            if dwelling.num_of_bedrooms() == 0:
                 
-                if space.objectClass in [room_types["quartoCasal"],room_types["quartoSimples"],room_types["quartoDuplo"]]:
-                    
-                    num_of_bedrooms +=1
-            
-            if num_of_bedrooms == 0:
-                
-                print(dwelling.relatedSpaces.__len__() >= 2)
-                
-                num_sala = 0
-                num_cozinha = 0    
-                
-                for space in dwelling.relatedSpaces:
-                    
-                    
-                    if space.objectClass == room_types["sala"]:
-                        
-                        print(space.area() >= 10)
-                        
-                        num_sala += 1
-                        
-                    if space.objectClass == room_types["cozinha"]:
-                        
-                        print(space.area() >= 6)
-                        
-                        num_cozinha += 1
+                print(dwelling.relatedSpaces.__len__() >= 2) 
 
-                print(num_sala >= 1)
+                print(dwelling.num_of_living_rooms() >= 1)
                 
-                print(num_cozinha >= 1)
+                print(dwelling.num_of_kitchens() >= 1)
 
 # -------------------------------------------------------------------           
 # RGEU, Artigo 67.º 1 
@@ -184,44 +159,36 @@ for parcel in my_permit.parcels:
     for building in parcel.buildings:
 
         for dwelling in building.dwellings:
-            
-            num_of_bedrooms = 0
-            
-            for space in dwelling.relatedSpaces:
-                
-                if space.objectClass in [room_types["quartoCasal"],room_types["quartoSimples"],room_types["quartoDuplo"]]:
-                    
-                    num_of_bedrooms +=1 
              
-            if num_of_bedrooms == 0:
+            if dwelling.num_of_bedrooms() == 0:
                 
                 print(dwelling.gross_area() >= 35)
           
-            if num_of_bedrooms == 1:
+            if dwelling.num_of_bedrooms() == 1:
                     
                 print(dwelling.gross_area() >= 52)
                 
-            if num_of_bedrooms == 2:
+            if dwelling.num_of_bedrooms() == 2:
                 
                 print(dwelling.gross_area() >= 72)
                 
-            if num_of_bedrooms == 3:
+            if dwelling.num_of_bedrooms() == 3:
                 
                 print(dwelling.gross_area() >= 91)
                 
-            if num_of_bedrooms == 4:
+            if dwelling.num_of_bedrooms() == 4:
                 
                 print(dwelling.gross_area() >= 105)
                 
-            if num_of_bedrooms == 5:
+            if dwelling.num_of_bedrooms() == 5:
                 
                 print(dwelling.gross_area() >= 122)
                 
-            if num_of_bedrooms == 6:
+            if dwelling.num_of_bedrooms() == 6:
                 
                 print(dwelling.gross_area() >= 134)
                 
-            if num_of_bedrooms > 6:
+            if dwelling.num_of_bedrooms() > 6:
                 
                 print((dwelling.habitable_area() * 1.6) >= 134)
 

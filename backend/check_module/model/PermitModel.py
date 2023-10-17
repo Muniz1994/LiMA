@@ -103,6 +103,25 @@ class Dwelling(PermitObject):
         
         return sum([space.area() for space in habitable_spaces])
     
+    def num_of_bedrooms(self):
+        
+       return self.num_of_room_per_class([room_types["quartoCasal"],room_types["quartoSimples"],room_types["quartoDuplo"]])
+    
+    def num_of_kitchens(self):
+        return self.num_of_room_per_class([room_types["cozinha"]])
+    def num_of_living_rooms(self):
+        return self.num_of_room_per_class([room_types["sala"]])
+    def num_of_room_per_class(self, list_of_classes):
+        num_of_rooms = 0
+        for space in self.relatedSpaces:
+                
+                if space.objectClass in list_of_classes:
+                    
+                    num_of_rooms +=1
+                    
+        return num_of_rooms
+        
+    
          
             
 @dataclass
