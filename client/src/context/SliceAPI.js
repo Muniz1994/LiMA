@@ -77,7 +77,10 @@ export const apiSlice = createApi({
             invalidatesTags: ['Verifications']
         }),
         getVerification: builder.query({
-            query: projectID => `verifications/${projectID}`
+            query: verificationID => `verifications/${verificationID}/`
+        }),
+        executeVerification: builder.query({
+            query: verificationID => `executeverification/${verificationID}/`
         }),
     })
 })
@@ -90,5 +93,6 @@ export const {
     useDeleteRegMutation,
     useVerificationsQuery,
     useGetVerificationQuery,
+    useExecuteVerificationQuery,
     useAddNewVerificationMutation, } = apiSlice
 

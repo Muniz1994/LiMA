@@ -100,6 +100,10 @@ body {
   font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
+.accordion-body {
+  padding: 0px;
+}
+
 //-------------------------------------------------------------------------------------------------
 // Viewer
 
@@ -419,6 +423,11 @@ $color in (default, #777),
 
   height: 100%;
   overflow: hidden;
+}
+
+.verification-list {
+  max-height: 400px;
+  overflow-y: scroll;
 }
 
 
@@ -931,7 +940,7 @@ $color in (default, #777),
   color: #99A4AD;
 }
 
-.xeokit-modelsTab {}
+
 
 .xeokit-modelsTab .xeokit-form-check {
   padding: 2px 0 2px 15px;
@@ -1402,7 +1411,7 @@ $color in (default, #777),
   pointer-events: none;
 }
 
-.xeokit-section {}
+
 
 .xeokit-section-counter {
   opacity: 1.0;

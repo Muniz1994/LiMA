@@ -26,11 +26,11 @@ import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
 import { Container } from 'react-bootstrap';
 import { ViewerIFCJS } from '../components/ModelViewer/ViewerJs';
-import { MDBListGroup, MDBListGroupItem, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBDropdownItem, MDBBtn, MDBSpinner } from 'mdb-react-ui-kit';
+import { MDBListGroup, MDBListGroupItem, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBBadge, MDBDropdownItem, MDBBtn, MDBSpinner, MDBAccordion, MDBAccordionItem, MDBIcon } from 'mdb-react-ui-kit';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { useVerificationsQuery } from '../context/SliceAPI';
+import { useExecuteVerificationQuery, useVerificationsQuery } from '../context/SliceAPI';
 
 library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark);
 
@@ -45,12 +45,23 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
     );
 }
 
+const getCheckResult = () => {
+
+
+}
+
 
 const Verifications = () => {
 
     const { data: verifications_list, error, isLoading } = useVerificationsQuery()
+
     const viewer = useSelector((state) => state.viewer.value);
     const dispatch = useDispatch();
+
+    const [activeVerificationId, setActiveVerificationId] = useState(null)
+    const [executeVerificationId, setExecuteVerificationId] = useState(null)
+
+    const { data: report, error: checkError, isLoading: isChecking } = useExecuteVerificationQuery(executeVerificationId)
 
     // Page loading state
     const [loading, setLoading] = useState(true);
@@ -103,11 +114,13 @@ const Verifications = () => {
         </div>
     )
 
-    const VerificationButton = ({ onSubmit, loading = false, disabled }) => {
+    const VerificationButton = ({ verificationId }) => {
         return (
-            <button className="submit-btn mx-2" onClick={onSubmit} disabled={disabled}>
-                {!loading ? <FontAwesomeIcon icon="fa-play" /> : <Loader className="spinner" />}
-            </button>
+            <>{!isChecking ? <MDBBtn color='dark' className="my-2" onClick={() => setExecuteVerificationId(verificationId)} outline><Stack direction='horizontal'><>Executar verificação</><MDBIcon className='px-2' fas size='lg' icon="play" /></Stack></MDBBtn> :
+                <><MDBBtn color='dark' className="" onClick={() => setExecuteVerificationId(verificationId)} outline><Stack direction='horizontal'><>Executar verificação</><MDBIcon className='px-2' fas size='lg' icon="play" /></Stack></MDBBtn><MDBSpinner grow></MDBSpinner></>}</>
+
+
+
         )
     }
 
@@ -147,6 +160,10 @@ const Verifications = () => {
         console.log(xktFile);
     }, [xktFile])
 
+    useEffect(() => {
+
+    })
+
     return (
         <>
             {loading === false && (
@@ -175,14 +192,14 @@ const Verifications = () => {
                                         <h6 className='bg-light p-2 border-top border-bottom'>Selecione verificação:</h6>
                                         <Stack
                                             direction='horizontal'
-                                            className='d-flex'>
+                                            className='d-flex my-2'>
                                             <MDBDropdown group>
                                                 <MDBBtn outline color='dark'>Verificações</MDBBtn>
                                                 <MDBDropdownToggle split color='dark'>
                                                 </MDBDropdownToggle>
                                                 <MDBDropdownMenu>
 
-                                                    {isLoading ? <MDBSpinner></MDBSpinner> : verifications_list.map(ver =>
+                                                    {isLoading ? <></> : verifications_list.map(ver =>
                                                         <RegulationDropdownItem
                                                             id={ver.id}
                                                             regulation={ver.id}
@@ -190,6 +207,7 @@ const Verifications = () => {
                                                                 if (viewer && ver.xkt_file) {
                                                                     dispatch({ type: 'CLEAN_MODEL', object: viewer })
                                                                     dispatch({ type: 'LOAD_MODEL', object: viewer, value: ver.xkt_file })
+                                                                    setActiveVerificationId(ver.id)
                                                                 }
                                                             }} />)}
                                                 </MDBDropdownMenu>
@@ -205,70 +223,97 @@ const Verifications = () => {
                                                 </Stack>
                                             </Button>
                                         </Stack>
+
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Informações de verificação:</h6>
+                                        {isLoading ?
+                                            <p>a carregar...</p> :
+                                            <>
+                                                {verifications_list.map(ver =>
+                                                    ver.id === activeVerificationId ?
+                                                        <>
+                                                            <h6>Id de verificação:</h6>
+                                                            <p className='m-0'>{ver.id}</p>
+                                                            <h6>Data de criação:</h6>
+                                                            <p className='m-0'>{ver.time_executed}</p>
+                                                            <h6>Ficheiro IFC:</h6>
+                                                            <p className='m-0'>{ver.ifc_file}</p>
+                                                            <VerificationButton verificationId={ver.id} />
+
+                                                        </>
+                                                        :
+                                                        <></>
+
+                                                )}
+                                            </>
+                                        }
+
                                     </Col>
                                 </Row>
                                 {/* Regulation choose end */}
 
                                 {/* Clause list start */}
-                                <Row className='d-none d-xl-inline'>
+                                <Row className='d-none d-xl-inline m-0'>
                                     <Col>
-                                        <Row className='d-flex'>
-                                            {/* Show the active regulation name */}
-                                            {activeRegulation.name !== '' &&
-                                                <>
-                                                    <h6 className='bg-light p-2 border-top border-bottom'>{activeRegulation.name}
-                                                    </h6>
-                                                    <Stack direction='horizontal'>
 
-                                                        <h6 className='ms-auto'>
-                                                            Run compliance check
-                                                            <VerificationButton
-                                                                text="Submit"
-                                                                onSubmit={onRunVerification}
-                                                                loading={showLoader}
-                                                                disabled={showLoader}
-                                                            />
-                                                        </h6>
-
-                                                    </Stack>
-
-                                                </>
-                                            }
-                                        </Row>
                                         <Row >
-                                            <Col className='border-bottom border-top'>
-                                                <MDBListGroup
-                                                    className='h-100 overflow-scroll clause-list-size'
-                                                    style={{ borderRadius: 0 }}>
+                                            <h6 className='bg-light p-2 border-top border-bottom'>Relatório de verificação:
+                                            </h6>
+                                            <Col className='verification-list '>
 
-                                                    {regulations_list.map(reg =>
-                                                        <>
-                                                            {reg.name === activeRegulation.name && reg.rules.map(rule =>
 
-                                                                <MDBListGroupItem
-                                                                    tag='button'
-                                                                    action noBorders type='button' className='px-3'
-                                                                    id={rule.id}
-                                                                    onClick={() => {
-                                                                        setActiveClause({ id: rule.id, name: rule.name, text: rule.text, blocks: rule.blocks })
-                                                                        setHighlightedElements(rule.result);
-                                                                    }}>
-                                                                    <div className="ms-2 me-auto d-flex">
-                                                                        <Stack direction='horizontal' gap={2} >
-                                                                            <FontAwesomeIcon icon="fa-section" />
-                                                                            <div className="fw-bold">{rule.external_reference}</div>
-                                                                            <FontAwesomeIcon className='me-auto' icon="fa-circle-info" />
-                                                                        </Stack>
-                                                                    </div>
-                                                                    {showVerification ? (rule.result[0].result === false ?
-                                                                        <FontAwesomeIcon className='text-danger' icon="fa-circle-xmark" />
-                                                                        :
-                                                                        <FontAwesomeIcon className='text-success' icon="fa-circle-check" />) : ''}
-                                                                </MDBListGroupItem>)}
-                                                        </>
-                                                    )}
 
-                                                </MDBListGroup>
+                                                <MDBAccordion flush className='px-0'>
+
+                                                    {isChecking ?
+                                                        <></> :
+                                                        report ?
+                                                            report.map(ver =>
+                                                                <>
+                                                                    <MDBAccordionItem className='px-0' collapseId={ver.id} headerTitle={ver.reference}>
+
+                                                                        <MDBListGroup>
+
+                                                                            {ver.checks.map(check =>
+
+                                                                                <MDBListGroupItem
+                                                                                    key={check.object_id}
+                                                                                    tag='button'
+                                                                                    type='button'
+                                                                                    noBorders
+                                                                                    action
+                                                                                    className='px-1'
+                                                                                    onClick={() => dispatch({ type: 'HIGHLIGHT_ELEMENTS', object: viewer, value: [check.object_id, check.result] })}
+                                                                                    light>
+                                                                                    <div className='me-auto text-start'>
+                                                                                        <p className='m-0'><small><b>Id do objecto:</b> {check.object_id}</small></p>
+                                                                                        <p className='m-0'><small><b>Nome do objecto:</b> {check.object_name}</small></p>
+                                                                                        <p className='m-0'><small><b>Valor de verificação:</b> {check.value}</small></p>
+                                                                                        {check.result ?
+                                                                                            <MDBBadge color='success' light>
+                                                                                                aprovado!
+                                                                                            </MDBBadge>
+                                                                                            :
+                                                                                            <MDBBadge color='danger' light>
+                                                                                                reprovado
+                                                                                            </MDBBadge>}
+
+                                                                                    </div>
+
+
+                                                                                </MDBListGroupItem>)}
+
+
+                                                                        </MDBListGroup>
+
+                                                                    </MDBAccordionItem>
+                                                                </>
+                                                            ) :
+                                                            <></>
+
+                                                    }
+
+                                                </MDBAccordion>
+
                                             </Col>
                                         </Row>
                                     </Col>

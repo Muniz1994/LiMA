@@ -27,6 +27,11 @@ const myMiddleware = store => next => action => {
             var viewer = action.object;
             viewer.navCube.destroy();
             break;
+        case 'HIGHLIGHT_ELEMENTS':
+            var viewer = action.object;
+            var id = action.value
+            viewer.highlightElements(id);
+            break;
 
     }
     return next(action);
