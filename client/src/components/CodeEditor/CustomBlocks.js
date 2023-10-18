@@ -61,7 +61,7 @@ pythonGenerator['bl_dwelling'] = function (block) {
     var statements_props = pythonGenerator.statementToCode(block, 'PROPS');
 
     if (statements_props) {
-        var code = `for dwelling in building.dwellings:\n  \n  ${statements_props}\n`;
+        var code = `for dwelling in building.dwellings:\n${statements_props}\n`;
     }
     else {
         var code = `for dwelling in building.dwellings:\n  \n  pass\n`;
@@ -152,7 +152,36 @@ pythonGenerator['bl_stair'] = function (block) {
     return code;
 };
 
+pythonGenerator['bl_compart'] = function (block) {
+    var field_name = block.getFieldValue('NAME');
+    var statements_props = pythonGenerator.statementToCode(block, 'PROPS');
+
+    if (statements_props) {
+        var code = `for space in dwelling.relatedSpaces:\n${statements_props}\n`;
+    }
+    else {
+        var code = `for space in dwelling.relatedSpaces:\n  pass\n`;
+    }
+    return code;
+};
+
 pythonGenerator['pr_space_cat'] = function (block) {
+    var dropdown_property = block.getFieldValue('PROPERTY');
+
+    var obj = 'space.';
+
+    switch (dropdown_property) {
+
+        case 'CLASSE':
+            var property = obj + 'objectClass';
+            break;
+    }
+
+    var code = property;
+    return [code, pythonGenerator.ORDER_MEMBER];
+};
+
+pythonGenerator['pr_compart_cat'] = function (block) {
     var dropdown_property = block.getFieldValue('PROPERTY');
 
     var obj = 'space.';
@@ -206,6 +235,25 @@ pythonGenerator['pr_space_num'] = function (block) {
     var code = property;
     return [code, pythonGenerator.ORDER_MEMBER];
 };
+pythonGenerator['pr_compart_num'] = function (block) {
+    var dropdown_property = block.getFieldValue('PROPERTY');
+
+    var obj = 'space.';
+
+    switch (dropdown_property) {
+
+        case 'AREA':
+            var property = obj + 'area()';
+            break;
+        case 'CEILINGHEIGHT':
+            var property = obj + 'ceilingHeight()';
+            break;
+
+    }
+
+    var code = property;
+    return [code, pythonGenerator.ORDER_MEMBER];
+};
 
 pythonGenerator['pr_dwelling_num'] = function (block) {
     var dropdown_property = block.getFieldValue('PROPERTY');
@@ -218,6 +266,15 @@ pythonGenerator['pr_dwelling_num'] = function (block) {
             break;
         case 'HABITABLEAREA':
             var property = obj + 'habitable_area()';
+            break;
+        case 'BEDROOMNUMBER':
+            var property = obj + 'num_of_bedrooms()';
+            break;
+        case 'KITCHENNUMBER':
+            var property = obj + 'num_of_kitchens()';
+            break;
+        case 'LIVINGROOMNUMBER':
+            var property = obj + 'num_of_living_rooms()';
             break;
 
     }
@@ -332,6 +389,55 @@ pythonGenerator['class_selector'] = function (block) {
     var code = `"${dropdown_property}"`;
     return [code, pythonGenerator.ORDER_MEMBER];
 };
+
+pythonGenerator['value_len'] = function (block) {
+    var value_value = pythonGenerator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_NONE);
+    var code = `${value_value}.__len__()`;
+    return [code, pythonGenerator.ORDER_MEMBER];
+};
+
+pythonGenerator['ch_parcel_buildings'] = function (block) {
+    var code = 'parcel.buildings';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_parcel_front_street'] = function (block) {
+    var code = 'parcel.frontStreet';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_building_buildingStoreys'] = function (block) {
+    var code = 'building.buildingStoreys';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_building_elevators'] = function (block) {
+    var code = 'building.elevators';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_building_stairs'] = function (block) {
+    var code = 'building.stairs';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_building_spaces'] = function (block) {
+    var code = 'building.spaces';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_building_dwellings'] = function (block) {
+    var code = 'building.dwellings';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+pythonGenerator['ch_dwelling_spaces'] = function (block) {
+    var code = 'dwelling.relatedSpaces';
+    return [code, pythonGenerator.ORDER_NONE];
+};
+
+
+
 
 
 

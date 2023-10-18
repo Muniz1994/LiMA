@@ -13,7 +13,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/logistics-shipping-delivery/cube-line-icon.png",
+            "src": "assets/cube-line-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -49,7 +49,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/buildings-architecture-real-estate/homeowner-icon.svg",
+            "src": "assets/homeowner-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -85,7 +85,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/layer-icon.png",
+            "src": "assets/layer-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -122,7 +122,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/buildings-architecture-real-estate/building-icon.png",
+            "src": "assets/building-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -164,7 +164,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/transportation-automotive/road-icon.png",
+            "src": "assets/road-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -200,7 +200,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/location-travel-map/address-location-icon.png",
+            "src": "assets/address-location-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -240,7 +240,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/buildings-architecture-real-estate/lift-elevator-icon.png",
+            "src": "assets/lift-elevator-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -278,7 +278,7 @@ export const customBlocksDefinition = [{
         },
         {
             "type": "field_image",
-            "src": "https://uxwing.com/wp-content/themes/uxwing/download/household-and-furniture/stairs-icon.png",
+            "src": "assets/stairs-icon.svg",
             "width": 40,
             "height": 50,
             "alt": "*",
@@ -395,6 +395,18 @@ export const customBlocksDefinition = [{
                 [
                     "Área habitável",
                     "HABITABLEAREA"
+                ],
+                [
+                    "Número de quartos",
+                    "BEDROOMNUMBER"
+                ],
+                [
+                    "Número de cozinhas",
+                    "KITCHENNUMBER"
+                ],
+                [
+                    "Número de salas",
+                    "LIVINGROOMNUMBER"
                 ]
             ]
         }
@@ -482,7 +494,7 @@ export const customBlocksDefinition = [{
         }
     ],
     "output": "String",
-    "colour": "#33B4E0",
+    "colour": "#ded77c",
     "tooltip": "",
     "helpUrl": ""
 },
@@ -855,6 +867,257 @@ export const customBlocksDefinition = [{
     'tooltip': '%{BKY_LISTS_CREATE_EMPTY_TOOLTIP}',
     'helpUrl': '%{BKY_LISTS_CREATE_EMPTY_HELPURL}',
 },
+{
+    "type": "value_len",
+    "message0": "Número de %1",
+    "args0": [
+        {
+            "type": "input_value",
+            "name": "VALUE"
+        }
+    ],
+    "colour": "#ded77c",
+    "inputsInline": true,
+    "output": null,
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_parcel_buildings",
+    "message0": "%1 Edifícios da parcela",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#174959",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_parcel_front_street",
+    "message0": "%1 Arruamentos da parcela",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#174959",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_building_buildingStoreys",
+    "message0": "%1 Pavimentos do edifício",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#21687f",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_building_elevators",
+    "message0": "%1 Elevadores do edifício",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#21687f",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_building_stairs",
+    "message0": "%1 Escadas do edifício",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#21687f",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_building_spaces",
+    "message0": "%1 Espaços do edifício",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#21687f",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_building_dwellings",
+    "message0": "%1 Fogos do edifício",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#21687f",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "ch_dwelling_spaces",
+    "message0": "%1 Compartimentos do fogo",
+    "args0": [
+        {
+            "type": "field_image",
+            "src": "assets/slideshow-icon.svg",
+            "width": 15,
+            "height": 15,
+            "alt": "*",
+            "flipRtl": false
+        }
+    ],
+    "output": null,
+    "colour": "#2c89a8",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "bl_compart",
+    "message0": "%1 %2 %3 %4 %5",
+    "args0": [
+        {
+            "type": "field_label_serializable",
+            "name": "NAME",
+            "text": "Compartimento"
+        },
+        {
+            "type": "input_dummy",
+            "align": "CENTRE"
+        },
+        {
+            "type": "field_image",
+            "src": "assets/cube-line-icon.svg",
+            "width": 40,
+            "height": 50,
+            "alt": "*",
+            "flipRtl": false
+        },
+        {
+            "type": "input_dummy",
+            "align": "CENTRE"
+        },
+        {
+            "type": "input_statement",
+            "name": "PROPS",
+            "align": "RIGHT"
+        }
+    ],
+    "previousStatement": "SPACE",
+    "colour": "#2c89a8",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "pr_compart_cat",
+    "message0": "%1do compartimento",
+    "args0": [
+        {
+            "type": "field_dropdown",
+            "name": "PROPERTY",
+            "options": [
+                [
+                    "Classe",
+                    "CLASSE"
+                ],
+                [
+                    "Area",
+                    "AREA"
+                ],
+                [
+                    "Pé Direito",
+                    "CEILINGHEIGHT"
+                ]
+            ]
+        }
+    ],
+    "inputsInline": true,
+    "output": null,
+    "colour": "#2c89a8",
+    "tooltip": "",
+    "helpUrl": ""
+},
+{
+    "type": "pr_compart_num",
+    "message0": "%1do compartimento",
+    "args0": [
+        {
+            "type": "field_dropdown",
+            "name": "PROPERTY",
+            "options": [
+                [
+                    "Area",
+                    "AREA"
+                ],
+                [
+                    "Pé Direito",
+                    "CEILINGHEIGHT"
+                ]
+            ]
+        },
+
+    ],
+    "inputsInline": true,
+    "output": null,
+    "colour": "#2c89a8",
+    "tooltip": "",
+    "helpUrl": ""
+},
+
 
 
 ]

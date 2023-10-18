@@ -21,11 +21,19 @@ export var toolbox = {
                             "kind": "block",
                             "type": "pr_parcel_num"
                         },
+                        {
+                            "kind": "block",
+                            "type": "ch_parcel_buildings"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_parcel_front_street"
+                        },
                     ]
                 },
                 {
                     "kind": "category",
-                    "name": "ViaPublica",
+                    "name": "Via Pública",
                     "colour": "#21687f",
                     "contents": [
                         {
@@ -36,7 +44,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Edificio",
+                    "name": "Edifício",
                     "colour": "#21687f",
                     "contents": [
                         {
@@ -54,6 +62,26 @@ export var toolbox = {
                         {
                             "kind": "block",
                             "type": "pr_building_bool"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_building_buildingStoreys"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_building_elevators"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_building_stairs"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_building_spaces"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "ch_building_dwellings"
                         },
                     ]
                 },
@@ -113,10 +141,6 @@ export var toolbox = {
                             "kind": "block",
                             "type": "pr_space_num"
                         },
-                        {
-                            "kind": "block",
-                            "type": "class_selector"
-                        },
                     ]
                 },
                 {
@@ -132,9 +156,28 @@ export var toolbox = {
                             "kind": "block",
                             "type": "pr_dwelling_num"
                         },
+                        {
+                            "kind": "block",
+                            "type": "ch_dwelling_spaces"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "bl_compart"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "pr_compart_cat"
+                        },
+                        {
+                            "kind": "block",
+                            "type": "pr_compart_num"
+                        },
                     ]
                 },
             ]
+        },
+        {
+            "kind": "sep"
         },
         {
             "kind": "category",
@@ -181,7 +224,11 @@ export var toolbox = {
                 },
                 {
                     "kind": "block",
-                    "type": "lists_length"
+                    "type": "value_len"
+                },
+                {
+                    "kind": "block",
+                    "type": "class_selector"
                 },
                 {
                     "kind": "block",
