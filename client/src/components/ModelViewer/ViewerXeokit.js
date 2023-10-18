@@ -4,7 +4,7 @@ import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, Mesh, PhongMater
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup } from '@fortawesome/free-solid-svg-icons'
+import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup, faHeartPulse } from '@fortawesome/free-solid-svg-icons'
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import { setViewer, cleanViewer } from '../../context/viewerSlice';
 import { constants } from 'blockly';
@@ -45,6 +45,7 @@ class XeokitViewer {
         this.setupXktLoader();
         this.setupGrid();
         this.setupNavCube();
+        this.addContextMenu();
 
     }
 
@@ -64,16 +65,16 @@ class XeokitViewer {
         // Emphasis effects
 
         this.viewer.scene.xrayMaterial.fill = true;
-        this.viewer.scene.xrayMaterial.fillAlpha = 0.1;
+        this.viewer.scene.xrayMaterial.fillAlpha = 0.02;
         this.viewer.scene.xrayMaterial.fillColor = [0, 0, 0];
-        this.viewer.scene.xrayMaterial.edgeAlpha = 0.3;
+        this.viewer.scene.xrayMaterial.edgeAlpha = 0.02;
         this.viewer.scene.xrayMaterial.edgeColor = [0, 0, 0];
 
         this.viewer.scene.highlightMaterial.edges = true;
         this.viewer.scene.highlightMaterial.edgeColor = [1, 1, 0];
         this.viewer.scene.highlightMaterial.edgeAlpha = 0.9;
         this.viewer.scene.highlightMaterial.fill = true;
-        this.viewer.scene.highlightMaterial.fillAlpha = 0.1;
+        this.viewer.scene.highlightMaterial.fillAlpha = 0.9;
         this.viewer.scene.highlightMaterial.fillColor = [1, 0, 0];
 
         this.viewer.scene.pointsMaterial.pointSize = 1;
@@ -128,31 +129,56 @@ class XeokitViewer {
     setupContextMenu() {
 
         this.canvasContextMenu = new ContextMenu({
+
             enabled: true,
-            context: {
-                viewer: this.viewer
-            },
+
             items: [
                 [
                     {
-                        getTitle: (context) => {
-                            return this.distanceMeasurements.control.active ? "Deactivate Control" : "Activate Control";
+                        title: "Hide Object",
+                        getEnabled: (context) => {
+                            return context.entity.visible; // Can't hide entity if already hidden
                         },
                         doAction: function (context) {
-                            this.distanceMeasurements.control.active
-                                ? this.distanceMeasurements.control.deactivate()
-                                : this.distanceMeasurements.control.activate();
+                            context.entity.visible = false;
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "Select Object",
+                        getEnabled: (context) => {
+                            return (!context.entity.selected); // Can't select an entity that's already selected
+                        },
+                        doAction: function (context) {
+                            context.entity.selected = true;
+                        }
+                    }
+                ],
+                [
+                    {
+                        title: "X-Ray Object",
+                        getEnabled: (context) => {
+                            return (!context.entity.xrayed); // Can't X-ray an entity that's already X-rayed
+                        },
+                        doAction: (context) => {
+                            context.entity.xrayed = true;
                         }
                     }
                 ]
             ]
         });
 
+    }
+
+    addContextMenu() {
+
+        const menu = this.canvasContextMenu
+
         this.viewer.cameraControl.on("rightClick", function (e) {
-            this.canvasContextMenu.show(e.pagePos[0], e.pagePos[1]);
+            menu.show(e.pagePos[0], e.pagePos[1]);
             e.event.preventDefault();
         });
-
     }
 
     // Setup Nav Cube ----------------------------------------------------------------------------------------------
@@ -241,8 +267,29 @@ class XeokitViewer {
         this.distanceMeasurements.destroy();
     }
 
-    highlightElements() {
-        this.viewer.scene.setObjectsHighlighted(['2VqlKGzpbEYfMhQ83V14NK'], true);
+    highlightElements([id, result]) {
+
+
+        this.viewer.scene.setObjectsVisible(this.viewer.metaScene.getObjectIDsByType("IfcSpace"), false)
+        this.viewer.scene.setObjectsOpacity(this.viewer.metaScene.getObjectIDsByType("IfcSpace"), 0.1)
+        this.viewer.scene.setObjectsHighlighted(this.viewer.scene.visibleObjectIds, false);
+        this.viewer.scene.setObjectsXRayed(this.viewer.scene.visibleObjectIds, true)
+        this.viewer.scene.setObjectsXRayed([id], false);
+        this.viewer.scene.setObjectsOpacity([id], 0.9)
+        this.viewer.scene.setObjectsVisible([id], true);
+
+        if (result === true) {
+            this.viewer.scene.setObjectsColorized([id], [0.23, 0.53, 0.35]);
+        }
+        else {
+            this.viewer.scene.setObjectsColorized([id], [0.77, 0.35, 0.42]);
+
+        }
+
+    }
+
+    xRayOff() {
+        this.viewer.scene.setObjectsXRayed(this.viewer.scene.visibleObjectIds, false)
     }
 
     toggleSpaces() {
@@ -275,6 +322,8 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
 
     const viewer = useSelector((state) => state.viewer.value);
     const dispatch = useDispatch()
+    const [viewerButton1, setViewerButton1] = useState(false)
+    const [viewerButton2, setViewerButton2] = useState(false)
 
 
     useEffect(() => {
@@ -305,12 +354,18 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
                 <canvas id='myCanvas' className='full-screen p-0'></canvas>
                 <canvas id="myNavCubeCanvas"></canvas>
                 <div id='viewer-tools'>
-                    <MDBBtn size='sm' color='dark' onClick={() => viewer.loadXkt()} className='viewer-tool-btn'><MDBIcon color='warning' fas size='lg' icon="bars" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' onClick={() => viewer.toggleMeasurements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="ruler" /></MDBBtn>
-                    <MDBBtn size='sm' color='warning' onClick={() => viewer.clearMeasurements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="recycle" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' onClick={() => viewer.highlightElements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="layer-group" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' onClick={() => viewer.toggleSpaces()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="cube" /></MDBBtn>
-                    <MDBBtn size='sm' color='dark' className='viewer-tool-btn'><MDBIcon fas size='lg' icon="save" /></MDBBtn>
+
+                    <MDBBtn size='sm' color={!viewerButton1 ? 'dark' : 'warning'} onClick={() => {
+                        viewer.toggleMeasurements()
+                        setViewerButton1(!viewerButton1)
+                    }} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="ruler" /></MDBBtn>
+                    <MDBBtn size='sm' color='dark' onClick={() => viewer.clearMeasurements()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="recycle" /></MDBBtn>
+                    <MDBBtn size='sm' color={!viewerButton2 ? 'dark' : 'warning'} onClick={() => {
+                        viewer.toggleSpaces()
+                        setViewerButton2(!viewerButton2)
+                    }
+                    } className='viewer-tool-btn'><MDBIcon fas size='lg' icon="cube" /></MDBBtn>
+                    <MDBBtn size='sm' color='dark' onClick={() => viewer.xRayOff()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="eye" /></MDBBtn>
                 </div>
             </div>
 
