@@ -130,7 +130,7 @@ class BuildingStorey(PermitObject):
     def __init__(self,data,model):
         super().__init__(data,model)
 
-        self.spaces: List[Space] = self.get_connection('IfcSpace',Space) 
+        self.spaces: List[Space] = self.get_connection('IfcSpace !(.ifcSpace[classification.Identification="SL_22_15"]|.ifcSpace[classification.Identification="SL_22_05"]|.ifcSpace[classification.Identification="SL_22_10"]|.ifcSpace[classification.Identification="SL_22_10_05"])',Space) 
         self.isAboveGround: Optional[bool] = self.get_property("Pset_BuildingStoreyCommon","AboveGround")
 
     
