@@ -32,7 +32,7 @@ class Verification(models.Model):
 
         check.check_regulation()
 
-        self.report = check.report
+        self.report = check.report.final_report
 
         self.save()
 

@@ -13,19 +13,132 @@ import random
 import ast
 import json
 
+class Report:
+    
+    def __init__(self) -> None:
+        
+        self.checks_executed = []
+        
+        self.num_checks_executed = 0
+        
+        self.final_report = []
+        
+        self.final_report_num = 0
+        
+        
+    def add_check(self,object, attribute_or_method, comparison, compared_value):
+        # Ensure that the comparison parameter is one of "=, >, >=, <, <="
+        if comparison not in {'=', '>', '>=', '<', '<='}:
+            raise ValueError("Invalid comparison operator")
+
+        try:
+            # Split the attribute_or_method into attribute and potential '__len__'
+            property = attribute_or_method.rsplit(".")
+            
+            if len(property) > 1:
+                attr, attr2 = property
+            else:
+                attr = property[0]
+            
+            # Get the attribute or method value from the object
+            value = getattr(object, attr)
+
+            # If it's a callable (method), call it to get the value
+            if callable(value):
+                value = value()
+
+            # Handle the special case of comparing the length
+            if attribute_or_method.endswith('.__len__'):
+                length = len(value)
+                value = length
+            else:
+                length = None
+
+            # Perform the specified comparison
+            if comparison == '=':
+                result = value == compared_value
+            elif comparison == '>':
+                result = value > compared_value
+            elif comparison == '>=':
+                result = value >= compared_value
+            elif comparison == '<':
+                result = value < compared_value
+            elif comparison == '<=':
+                result = value <= compared_value
+                
+            if hasattr(object,'GlobalId'):
+                
+                if object.is_a('IfcSpatialStructureElement'):
+                    
+                    name = object.LongName
+                    
+                else:
+                    name= object.Name
+                
+                result_dict ={
+                    "id":self.num_checks_executed + 1,
+                    "result":result,
+                    "object_id": object.GlobalId,
+                    "object_name": name,
+                    "value":round(value,1)
+                }
+                
+            else:
+                
+                result_dict ={
+                    "id":self.num_checks_executed + 1,
+                    "result":result,
+                    "object_name": object.Name,
+                    "value":round(value,1)
+                }
+                
+            
+            self.num_checks_executed +=1
+            
+            self.checks_executed.append(result_dict)
+        except AttributeError:
+            raise AttributeError(f"'{object.__class__.__name__}' object has no attribute '{attribute_or_method}'")
+
+        
+    def addRef(self, ref):
+        
+        self.final_report.append({"id": self.final_report_num +1 ,"reference":ref,"checks":self.checks_executed})
+        
+        self.final_report_num +=1
+        
+        self.checks_executed = []
+
+
 class ComplianceCheck:
     # Constructor
     def __init__(self, rule_set, building_path):
         
         self.rule_set = rule_set
-        self.report = []
+        self.report = Report()
+        self.results = []
         self.rule_verification_list = []
         self.permit_model = PermitModel(CheckModel(building_path))
+        
+        self.room_types = {
+    "vestibulo":"SL_40_65_94",
+    "corredor":"SL_90_10_36",
+    "instalacaoSanitaria":"SL_35_80",
+    "despensa":"SL_90_50_46",
+    "arrecadacao":"SL_90_50_39",
+    "sala":"SL_45_10_49",
+    "cozinha":"SL_45_10_23",
+    "quartoCasal":"SL_45_10_10",
+    "quartoDuplo":"SL_45_10_11",
+    "quartoSimples":"SL_45_10_07",
+    "varanda":"SL_45_10_06",
+}
+
 
         # Here is the namespace for the python code execution
         self.local_vars = {
-            "add_verification": self.add_verification,
-            "my_permit": self.permit_model,
+            "add_check": self.report.add_check,
+            "my_permit_model": self.permit_model,
+            "room_types": self.room_types
         }
 
     def check_regulation(self):
@@ -36,21 +149,10 @@ class ComplianceCheck:
 
             rule_report = model_to_dict(rule)
 
-            rule_report["result"] = self.exec_code(rule.code)
+            self.exec_code(rule.code)
             
-            self.report.append(rule_report)
-        # if self.regulation != None:
-        #     for zone in self.regulation["zones"]:
-        #         for rule in zone["rules"]:
-        #             self.exec_code(rule["code"])
-        #             self.report.append(
-        #                 {
-        #                     "legal_reference": rule["legal_reference"],
-        #                     "rule_name": rule["name"],
-        #                     "result": self.rule_verification_list,
-        #                 }
-        #             )
-        #             self.restart_verification_list()
+            self.report.addRef(rule.external_reference)
+    
 
     def exec_code(self, code):
         parsed_code = ast.parse(code)
@@ -66,8 +168,6 @@ class ComplianceCheck:
 
         return self.rule_verification_list
 
-    def add_verification(self, condition):
-        self.rule_verification_list.append(condition)
 
     def restart_verification_list(self):
         self.rule_verification_list = []

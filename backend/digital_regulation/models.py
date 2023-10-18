@@ -8,7 +8,7 @@ class Rule(models.Model):
     name = models.CharField(max_length=100)
     text = models.TextField(max_length=1000)
     external_reference = models.CharField(max_length=100)
-    code = models.TextField(max_length=1000, blank=True)
+    code = models.TextField(max_length=10000, blank=True)
     blocks = models.CharField(max_length=10000, blank=True)
     has_code = models.BooleanField(default=False)
 
