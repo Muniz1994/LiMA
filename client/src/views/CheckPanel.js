@@ -39,7 +39,7 @@ const ProjectUser = ({ userID }) => {
     )
 }
 
-const CheckHub = () => {
+const CheckPanel = () => {
 
     const [showNewVerficationModal, setShowNewVerificationModal] = useState(false);
     const [addIfcModal, setAddIfcModal] = useState(false);
@@ -139,4 +139,4 @@ const CheckHub = () => {
     );
 };
 
-export default CheckHub;
+export default CheckPanel;

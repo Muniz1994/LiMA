@@ -7,7 +7,7 @@ import Col from "react-bootstrap/esm/Col";
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { isblEditorLight } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { toolbox } from "./ToolBox3";
+import { toolbox } from "./ToolBox";
 
 const CodeBlock = ({ codeString }) => {
     return (

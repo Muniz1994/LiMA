@@ -51,7 +51,7 @@ const getCheckResult = () => {
 }
 
 
-const Verifications = () => {
+const Reports = () => {
 
     const { data: verifications_list, error, isLoading } = useVerificationsQuery()
 
@@ -336,4 +336,4 @@ const Verifications = () => {
     );
 };
 
-export default Verifications;
+export default Reports;

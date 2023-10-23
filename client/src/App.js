@@ -9,9 +9,9 @@ import Navigationbar from './components/Navbar'; // import navbar
 import Login from './views/auth/Login';
 import Signup from './views/auth/Signup';
 import Logout from './views/auth/Logout';
-import Verifications from './views/Verifications';
+import Reports from './views/Reports';
 import Regulations from './views/Regulations';
-import CheckHub from './views/CheckHub';
+import CheckPanel from './views/CheckPanel';
 
 
 
@@ -29,8 +29,8 @@ const App = () => {
           <Route path='/logout' element={<Logout />}></Route>
           {/* Sign in routes */}
           <Route path='/regulations' element={<Regulations />}></Route>
-          <Route path='/checkhub' element={<CheckHub />}></Route>
-          <Route path='/verifications' element={<Verifications />}></Route>
+          <Route path='/checkpanel' element={<CheckPanel />}></Route>
+          <Route path='/reports' element={<Reports />}></Route>
         </Routes>
       </Router>
 
