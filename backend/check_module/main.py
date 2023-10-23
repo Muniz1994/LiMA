@@ -115,8 +115,6 @@ class ComplianceCheck:
         
         self.rule_set = rule_set
         self.report = Report()
-        self.results = []
-        self.rule_verification_list = []
         self.permit_model = PermitModel(CheckModel(building_path))
         
         self.room_types = {
@@ -141,7 +139,7 @@ class ComplianceCheck:
             "room_types": self.room_types
         }
 
-    def check_regulation(self):
+    def exec_check(self):
         
         """Iterates through every rule in the digital regulation and executes the rule code"""
 
@@ -166,11 +164,6 @@ class ComplianceCheck:
 
         exec(compile(parsed_code, filename="", mode="exec"), self.local_vars)
 
-        return self.rule_verification_list
-
-
-    def restart_verification_list(self):
-        self.rule_verification_list = []
 
 
 if __name__ == '__main__':

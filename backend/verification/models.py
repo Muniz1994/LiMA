@@ -14,7 +14,7 @@ class Verification(models.Model):
     report = models.CharField(max_length=200, default='', blank=True)
     regulations = models.ManyToManyField(Regulation, blank=True)
 
-    def get_model_rules(self):
+    def get_rules(self):
 
         rule_set = []
 
@@ -28,9 +28,9 @@ class Verification(models.Model):
 
     def run_verification(self):
 
-        check = ComplianceCheck(self.get_model_rules(), self.ifc_file.path)
+        check = ComplianceCheck(self.get_rules(), self.ifc_file.path)
 
-        check.check_regulation()
+        check.exec_check()
 
         self.report = check.report.final_report
 
