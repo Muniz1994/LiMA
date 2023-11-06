@@ -25,8 +25,7 @@ import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
 import { Container } from 'react-bootstrap';
-import { ViewerIFCJS } from '../components/ModelViewer/ViewerJs';
-import { MDBListGroup, MDBListGroupItem, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBBadge, MDBDropdownItem, MDBBtn, MDBSpinner, MDBAccordion, MDBAccordionItem, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBListGroup, MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalTitle, MDBModalBody, MDBModalFooter, MDBListGroupItem, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBBadge, MDBDropdownItem, MDBBtn, MDBSpinner, MDBAccordion, MDBAccordionItem, MDBIcon } from 'mdb-react-ui-kit';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -45,9 +44,30 @@ function RegulationDropdownItem({ regulation, onRegulationClick }) {
     );
 }
 
-const getCheckResult = () => {
+const ReportInfoModal = ({ toggleShow, basicModal, setBasicModal }) => {
 
+    return (
+        <>
+            <MDBModal show={basicModal} setShow={setBasicModal} tabIndex='-1'>
+                <MDBModalDialog centered>
+                    <MDBModalContent>
+                        <MDBModalHeader>
+                            <MDBModalTitle>Reg</MDBModalTitle>
+                            <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
+                        </MDBModalHeader>
+                        <MDBModalBody>Info</MDBModalBody>
 
+                        <MDBModalFooter>
+                            <MDBBtn color='dark' onClick={toggleShow}>
+                                Close
+                            </MDBBtn>
+                        </MDBModalFooter>
+                    </MDBModalContent>
+                </MDBModalDialog>
+            </MDBModal>
+
+        </>
+    )
 }
 
 
@@ -71,48 +91,15 @@ const Reports = () => {
 
     // State of active regulation and clause
     const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' })
-    const [activeClause, setActiveClause] = useState({ id: '', name: '', text: '', blocks: '', code: '', has_code: false })
 
     // Modals States
     const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
+    const [reportInfoModalShow, setReportInfoModalShow] = useState(false);
 
-    const [ifcFile, setIfcFile] = useState(null);
     const [xktFile, setXktFile] = useState(null);
 
-    const [highlightedElements, setHighlightedElements] = useState(null);
-
-    const [showLoader, setShowLoader] = useState(false)
-
-    const [showVerification, setShowVerification] = useState(false)
-
-
-    const onRunVerification = () => {
-        setShowVerification(false)
-        setShowLoader(true)
-        setTimeout(() => {
-            setShowLoader(false);
-            setShowVerification(true)
-        }, 3000)
-    }
-
-
-    const Loader = ({ className }) => (
-        <div className={className}>
-            <svg
-                width="13"
-                height="14"
-                viewBox="0 0 13 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-            >
-                <path
-                    d="M4.38798 12.616C3.36313 12.2306 2.46328 11.5721 1.78592 10.7118C1.10856 9.85153 0.679515 8.82231   0.545268 7.73564C0.411022 6.64897 0.576691 5.54628 1.02433 4.54704C1.47197 3.54779 2.1845 2.69009 3.08475   2.06684C3.98499 1.4436 5.03862 1.07858 6.13148 1.01133C7.22435 0.944078 8.31478 1.17716 9.28464    1.68533C10.2545 2.19349 11.0668 2.95736 11.6336 3.89419C12.2004 4.83101 12.5 5.90507 12.5 7"
-                    stroke="white"
-                />
-            </svg>
-        </div>
-    )
+    const toggleReportInfoModal = () => setReportInfoModalShow(!reportInfoModalShow)
 
     const VerificationButton = ({ verificationId }) => {
         return (
@@ -169,19 +156,12 @@ const Reports = () => {
             {loading === false && (
                 <>
                     {/* Initiate the modals */}
-                    <ClauseListModal
-                        ShowState={clauseListModalShow}
-                        HideFunction={() => setClauseListModalShow(false)}
-                        setClauseListModalShow={setClauseListModalShow}
-                        activeRegulation={activeRegulation}
-                        regulations_list={regulations_list}
-                        setActiveClause={setActiveClause}
+                    <ReportInfoModal
+                        toggleShow={toggleReportInfoModal}
+                        basicModal={reportInfoModalShow}
+                        setBasicModal={setReportInfoModalShow}
                     />
-                    <InfoRegulationModal
-                        regulation={activeRegulation.name}
-                        regulations_list={regulations_list}
-                        ShowState={infoRegulationModalShow}
-                        HideFunction={() => setInfoRegulationModalShow(false)} />
+
                     {/* Page */}
                     <Container fluid className='h-100 max-h-100 overflow-hidden'>
                         <Row className='h-100'>
@@ -284,20 +264,26 @@ const Reports = () => {
                                                                                     className='px-1'
                                                                                     onClick={() => dispatch({ type: 'HIGHLIGHT_ELEMENTS', object: viewer, value: [check.object_id, check.result] })}
                                                                                     light>
-                                                                                    <div className='me-auto text-start'>
-                                                                                        <p className='m-0'><small><b>Id do objecto:</b> {check.object_id}</small></p>
-                                                                                        <p className='m-0'><small><b>Nome do objecto:</b> {check.object_name}</small></p>
-                                                                                        <p className='m-0'><small><b>Valor de verificação:</b> {check.value}</small></p>
-                                                                                        {check.result ?
-                                                                                            <MDBBadge color='success' light>
-                                                                                                aprovado!
-                                                                                            </MDBBadge>
-                                                                                            :
-                                                                                            <MDBBadge color='danger' light>
-                                                                                                reprovado
-                                                                                            </MDBBadge>}
+                                                                                    <Stack direction='horizontal'>
+                                                                                        <div className='me-auto text-start'>
+                                                                                            <p className='m-0'><small><b>Id do objecto:</b> {check.object_id}</small></p>
+                                                                                            <p className='m-0'><small><b>Nome do objecto:</b> {check.object_name}</small></p>
+                                                                                            <p className='m-0'><small><b>Valor de verificação:</b> {check.value}</small></p>
+                                                                                            {check.result ?
+                                                                                                <MDBBadge color='success' light>
+                                                                                                    aprovado!
+                                                                                                </MDBBadge>
+                                                                                                :
+                                                                                                <MDBBadge color='danger' light>
+                                                                                                    reprovado
+                                                                                                </MDBBadge>}
 
-                                                                                    </div>
+                                                                                        </div>
+                                                                                        <MDBBtn color='dark' onClick={toggleReportInfoModal}><MDBIcon fas icon="info-circle" /></MDBBtn>
+
+                                                                                    </Stack>
+
+
 
 
                                                                                 </MDBListGroupItem>)}
