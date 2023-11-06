@@ -570,7 +570,7 @@ export const customBlocksDefinition = [{
     "inputsInline": true,
     "output": null,
     "colour": "#21687F",
-    "tooltip": "",
+    "tooltip": "A profundidade de empena desconsidera varandas e corpos balançados",
     "helpUrl": ""
 },
 {
@@ -629,7 +629,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Check"
+            "text": "Verificar"
         },
         {
             "type": "input_dummy",
@@ -876,7 +876,7 @@ export const customBlocksDefinition = [{
             "name": "VALUE"
         }
     ],
-    "colour": "#ded77c",
+    "colour": "#46585e",
     "inputsInline": true,
     "output": null,
     "tooltip": "",

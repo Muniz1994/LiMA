@@ -44,7 +44,7 @@ function UploadButton({ setIfcFile, setXktFile, setLoadingFile }) {
     }
     return (
         <>
-            <MDBFile label='Upload IFC file' onChange={handleDisplayFileDetails}></MDBFile>
+            <MDBFile label='Carregue ficheiro IFC' onChange={handleDisplayFileDetails}></MDBFile>
         </>
     );
 }
@@ -84,7 +84,7 @@ export const AddFileModal = ({ ShowState, HideFunction, verificationId }) => {
                         <MDBSpinner grow></MDBSpinner> :
                         <>
                             <MDBModalHeader closeButton>
-                                <MDBModalTitle><p>Add Ifc Model</p></MDBModalTitle>
+                                <MDBModalTitle><p>Adicione modelo IFC</p></MDBModalTitle>
                             </MDBModalHeader>
                             <MDBModalBody>
                                 {loadingFile ?
@@ -104,8 +104,8 @@ export const AddFileModal = ({ ShowState, HideFunction, verificationId }) => {
 
                             </MDBModalBody>
                             <MDBModalFooter>
-                                <MDBBtn color='light' className='mx-2' onClick={uploadFile}>Save</MDBBtn>
-                                <MDBBtn color='dark' className='mx-2' onClick={HideFunction}>Cancel</MDBBtn>
+                                <MDBBtn color='dark' className='mx-2' onClick={uploadFile}>Salvar</MDBBtn>
+                                <MDBBtn color='dark' className='mx-2' outline onClick={HideFunction}>CAncelar</MDBBtn>
                             </MDBModalFooter>
 
                         </>}

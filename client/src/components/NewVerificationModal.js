@@ -13,6 +13,7 @@ import {
     MDBModalBody,
     MDBModalFooter,
     MDBSpinner,
+    MDBIcon,
 } from 'mdb-react-ui-kit';
 
 import { useAddNewVerificationMutation, useRegulationsQuery } from '../context/SliceAPI';
@@ -78,7 +79,7 @@ export function NewVerificationModal({ basicModal, setBasicModal, toggleShow }) 
             <MDBModalDialog centered>
                 <MDBModalContent>
                     <MDBModalHeader>
-                        <MDBModalTitle>New verification</MDBModalTitle>
+                        <MDBModalTitle>Nova verificação <MDBIcon fas icon="clipboard-check" /></MDBModalTitle>
                         <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
                     </MDBModalHeader>
                     <MDBModalBody>
@@ -99,10 +100,10 @@ export function NewVerificationModal({ basicModal, setBasicModal, toggleShow }) 
                     </MDBModalBody>
 
                     <MDBModalFooter>
-                        <MDBBtn color='secondary' onClick={toggleShow}>
-                            Close
+                        <MDBBtn color='dark' outline onClick={toggleShow}>
+                            Cancelar
                         </MDBBtn>
-                        <MDBBtn onClick={HandleSubmit}>Save changes</MDBBtn>
+                        <MDBBtn onClick={HandleSubmit} color='dark'>Salvar</MDBBtn>
                     </MDBModalFooter>
                 </MDBModalContent>
             </MDBModalDialog>

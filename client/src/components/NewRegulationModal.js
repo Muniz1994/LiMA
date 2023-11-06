@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/esm/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Stack from 'react-bootstrap/Stack';
-import { MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalHeader, MDBModalTitle } from 'mdb-react-ui-kit';
+import { MDBIcon, MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalHeader, MDBModalTitle } from 'mdb-react-ui-kit';
 
 export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulations }) {
 
@@ -32,30 +32,30 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
             <MDBModalDialog centered>
                 <MDBModalContent>
                     <MDBModalHeader closeButton>
-                        <MDBModalTitle><p>New Regulation</p></MDBModalTitle>
+                        <MDBModalTitle>Novo regulamento <MDBIcon fas icon="book" /></MDBModalTitle>
                     </MDBModalHeader>
                     <MDBModalBody>
                         <Form onSubmit={HandleSubmit}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Regulation Name</Form.Label>
+                                <Form.Label>Nome do regulamento</Form.Label>
                                 <Form.Control
                                     type="text"
                                     onChange={(e) => setRegulationName(e.target.value)}
-                                    placeholder="Insert the name of the regulation" />
+                                    placeholder="Insira o nome do regulamento" />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Scope</Form.Label>
+                                <Form.Label>Âmbito</Form.Label>
                                 <Form.Control
                                     onChange={(e) => setRegulationCity(e.target.value)}
                                     type="text"
-                                    placeholder="Insert the scope" />
+                                    placeholder="Insira o âmbito do regulamento" />
                             </Form.Group>
                             <Stack direction='horizontal' gap={2}>
                                 <Button variant="dark" type="submit">
-                                    Save
+                                    Salvar
                                 </Button>
                                 <Button onClick={HideFunction} variant="light">
-                                    Cancel
+                                    Cancelar
                                 </Button>
                             </Stack>
 
