@@ -21,7 +21,7 @@ export const viewerSlice = createSlice({
 
             }
 
-            state.value.clean()
+            state.value.cleanViewer()
         },
     },
 })

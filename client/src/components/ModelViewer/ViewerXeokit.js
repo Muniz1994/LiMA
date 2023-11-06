@@ -306,7 +306,7 @@ class XeokitViewer {
 
     }
 
-    clean() {
+    cleanViewer() {
         this.navCube.destroy()
         this.grid.destroy()
     }
