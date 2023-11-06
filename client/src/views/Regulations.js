@@ -328,7 +328,7 @@ const Regulations = () => {
                             </Col>
                             {/* Regulation left panel end */}
                             <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                                <Row className='h-30 d-flex align-start p-2'>
+                                <Row className=' d-flex align-start p-2'>
                                     <Col className='d-flex flex-column'>
                                         <Row className='mb-auto'>
                                             <Col>
@@ -377,7 +377,7 @@ const Regulations = () => {
                                     </Col>
                                 </Row>
 
-                                <Row className='h-70'>
+                                <Row className='h-100'>
                                     <MyBlocklyEditor
                                         showCode={showCode}
                                         key={editorKey}
