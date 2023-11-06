@@ -224,10 +224,6 @@ export var toolbox = {
                 },
                 {
                     "kind": "block",
-                    "type": "value_len"
-                },
-                {
-                    "kind": "block",
                     "type": "class_selector"
                 },
                 {
@@ -244,6 +240,10 @@ export var toolbox = {
                 {
                     "kind": "block",
                     "type": "math_arithmetic"
+                },
+                {
+                    "kind": "block",
+                    "type": "value_len"
                 },
             ]
         }
