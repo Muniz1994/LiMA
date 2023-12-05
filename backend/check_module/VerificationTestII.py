@@ -165,7 +165,7 @@ for parcel in my_permit.parcels:
                 
                 add_check(stair, 'riserHeight', '>=', 0.193)
                 
-        if building.category == "habitação coletiva" and building.buildingStoreys.__len__() >= 3 and building.buildingStoreys.__len__() <= 5 and building.elevators == None:
+        if building.category == "habitação coletiva" and building.buildingStoreys.__len__() >= 3 and building.buildingStoreys.__len__() <= 5 and building.elevators.__len__() >= 1:
             
             for stair in building.stairs:
                 
@@ -221,6 +221,74 @@ for parcel in my_permit.parcels:
                 add_check(dwelling, 'num_of_living_rooms', '>=', 1)
                 
                 add_check(dwelling, 'num_of_kitchens', '>=', 1)
+        
+                
+                for space in dwelling.relatedSpaces:
+                    
+                    match space.objectClass:
+                        
+                        case "SL_45_10_49":
+                    
+                            add_check(space, 'area', '>=', 10)
+                            
+                        case "SL_45_10_23":
+                    
+                            add_check(space, 'area', '>=', 6)
+                            
+            if dwelling.num_of_bedrooms() == 1:
+                
+                add_check(dwelling, 'relatedSpaces.__len__', '>=', 3) 
+
+                add_check(dwelling, 'num_of_living_rooms', '>=', 1)
+                
+                add_check(dwelling, 'num_of_kitchens', '>=', 1)
+        
+                
+                for space in dwelling.relatedSpaces:
+                    
+                    match space.objectClass:
+                        
+                        case "SL_45_10_49":
+                    
+                            add_check(space, 'area', '>=', 10)
+                            
+                        case "SL_45_10_23":
+                    
+                            add_check(space, 'area', '>=', 6)
+                            
+                        case "SL_45_10_10":
+                    
+                            add_check(space, 'area', '>=', 10.5)
+                            
+            if dwelling.num_of_bedrooms() == 2:
+                
+                add_check(dwelling, 'relatedSpaces.__len__', '>=', 4) 
+
+                add_check(dwelling, 'num_of_living_rooms', '>=', 1)
+                
+                add_check(dwelling, 'num_of_double_rooms', '>=', 1)
+                
+                add_check(dwelling, 'num_of_kitchens', '>=', 1)
+        
+                for space in dwelling.relatedSpaces:
+                    
+                    match space.objectClass:
+                        
+                        case "SL_45_10_49":
+                    
+                            add_check(space, 'area', '>=', 10)
+                            
+                        case "SL_45_10_23":
+                    
+                            add_check(space, 'area', '>=', 6)
+                            
+                        case "SL_45_10_10":
+                    
+                            add_check(space, 'area', '>=', 10.5)
+                            
+                        case "SL_45_10_11":
+                    
+                            add_check(space, 'area', '>=', 9)
 
 # -------------------------------------------------------------------           
 # RGEU, Artigo 67.º 1 
@@ -276,9 +344,9 @@ for parcel in my_permit.parcels:
         
         if set(["exploração agrícola", "exploração pecuária", "exploração florestal"]) & set(building.uses):
             
-            add_check(building, 'buildingStoreys.__len__', '<=', 6.5)
+            add_check(building, 'height', '<=', 6.5)
             
-            add_check(building, 'height', '<=', 2)
+            add_check(building, 'buildingStoreys.__len__', '<=', 2)
 
 # ------------------------------------------------------------------- 
 # PDM de Vila Nova de Gaia, Artigo 42.º 1 

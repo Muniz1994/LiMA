@@ -5,27 +5,16 @@ import axios from 'axios';
 import MyBlocklyEditor from '../components/CodeEditor/BlockEditor';
 
 // React-Boostrap imports
-import Col from 'react-bootstrap/esm/Col';
-import Row from 'react-bootstrap/esm/Row';
-import Button from 'react-bootstrap/esm/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import ListGroup from 'react-bootstrap/esm/ListGroup';
-import Badge from 'react-bootstrap/Badge';
 import Stack from 'react-bootstrap/Stack';
-import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 
-import { MDBBadge, MDBBtn, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBListGroup, MDBListGroupItem } from 'mdb-react-ui-kit';
+import { MDBIcon, MDBContainer, MDBCol, MDBRow, MDBBadge, MDBBtn, MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBListGroup, MDBListGroupItem } from 'mdb-react-ui-kit';
 
 // Import icons
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+
 import { NewRegulationModal } from '../components/NewRegulationModal';
 import { NewClauseModal } from '../components/NewClauseModal';
 import { InfoRegulationModal } from '../components/InfoRegulationModal';
 import { ClauseListModal } from '../components/ClauseListModal';
-import { Container } from 'react-bootstrap';
-import { NewZoneModal } from '../components/NewZoneModal';
 
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -34,16 +23,13 @@ import { setActiveRegulation } from '../context/activeRegulationSlice';
 import { setActiveClause } from '../context/activeClauseSlice';
 
 
-library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation);
-
-
 // Choose the existing regulations in a dropdown
 function RegulationDropdownItem({ regulation, onRegulationClick }) {
     return (
-        <Dropdown.Item
-            variant="secondary"
+        <MDBDropdownItem
+            link childTag='button'
             onClick={onRegulationClick}>{regulation}
-        </Dropdown.Item>
+        </MDBDropdownItem>
     );
 }
 
@@ -104,6 +90,7 @@ const Regulations = () => {
         } else {
 
             // Confirm user authentication
+            // TODO: change to RTK
             axios.get(process.env.REACT_APP_API_ROOT + 'auth/user/',
                 {
                     headers: {
@@ -119,6 +106,7 @@ const Regulations = () => {
 
 
             // Get regulations
+            // TODO: change to RTK
             axios.get(process.env.REACT_APP_API_ROOT + 'regulations/')
                 .then(response => {
                     dispatch(setRegulationList((response.data)));
@@ -152,6 +140,7 @@ const Regulations = () => {
             }
         }
 
+        // TODO: change to RTK
         axios.patch(process.env.REACT_APP_API_ROOT + 'rules/' + activeClause.id + '/', newCode)
             .then(response => {
                 console.log(response);
@@ -182,7 +171,8 @@ const Regulations = () => {
                         regulation={activeRegulation.name}
                         regulations_list={regulations_list}
                         ShowState={infoRegulationModalShow}
-                        HideFunction={() => setInfoRegulationModalShow(false)} />
+                        setShowState={setInfoRegulationModalShow}
+                        toggleOpen={() => setInfoRegulationModalShow(!infoRegulationModalShow)} />
                     <NewRegulationModal
                         setUpdatedRegulations={setUpdatedRegulations}
                         ShowState={newRegulationModalShow}
@@ -192,22 +182,16 @@ const Regulations = () => {
                         setUpdatedClause={setUpdatedClause}
                         ShowState={newClauseModalShow}
                         HideFunction={() => setNewClauseModalShow(false)} />
-                    <NewZoneModal
-                        regulationId={activeRegulation.id}
-                        setUpdatedZone={setUpdatedZone}
-                        ShowState={newZoneModalShow}
-                        HideFunction={() => setNewZoneModalShow(false)}
 
-                    />
 
                     {/* Page */}
-                    <Container fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
-                        <Row className='h-100'>
+                    <MDBContainer fluid className='h-100 max-h-100 overflow-hidden px-5 px-xl-3'>
+                        <MDBRow className='h-100'>
                             {/* Regulation left panel start */}
-                            <Col>
+                            <MDBCol>
                                 {/* Regulation choose start */}
-                                <Row>
-                                    <Col className='p-2'>
+                                <MDBRow>
+                                    <MDBCol className='p-2'>
 
                                         <h6 className='bg-light p-2 border-top border-bottom'>Selecione regulamento:</h6>
                                         <Stack
@@ -235,44 +219,44 @@ const Regulations = () => {
                                                 color='dark'>
                                                 <Stack gap={2} direction="horizontal">
                                                     <span>Novo regulamento</span>
-                                                    <FontAwesomeIcon icon="fa-plus" />
+                                                    <MDBIcon fas icon="plus" />
                                                 </Stack>
                                             </MDBBtn>
-                                            <Button
+                                            <MDBBtn
                                                 onClick={() => setClauseListModalShow(true)}
                                                 size='sm'
                                                 className='ms-auto d-inline d-xl-none'
-                                                variant='light'>
+                                                color='light'>
                                                 <Stack gap={2} direction="horizontal">
                                                     <span>clauses list</span>
-                                                    <FontAwesomeIcon icon="fa-list" />
+                                                    <MDBIcon fas icon="list" />
                                                 </Stack>
-                                            </Button>
+                                            </MDBBtn>
                                         </Stack>
-                                    </Col>
-                                </Row>
+                                    </MDBCol>
+                                </MDBRow>
                                 {/* Regulation choose end */}
 
                                 {/* Clause list start */}
-                                <Row className='d-none d-xl-inline'>
-                                    <Col>
-                                        <Row>
+                                <MDBRow className='d-none d-xl-inline'>
+                                    <MDBCol>
+                                        <MDBRow>
                                             {/* Show the active regulation name */}
                                             {activeRegulation.name !== '' &&
                                                 <>
-                                                    <h6 className='bg-light p-2 border-top border-bottom'>{activeRegulation.name}<Button
+                                                    <h6 className='bg-light p-2 border-top border-bottom'>{activeRegulation.name}<MDBBtn
                                                         className='mx-2'
-                                                        variant='light'
+                                                        color='light'
                                                         size='sm'
                                                         onClick={() => setInfoRegulationModalShow(true)}>
-                                                        <FontAwesomeIcon icon="fa-circle-info" />
-                                                    </Button></h6>
+                                                        <MDBIcon fas icon="info-circle" />
+                                                    </MDBBtn></h6>
 
                                                 </>
                                             }
-                                        </Row>
-                                        <Row >
-                                            <Col className='border-bottom border-top'>
+                                        </MDBRow>
+                                        <MDBRow >
+                                            <MDBCol className='border-bottom border-top'>
                                                 <MDBListGroup
                                                     className='h-100 overflow-scroll clause-list-size'
                                                     style={{ borderRadius: 0 }}>
@@ -291,7 +275,7 @@ const Regulations = () => {
                                                                     }}>
                                                                     <div className="ms-2 me-auto">
                                                                         <Stack direction='horizontal' gap={2}>
-                                                                            <FontAwesomeIcon icon="fa-section" />
+                                                                            <MDBIcon fas icon="puzzle-piece" />
                                                                             <div className="fw-bold">{rule.name}</div>
                                                                         </Stack>
 
@@ -315,29 +299,29 @@ const Regulations = () => {
 
                                                             <div className="ms-2 me-auto">
                                                                 <Stack direction='horizontal' gap={2}>
-                                                                    <div className="fw-bold">Nova regra</div> <FontAwesomeIcon icon="fa-plus" />
+                                                                    <div className="fw-bold">Nova regra</div> <MDBIcon fas icon="plus" />
                                                                 </Stack>
                                                             </div>
                                                         </MDBListGroupItem>}
                                                 </MDBListGroup>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
+                                            </MDBCol>
+                                        </MDBRow>
+                                    </MDBCol>
+                                </MDBRow>
                                 {/* Clause list end */}
-                            </Col>
+                            </MDBCol>
                             {/* Regulation left panel end */}
-                            <Col xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
-                                <Row className=' d-flex align-start p-2'>
-                                    <Col className='d-flex flex-column'>
-                                        <Row className='mb-auto'>
-                                            <Col>
+                            <MDBCol xs={12} xl={8} xxl={9} className="h-100 border max-h-100">
+                                <MDBRow className=' d-flex align-start p-2'>
+                                    <MDBCol className='d-flex flex-column'>
+                                        <MDBRow className='mb-auto'>
+                                            <MDBCol>
                                                 <h5>{activeClause.name}</h5>
                                                 <p className=''>{(activeClause.text).substring(0, 500)}</p>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col>
+                                            </MDBCol>
+                                        </MDBRow>
+                                        <MDBRow>
+                                            <MDBCol>
                                                 <Stack
                                                     className='d-flex'
                                                     direction='horizontal' gap={2}>
@@ -348,20 +332,20 @@ const Regulations = () => {
                                                         onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
                                                     >
                                                         <span className='p-2'>Salvar regra</span>
-                                                        <FontAwesomeIcon icon="fa-save" />
+                                                        <MDBIcon far icon="save" />
                                                     </MDBBtn>
                                                     {activeClause.blocks !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
                                                         <span className='small'>Updated</span>
-                                                        <FontAwesomeIcon variant='success' icon="fa-check" />
+                                                        <MDBIcon fas icon="check" />
                                                     </Stack> :
                                                         <Stack className="text-warning" direction='horizontal' gap={1}>
                                                             <span className='small'>Not updated</span>
-                                                            <FontAwesomeIcon variant='success' icon="fa-circle-exclamation" />
+                                                            <MDBIcon fas icon="exclamation-triangle" />
                                                         </Stack> : null}
 
-                                                    <Button
+                                                    <MDBBtn
                                                         className='ms-auto'
-                                                        variant='dark'
+                                                        color='dark'
                                                         size='sm'
                                                         onClick={() => {
                                                             setShowCode(prevShowCode => !prevShowCode);
@@ -369,15 +353,15 @@ const Regulations = () => {
                                                         }}
                                                     >
                                                         <span className='p-2'>Mostrar código</span>
-                                                        <FontAwesomeIcon icon="fa-code" />
-                                                    </Button>
+                                                        <MDBIcon fas icon="code" />
+                                                    </MDBBtn>
                                                 </Stack>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
+                                            </MDBCol>
+                                        </MDBRow>
+                                    </MDBCol>
+                                </MDBRow>
 
-                                <Row className='h-100'>
+                                <MDBRow className='h-100'>
                                     <MyBlocklyEditor
                                         showCode={showCode}
                                         key={editorKey}
@@ -385,10 +369,10 @@ const Regulations = () => {
                                         setBlockXml={setBlockXml}
                                         setBlockPython={setBlockPython}
                                         className="" />
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Container>
+                                </MDBRow>
+                            </MDBCol>
+                        </MDBRow>
+                    </MDBContainer>
 
                 </>
             )}

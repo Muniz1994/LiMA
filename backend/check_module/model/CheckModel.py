@@ -1,5 +1,5 @@
 import ifcopenshell
-from ifcopenshell.util.selector import Selector
+from .Selector import Selector
 import ifcopenshell.util.shape
 import ifcopenshell.geom
 import multiprocessing

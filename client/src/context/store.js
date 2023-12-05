@@ -6,8 +6,6 @@ import activeClauseReducer from './activeClauseSlice'
 import { userApiSlice } from './userSliceAPI'
 import viewerReducer from './viewerSlice'
 
-import { useSelector, useDispatch } from 'react-redux'
-
 const myMiddleware = store => next => action => {
     switch (action.type) {
 

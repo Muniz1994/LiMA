@@ -9,11 +9,7 @@ import axios from 'axios';
 import { ReactComponent as Logo } from '../lima_new_2.svg'
 
 // Import React Bootstrap components
-import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button';
 
 import Stack from 'react-bootstrap/Stack';
 
@@ -27,7 +23,13 @@ import {
     MDBNavbarLink,
     MDBIcon,
     MDBCollapse,
-    MDBBtn
+    MDBBtn,
+    MDBModal,
+    MDBModalHeader,
+    MDBModalBody,
+    MDBModalFooter,
+    MDBModalDialog,
+    MDBModalContent
 } from 'mdb-react-ui-kit';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -36,12 +38,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 library.add(faPuzzlePiece, faBuilding, faListCheck);
 
-
-
 // Logout
 const handleLogout = e => {
     e.preventDefault();
 
+    // TODO: change to RTK
     axios.post(process.env.REACT_APP_API_ROOT + 'auth/logout/', {
         headers: { Authorization: `Token ${localStorage.getItem('token')}` }
     })
@@ -52,25 +53,25 @@ const handleLogout = e => {
         })
 };
 
-const LogoutModal = ({ ShowState, HideFunction }) => {
+const LogoutModal = ({ ShowState, toggleOpen }) => {
     return (
         <>
-            <Modal show={ShowState} onHide={HideFunction}>
-                <Modal.Header>
-                    <h1>Logout</h1>
-                </Modal.Header>
-                <Modal.Body>
-                    <span>Do you wish to logout?</span>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button className='px-4' onClick={handleLogout} variant='theme-b'>
-                        Yes
-                    </Button>
-                    <Button className='px-4' onClick={HideFunction} variant='theme-e'>
-                        No
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <MDBModal show={ShowState} tabIndex='-1'>
+                <MDBModalDialog centered>
+                    <MDBModalContent>
+                        <MDBModalHeader>
+                            <h1>Logout</h1>
+                        </MDBModalHeader>
+                        <MDBModalBody>
+                            <span>Do you wish to logout?</span>
+                        </MDBModalBody>
+                        <MDBModalFooter>
+                            <MDBBtn onClick={handleLogout} color='dark' outline>Yes</MDBBtn>
+                            <MDBBtn onClick={toggleOpen} color='dark'>Cancel</MDBBtn>
+                        </MDBModalFooter>
+                    </MDBModalContent>
+                </MDBModalDialog>
+            </MDBModal>
         </>
     )
 }
@@ -81,14 +82,28 @@ const InternalLinks = () => {
     return (
         <>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/regulations'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-puzzle-piece" /><span>Regulamento Digital</span></Stack></MDBNavbarLink>
+                <MDBNavbarLink tag={Link} to='/regulations'>
+                    <Stack direction='horizontal' gap={2}>
+                        <MDBIcon fas icon="puzzle-piece" />
+                        <span>Regulamento Digital</span>
+                    </Stack>
+                </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/checkpanel'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-list-check" /><span>Painel de Verificação</span></Stack></MDBNavbarLink>
+                <MDBNavbarLink tag={Link} to='/checkpanel'>
+                    <Stack direction='horizontal' gap={2}>
+                        <MDBIcon far icon="list-alt" />
+                        <span>Painel de Verificação</span>
+                    </Stack>
+                </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-                <MDBNavbarLink tag={Link} to='/reports'><Stack direction='horizontal' gap={2}><FontAwesomeIcon icon="fa-building" /><span>Relatório</span></Stack></MDBNavbarLink>
-
+                <MDBNavbarLink tag={Link} to='/reports'>
+                    <Stack direction='horizontal' gap={2}>
+                        <MDBIcon far icon="building" />
+                        <span>Relatório</span>
+                    </Stack>
+                </MDBNavbarLink>
             </MDBNavbarItem>
         </>
     )
@@ -114,24 +129,19 @@ const Navigationbar = props => {
         }
     }, []);
 
+    const toggleLogoutModal = () => {
+        setLogoutState(!logoutState)
+    }
+
     return (
         <MDBNavbar style={{ zIndex: 10010 }} dark bgColor='dark' sticky='top' variant='dark' expand="lg">
             <MDBContainer fluid className='mx-3'>
                 <LogoutModal
                     ShowState={logoutState}
-                    HideFunction={() => setLogoutState(false)} />
+                    toggleOpen={toggleLogoutModal} />
                 <MDBNavbarBrand
                     href="/">
-                    <Logo
-                        className="logo-app" />
-
-                    {/* <img
-                        src="/chek_logo.png"
-                        width="auto"
-                        height="60"
-                        className="d-inline-block align-top"
-                        alt="React Bootstrap logo"
-                    /> */}
+                    <Logo className="logo-app" />
                 </MDBNavbarBrand>
                 <MDBNavbarToggler
                     type='button'
@@ -149,7 +159,9 @@ const Navigationbar = props => {
                             <MDBNavbarNav className='d-flex justify-content-center'>
                                 <InternalLinks />
                             </MDBNavbarNav>
-                            <MDBBtn className='ms-auto shadow-0' color='light' onClick={() => setLogoutState(true)}>Logout</MDBBtn>
+                            <MDBBtn className='ms-auto shadow-0' color='light' onClick={() => {
+                                setLogoutState(!logoutState)
+                            }}>Logout</MDBBtn>
                         </>
                     ) : (
                         <>

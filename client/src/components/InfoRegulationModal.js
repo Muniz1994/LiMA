@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/esm/Button';
-import Modal from 'react-bootstrap/Modal';
+import {
+    MDBBtn,
+    MDBModal,
+    MDBModalDialog,
+    MDBModalContent,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter,
+} from 'mdb-react-ui-kit';
 
-export function InfoRegulationModal({ ShowState, HideFunction, regulation, regulations_list }) {
+export function InfoRegulationModal({ ShowState, setShowState, toggleOpen, regulation, regulations_list }) {
 
     const [modalRegulation, setModalRegulation] = useState({})
 
@@ -13,18 +21,24 @@ export function InfoRegulationModal({ ShowState, HideFunction, regulation, regul
     }, [regulations_list, regulation])
 
     return (
-        <Modal show={ShowState} onHide={HideFunction}>
-            <Modal.Header closeButton>
-                <Modal.Title>{regulation}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>City: {modalRegulation.scope}</p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={HideFunction}>
-                    Ok
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        <MDBModal show={ShowState} setopen={setShowState} tabIndex='-1'>
+            <MDBModalDialog centered>
+                <MDBModalContent>
+                    <MDBModalHeader>
+                        <MDBModalTitle>{regulation}</MDBModalTitle>
+                        <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
+                    </MDBModalHeader>
+                    <MDBModalBody>
+                        <p>City: {modalRegulation.scope}</p>
+                    </MDBModalBody>
+
+                    <MDBModalFooter>
+                        <MDBBtn color='black' onClick={toggleOpen}>
+                            Close
+                        </MDBBtn>
+                    </MDBModalFooter>
+                </MDBModalContent>
+            </MDBModalDialog>
+        </MDBModal>
     );
 }

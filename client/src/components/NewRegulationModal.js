@@ -17,6 +17,7 @@ export function NewRegulationModal({ ShowState, HideFunction, setUpdatedRegulati
             name: regulationName,
             scope: regulationCity
         };
+        // TODO: change to RTK
         axios.post(process.env.REACT_APP_API_ROOT + 'regulations/', newRegulation)
             .then(response => {
                 console.log(response.data);

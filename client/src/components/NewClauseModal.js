@@ -22,6 +22,7 @@ export function NewClauseModal({ ShowState, HideFunction, RegulationId, setUpdat
         };
 
         console.log(newClause);
+        // TODO: change to RTK
         axios.post(process.env.REACT_APP_API_ROOT + 'rules/', newClause)
             .then(response => {
                 setUpdatedClause(response.data);

@@ -1,4 +1,4 @@
-from ifcopenshell.util.selector import get_classification
+from .Selector import get_classification
 from ifcopenshell.util.element import get_pset
 import trimesh
 from dataclasses import dataclass
@@ -121,9 +121,7 @@ class Dwelling(PermitObject):
                     
         return num_of_rooms
         
-    
-         
-            
+     
 @dataclass
 class BuildingStorey(PermitObject):
     
@@ -132,8 +130,7 @@ class BuildingStorey(PermitObject):
 
         self.spaces: List[Space] = self.get_connection('IfcSpace !(.ifcSpace[classification.Identification="SL_22_15"]|.ifcSpace[classification.Identification="SL_22_05"]|.ifcSpace[classification.Identification="SL_22_10"]|.ifcSpace[classification.Identification="SL_22_10_05"])',Space) 
         self.isAboveGround: Optional[bool] = self.get_property("Pset_BuildingStoreyCommon","AboveGround")
-
-    
+   
     def gross_area(self):
         
         storey = self.model.select('@ #%s & (.IfcWall | .IfcSpace[classification.Identification!="SL_45_10_06"]) ! (.IfcSpace[classification.Identification="SL_22_05"] | .IfcSpace[classification.Identification="SL_22_15"]| .IfcSpace[classification.Identification="SL_22_10"]| .IfcSpace[classification.Identification="SL_22_10_05"])'%self.data.GlobalId)

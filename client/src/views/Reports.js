@@ -7,20 +7,14 @@ import axios from 'axios';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import Button from 'react-bootstrap/esm/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import ListGroup from 'react-bootstrap/esm/ListGroup';
+
 import Stack from 'react-bootstrap/Stack';
-import ListGroupItem from 'react-bootstrap/esm/ListGroupItem';
 
 // Import icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faPlay, faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import { InfoRegulationModal } from '../components/InfoRegulationModal';
-import { ClauseListModal } from '../components/ClauseListModal';
 
-import { XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer } from '@xeokit/xeokit-convert/dist/xeokit-convert.es'
-import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api.js";
 
 
 import { ViewerXeokit } from '../components/ModelViewer/ViewerXeokit';
@@ -37,10 +31,10 @@ library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faC
 // Choose the existing regulations in a dropdown
 function RegulationDropdownItem({ regulation, onRegulationClick }) {
     return (
-        <Dropdown.Item
-            variant="secondary"
+        <MDBDropdownItem
+            link
             onClick={onRegulationClick}>{regulation}
-        </Dropdown.Item>
+        </MDBDropdownItem>
     );
 }
 
@@ -56,7 +50,6 @@ const ReportInfoModal = ({ toggleShow, basicModal, setBasicModal }) => {
                             <MDBBtn className='btn-close' color='none' onClick={toggleShow}></MDBBtn>
                         </MDBModalHeader>
                         <MDBModalBody>Info</MDBModalBody>
-
                         <MDBModalFooter>
                             <MDBBtn color='dark' onClick={toggleShow}>
                                 Close

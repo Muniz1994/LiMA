@@ -1,19 +1,12 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, DirLight, Mesh, PhongMaterial, buildGridGeometry, VBOGeometry, ContextMenu, NavCubePlugin, TreeViewPlugin, CityJSONLoaderPlugin, DistanceMeasurementsPlugin, DistanceMeasurementsMouseControl, LineSet, AnnotationsPlugin, PointerLens } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@2.4.0-alpha-30/dist/xeokit-sdk.es.min.js";
+import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, Mesh, PhongMaterial, buildGridGeometry, VBOGeometry, ContextMenu, NavCubePlugin, DistanceMeasurementsPlugin } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@2.4.0-alpha-37/dist/xeokit-sdk.es.min.js";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faInfo, faCircleInfo, faPlus, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup, faHeartPulse } from '@fortawesome/free-solid-svg-icons'
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import { setViewer, cleanViewer } from '../../context/viewerSlice';
-import { constants } from 'blockly';
 
 import { useSelector, useDispatch } from 'react-redux'
 
-
-
-library.add(faCircleInfo, faPlus, faInfo, faSave, faList, faCode, faSection, faCheck, faCircleExclamation, faCube, faSquare, faCrop, faTableCellsLarge, faEraser, faMousePointer, faObjectGroup);
 
 class XeokitViewer {
     constructor(viewerId, navCubeId = null) {
@@ -40,12 +33,9 @@ class XeokitViewer {
         this.setupScene();
         this.setupSao();
         this.setupDistanceMeasurement();
-        this.setupContextMenu();
-        this.setupIfcLoader();
         this.setupXktLoader();
         this.setupGrid();
         this.setupNavCube();
-        this.addContextMenu();
 
     }
 
@@ -123,63 +113,18 @@ class XeokitViewer {
 
         this.distanceMeasurements = new DistanceMeasurementsPlugin(this.viewer);
 
-    }
+        this.distanceMeasurements.on("mouseOver", (e) => {
+            e.measurement.setHighlighted(true);
+        });
 
-    // Setup Context Menu ----------------------------------------------------------------------------------------------
-    setupContextMenu() {
+        this.distanceMeasurements.on("mouseLeave", (e) => {
 
-        this.canvasContextMenu = new ContextMenu({
-
-            enabled: true,
-
-            items: [
-                [
-                    {
-                        title: "Hide Object",
-                        getEnabled: (context) => {
-                            return context.entity.visible; // Can't hide entity if already hidden
-                        },
-                        doAction: function (context) {
-                            context.entity.visible = false;
-                        }
-                    }
-                ],
-                [
-                    {
-                        title: "Select Object",
-                        getEnabled: (context) => {
-                            return (!context.entity.selected); // Can't select an entity that's already selected
-                        },
-                        doAction: function (context) {
-                            context.entity.selected = true;
-                        }
-                    }
-                ],
-                [
-                    {
-                        title: "X-Ray Object",
-                        getEnabled: (context) => {
-                            return (!context.entity.xrayed); // Can't X-ray an entity that's already X-rayed
-                        },
-                        doAction: (context) => {
-                            context.entity.xrayed = true;
-                        }
-                    }
-                ]
-            ]
+            e.measurement.setHighlighted(false);
         });
 
     }
 
-    addContextMenu() {
 
-        const menu = this.canvasContextMenu
-
-        this.viewer.cameraControl.on("rightClick", function (e) {
-            menu.show(e.pagePos[0], e.pagePos[1]);
-            e.event.preventDefault();
-        });
-    }
 
     // Setup Nav Cube ----------------------------------------------------------------------------------------------
     setupNavCube() {
@@ -218,12 +163,6 @@ class XeokitViewer {
         this.xktLoader = new XKTLoaderPlugin(this.viewer);
     }
 
-    setupIfcLoader() {
-
-        this.ifcLoader = new WebIFCLoaderPlugin(this.viewer, {
-            wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk/dist/"
-        });
-    }
 
     loadXkt(path) {
         this.sceneModel = this.xktLoader.load({          // Returns an Entity that represents the model
@@ -242,16 +181,6 @@ class XeokitViewer {
             this.viewer.cameraFlight.flyTo(this.viewer.scene);
         });
 
-    }
-
-    loadIFC() {
-
-        const sceneModel =
-            this.ifcLoader.load({
-                src: 'duplex.ifc',
-                edges: true,
-                excludeUnclassifiedObjects: false
-            });
     }
 
     toggleMeasurements() {
@@ -366,6 +295,7 @@ export const ViewerXeokit = ({ ifcFile, highlightedElements }) => {
                     }
                     } className='viewer-tool-btn'><MDBIcon fas size='lg' icon="cube" /></MDBBtn>
                     <MDBBtn size='sm' color='dark' onClick={() => viewer.xRayOff()} className='viewer-tool-btn'><MDBIcon fas size='lg' icon="eye" /></MDBBtn>
+
                 </div>
             </div>
 
