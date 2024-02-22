@@ -5,12 +5,12 @@ export var toolbox = {
     "contents": [
         {
             "kind": "category",
-            "name": "Modelo",
+            "name": "Model",
             "colour": "#33B4E0",
             "contents": [
                 {
                     "kind": "category",
-                    "name": "Parcela",
+                    "name": "Parcel",
                     "colour": "#174959",
                     "contents": [
                         {
@@ -33,7 +33,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Via Pública",
+                    "name": "Street",
                     "colour": "#21687f",
                     "contents": [
                         {
@@ -44,7 +44,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Edifício",
+                    "name": "Building",
                     "colour": "#21687f",
                     "contents": [
                         {
@@ -87,7 +87,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Pavimento",
+                    "name": "Storey",
                     "colour": "#2c89a8",
                     "contents": [
                         {
@@ -102,7 +102,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Elevador",
+                    "name": "Elevator",
                     "colour": "#2c89a8",
                     "contents": [{
                         "kind": "block",
@@ -111,7 +111,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Escada",
+                    "name": "Stair",
                     "colour": "#2c89a8",
                     "contents": [
                         {
@@ -126,7 +126,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Espaço",
+                    "name": "Space",
                     "colour": "#33b4e0",
                     "contents": [
                         {
@@ -145,7 +145,7 @@ export var toolbox = {
                 },
                 {
                     "kind": "category",
-                    "name": "Fogo",
+                    "name": "Dwelling",
                     "colour": "#2c89a8",
                     "contents": [
                         {
@@ -181,7 +181,7 @@ export var toolbox = {
         },
         {
             "kind": "category",
-            "name": "Lógica",
+            "name": "Logic",
             "colour": "#897a7e",
             "contents": [
                 {
@@ -200,7 +200,7 @@ export var toolbox = {
         },
         {
             "kind": "category",
-            "name": "Verificação",
+            "name": "Verification",
             "colour": "#de7c95",
             "contents": [
                 {
@@ -211,7 +211,7 @@ export var toolbox = {
         },
         {
             "kind": "category",
-            "name": "Valores",
+            "name": "Values",
             "colour": "#ded77c",
             "contents": [
                 {
@@ -234,7 +234,7 @@ export var toolbox = {
         },
         {
             "kind": "category",
-            "name": "Matemática",
+            "name": "Math",
             "colour": "#46585e",
             "contents": [
                 {

@@ -1,3 +1,7 @@
+
+
+
+
 export const customBlocksDefinition = [{
     "type": "bl_space",
     "message0": "%1 %2 %3 %4 %5",
@@ -5,7 +9,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Espaço"
+            "text": "Space"
         },
         {
             "type": "input_dummy",
@@ -41,7 +45,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Fogo"
+            "text": "Dwelling"
         },
         {
             "type": "input_dummy",
@@ -77,7 +81,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Pavimento"
+            "text": "Storey"
         },
         {
             "type": "input_dummy",
@@ -114,7 +118,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Edifício"
+            "text": "Building"
         },
         {
             "type": "input_dummy",
@@ -156,7 +160,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Via Pública"
+            "text": "Front street"
         },
         {
             "type": "input_dummy",
@@ -232,7 +236,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Elevador"
+            "text": "Elevator"
         },
         {
             "type": "input_dummy",
@@ -270,7 +274,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Escada"
+            "text": "Stair"
         },
         {
             "type": "input_dummy",
@@ -302,14 +306,14 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_space_cat",
-    "message0": "%1do espaço",
+    "message0": "%1of the space",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Classe",
+                    "Class",
                     "CLASSE"
                 ],
                 [
@@ -317,7 +321,7 @@ export const customBlocksDefinition = [{
                     "AREA"
                 ],
                 [
-                    "Pé Direito",
+                    "Ceiling height",
                     "CEILINGHEIGHT"
                 ]
             ]
@@ -331,18 +335,18 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_stair_cat",
-    "message0": "%1da escada",
+    "message0": "%1of the stair",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Largura do degrau",
+                    "Thread length",
                     "THREADLENGTH"
                 ],
                 [
-                    "Altura do degrau",
+                    "Riser height",
                     "RISERHEIGHT"
                 ],
             ]
@@ -356,7 +360,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_space_num",
-    "message0": "%1do espaço",
+    "message0": "%1of the space",
     "args0": [
         {
             "type": "field_dropdown",
@@ -367,7 +371,7 @@ export const customBlocksDefinition = [{
                     "AREA"
                 ],
                 [
-                    "Pé Direito",
+                    "Ceiling height",
                     "CEILINGHEIGHT"
                 ]
             ]
@@ -389,23 +393,23 @@ export const customBlocksDefinition = [{
             "name": "PROPERTY",
             "options": [
                 [
-                    "Área bruta",
+                    "Gross area",
                     "GROSSAREA"
                 ],
                 [
-                    "Área habitável",
+                    "Habitable area",
                     "HABITABLEAREA"
                 ],
                 [
-                    "Número de quartos",
+                    "Bedroom number",
                     "BEDROOMNUMBER"
                 ],
                 [
-                    "Número de cozinhas",
+                    "Number of kitchen",
                     "KITCHENNUMBER"
                 ],
                 [
-                    "Número de salas",
+                    "Number of living rooms",
                     "LIVINGROOMNUMBER"
                 ]
             ]
@@ -419,14 +423,14 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_bs_num",
-    "message0": "%1do pavimento",
+    "message0": "%1of the storey",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Área bruta",
+                    "Gross area",
                     "GROSSAREA"
                 ]
             ]
@@ -500,18 +504,18 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_building_cat",
-    "message0": "%1do edifício",
+    "message0": "%1of the building",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Categoria",
+                    "Category",
                     "CATEGORY"
                 ],
                 [
-                    "Usos",
+                    "Uses",
                     "USES"
                 ]
             ]
@@ -525,14 +529,14 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_building_bool",
-    "message0": "O edifício é%1",
+    "message0": "The building is%1",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Nova Construção?",
+                    "New Construction?",
                     "ISNEWCONSTRUCTION"
                 ]
             ]
@@ -546,22 +550,22 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_building_num",
-    "message0": "%1do edifício",
+    "message0": "%1of the building",
     "args0": [
         {
             "type": "field_dropdown",
             "name": "PROPERTY",
             "options": [
                 [
-                    "Altura piso a piso",
+                    "Floor to floor height",
                     "FLOORTOFLOORHEIGHT"
                 ],
                 [
-                    "Profundidade de empena",
+                    "Depth",
                     "DEPTH"
                 ],
                 [
-                    "Altura",
+                    "Height",
                     "HEIGHT"
                 ]
             ]
@@ -582,23 +586,23 @@ export const customBlocksDefinition = [{
             "name": "PROPERTY",
             "options": [
                 [
-                    "Profundidade",
+                    "Depth",
                     "DEPTH"
                 ],
                 [
-                    "Área",
+                    "Area",
                     "AREA"
                 ],
                 [
-                    "Índice de edificabilidade",
+                    "Buildability index",
                     "BINDEX"
                 ],
                 [
-                    "Superfície de pavimento",
+                    "Gross Floor Area",
                     "GROSSFLOORAREA"
                 ],
                 [
-                    "Faixa de implantação",
+                    "Implantation range",
                     "IMPLANTATIONRANGE"
                 ]
             ]
@@ -869,7 +873,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "value_len",
-    "message0": "Número de %1",
+    "message0": "Number of %1",
     "args0": [
         {
             "type": "input_value",
@@ -884,7 +888,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_parcel_buildings",
-    "message0": "%1 Edifícios da parcela",
+    "message0": "%1 Parcel buildings",
     "args0": [
         {
             "type": "field_image",
@@ -902,7 +906,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_parcel_front_street",
-    "message0": "%1 Arruamentos da parcela",
+    "message0": "%1 Parcel surrounding streets",
     "args0": [
         {
             "type": "field_image",
@@ -920,7 +924,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_building_buildingStoreys",
-    "message0": "%1 Pavimentos do edifício",
+    "message0": "%1 storeys of the building",
     "args0": [
         {
             "type": "field_image",
@@ -938,7 +942,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_building_elevators",
-    "message0": "%1 Elevadores do edifício",
+    "message0": "%1 elevators of the building",
     "args0": [
         {
             "type": "field_image",
@@ -956,7 +960,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_building_stairs",
-    "message0": "%1 Escadas do edifício",
+    "message0": "%1 stairs of the building",
     "args0": [
         {
             "type": "field_image",
@@ -974,7 +978,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_building_spaces",
-    "message0": "%1 Espaços do edifício",
+    "message0": "%1 spaces of the building",
     "args0": [
         {
             "type": "field_image",
@@ -992,7 +996,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_building_dwellings",
-    "message0": "%1 Fogos do edifício",
+    "message0": "%1 dwellings of the building",
     "args0": [
         {
             "type": "field_image",
@@ -1010,7 +1014,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "ch_dwelling_spaces",
-    "message0": "%1 Compartimentos do fogo",
+    "message0": "%1 compartments of the dwelling",
     "args0": [
         {
             "type": "field_image",
@@ -1033,7 +1037,7 @@ export const customBlocksDefinition = [{
         {
             "type": "field_label_serializable",
             "name": "NAME",
-            "text": "Compartimento"
+            "text": "compartment"
         },
         {
             "type": "input_dummy",
@@ -1064,7 +1068,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_compart_cat",
-    "message0": "%1do compartimento",
+    "message0": "%1of the compartment",
     "args0": [
         {
             "type": "field_dropdown",
@@ -1093,7 +1097,7 @@ export const customBlocksDefinition = [{
 },
 {
     "type": "pr_compart_num",
-    "message0": "%1do compartimento",
+    "message0": "%1of the compartment",
     "args0": [
         {
             "type": "field_dropdown",

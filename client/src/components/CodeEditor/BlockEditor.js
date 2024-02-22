@@ -54,7 +54,7 @@ var options = {
         controls: true,
         wheel: true,
         startScale: .7,
-        maxScale: 0.7,
+        maxScale: 1.5,
         minScale: 0.3,
         scaleSpeed: 1.01
     }

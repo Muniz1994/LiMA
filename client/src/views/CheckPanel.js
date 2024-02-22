@@ -90,7 +90,7 @@ const CheckPanel = () => {
                                     onClick={toggleNewVerificationModal}
                                     outline>
                                     <Stack gap={2} direction="horizontal">
-                                        <span>Nova verificação</span>
+                                        <span>New verification</span>
                                         <FontAwesomeIcon icon="fa-plus" />
                                     </Stack>
                                 </MDBBtn>
@@ -103,8 +103,8 @@ const CheckPanel = () => {
                             <MDBTable align='middle'>
                                 <MDBTableHead className='bg-light p-2 border-top border-bottom'>
                                     <tr>
-                                        <th scope='col'>Data de criação</th>
-                                        <th scope='col'>Ficheiro IFC</th>
+                                        <th scope='col'>Creation date</th>
+                                        <th scope='col'>IFC file</th>
                                         <th scope='col'></th>
                                     </tr>
                                 </MDBTableHead>

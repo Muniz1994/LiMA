@@ -162,12 +162,12 @@ const Reports = () => {
                             <Col className='verification-panel'>
                                 <Row>
                                     <Col className='p-2'>
-                                        <h6 className='bg-light p-2 border-top border-bottom'>Selecione verificação:</h6>
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Select verification:</h6>
                                         <Stack
                                             direction='horizontal'
                                             className='d-flex my-2'>
                                             <MDBDropdown group>
-                                                <MDBBtn outline color='dark'>Verificações</MDBBtn>
+                                                <MDBBtn outline color='dark'>Verifications</MDBBtn>
                                                 <MDBDropdownToggle split color='dark'>
                                                 </MDBDropdownToggle>
                                                 <MDBDropdownMenu>
@@ -197,18 +197,18 @@ const Reports = () => {
                                             </Button>
                                         </Stack>
 
-                                        <h6 className='bg-light p-2 border-top border-bottom'>Informações de verificação:</h6>
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Verification info:</h6>
                                         {isLoading ?
                                             <p>a carregar...</p> :
                                             <>
                                                 {verifications_list.map(ver =>
                                                     ver.id === activeVerificationId ?
                                                         <>
-                                                            <h6>Id de verificação:</h6>
+                                                            <h6>Verification ID:</h6>
                                                             <p className='m-0'>{ver.id}</p>
-                                                            <h6>Data de criação:</h6>
+                                                            <h6>Creation date:</h6>
                                                             <p className='m-0'>{ver.time_executed}</p>
-                                                            <h6>Ficheiro IFC:</h6>
+                                                            <h6>IFC file:</h6>
                                                             <p className='m-0'>{ver.ifc_file}</p>
                                                             <VerificationButton verificationId={ver.id} />
 
@@ -229,7 +229,7 @@ const Reports = () => {
                                     <Col>
 
                                         <Row >
-                                            <h6 className='bg-light p-2 border-top border-bottom'>Relatório de verificação:
+                                            <h6 className='bg-light p-2 border-top border-bottom'>Verification report:
                                             </h6>
                                             <Col className='verification-list '>
 
