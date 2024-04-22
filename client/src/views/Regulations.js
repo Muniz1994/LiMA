@@ -193,12 +193,12 @@ const Regulations = () => {
                                 <MDBRow>
                                     <MDBCol className='p-2'>
 
-                                        <h6 className='bg-light p-2 border-top border-bottom'>Select regulation:</h6>
+                                        <h6 className='bg-light p-2 border-top border-bottom'>Selecione regulamento:</h6>
                                         <Stack
                                             direction='horizontal'
                                             className='d-flex'>
                                             <MDBDropdown group>
-                                                <MDBBtn outline color='dark'>Regulations</MDBBtn>
+                                                <MDBBtn outline color='dark'>Regulamentos</MDBBtn>
                                                 <MDBDropdownToggle split color='dark'>
                                                 </MDBDropdownToggle>
                                                 <MDBDropdownMenu>
@@ -218,7 +218,7 @@ const Regulations = () => {
                                                 className='m-2'
                                                 color='dark'>
                                                 <Stack gap={2} direction="horizontal">
-                                                    <span>New regulation</span>
+                                                    <span>Novo regulamento</span>
                                                     <MDBIcon fas icon="plus" />
                                                 </Stack>
                                             </MDBBtn>
@@ -331,7 +331,7 @@ const Regulations = () => {
                                                         size='sm'
                                                         onClick={() => SaveClauseCode(blockXml, blockPython, activeClause.id)}
                                                     >
-                                                        <span className='p-2'>Save rule</span>
+                                                        <span className='p-2'>Salvar regra</span>
                                                         <MDBIcon far icon="save" />
                                                     </MDBBtn>
                                                     {activeClause.blocks !== '' ? isClauseCodeUpdated ? <Stack className="text-success" direction='horizontal' gap={1}>
@@ -352,7 +352,7 @@ const Regulations = () => {
                                                             setEditorKey(Math.random())
                                                         }}
                                                     >
-                                                        <span className='p-2'>Show code</span>
+                                                        <span className='p-2'>Código</span>
                                                         <MDBIcon fas icon="code" />
                                                     </MDBBtn>
                                                 </Stack>

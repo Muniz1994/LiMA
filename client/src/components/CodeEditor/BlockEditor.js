@@ -6,7 +6,7 @@ import Blockly from 'blockly/core';
 import { pythonGenerator } from 'blockly/python'
 
 // Import toolbox
-import { toolbox } from "./ToolBox";
+import { toolbox } from "./ToolBox.pt";
 
 // Syntax highlighter imports
 import SyntaxHighlighter from 'react-syntax-highlighter';

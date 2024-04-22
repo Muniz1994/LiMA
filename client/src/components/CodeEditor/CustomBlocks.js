@@ -1,6 +1,6 @@
 import Blockly from 'blockly/core';
 import { pythonGenerator } from 'blockly/python';
-import { customBlocksDefinition } from './CustomBlocksDefinition';
+import { customBlocksDefinition } from './CustomBlocksDefinition.pt';
 
 const parseStatement = (statement) => {
 

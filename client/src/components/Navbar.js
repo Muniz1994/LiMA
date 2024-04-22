@@ -85,7 +85,7 @@ const InternalLinks = () => {
                 <MDBNavbarLink tag={Link} to='/regulations'>
                     <Stack direction='horizontal' gap={2}>
                         <MDBIcon fas icon="puzzle-piece" />
-                        <span>Digital regulation</span>
+                        <span>Regulamento digital</span>
                     </Stack>
                 </MDBNavbarLink>
             </MDBNavbarItem>
@@ -93,7 +93,7 @@ const InternalLinks = () => {
                 <MDBNavbarLink tag={Link} to='/checkpanel'>
                     <Stack direction='horizontal' gap={2}>
                         <MDBIcon far icon="list-alt" />
-                        <span>Verification panel</span>
+                        <span>Painél de verificação</span>
                     </Stack>
                 </MDBNavbarLink>
             </MDBNavbarItem>
@@ -101,7 +101,7 @@ const InternalLinks = () => {
                 <MDBNavbarLink tag={Link} to='/reports'>
                     <Stack direction='horizontal' gap={2}>
                         <MDBIcon far icon="building" />
-                        <span>Report</span>
+                        <span>Relatório</span>
                     </Stack>
                 </MDBNavbarLink>
             </MDBNavbarItem>
