@@ -1,5 +1,3 @@
-![alt text](client/src/lima_new_2.svg)
-
 # LiMA
 
 ## Overview
