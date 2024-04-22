@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 // Import logo
-import { ReactComponent as Logo } from '../lima_new_2.svg'
+import { ReactComponent as Logo } from '../assets/lima_new_2.svg'
 
 // Import React Bootstrap components
 import Nav from 'react-bootstrap/Nav';
