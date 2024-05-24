@@ -193,3 +193,4 @@ sketch
 client/public/model.xkt
 client/public/geometry.xkt
 client/public/BuildingTeste.v52.ifc.xkt
+backend/db.sqlite3
