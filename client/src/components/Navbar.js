@@ -1,15 +1,13 @@
 // React imports
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Import router links
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+
 
 // Import logo
 import { ReactComponent as Logo } from '../assets/lima_new_2.svg'
 
-// Import React Bootstrap components
-import Nav from 'react-bootstrap/Nav';
 
 import Stack from 'react-bootstrap/Stack';
 
@@ -23,16 +21,8 @@ import {
     MDBNavbarLink,
     MDBIcon,
     MDBCollapse,
-    MDBBtn,
-    MDBModal,
-    MDBModalHeader,
-    MDBModalBody,
-    MDBModalFooter,
-    MDBModalDialog,
-    MDBModalContent
 } from 'mdb-react-ui-kit';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPuzzlePiece, faBuilding, faListCheck } from '@fortawesome/free-solid-svg-icons'
 import { library } from '@fortawesome/fontawesome-svg-core'
 

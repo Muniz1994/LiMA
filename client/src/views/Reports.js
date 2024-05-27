@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
 
 import axios from 'axios';
 
@@ -66,7 +66,7 @@ const ReportInfoModal = ({ toggleShow, basicModal, setBasicModal }) => {
 
 const Reports = () => {
 
-    const { data: verifications_list, error, isLoading } = useVerificationsQuery()
+    const { data: verifications_list, isLoading } = useVerificationsQuery()
 
     const viewer = useSelector((state) => state.viewer.value);
     const dispatch = useDispatch();
@@ -74,19 +74,14 @@ const Reports = () => {
     const [activeVerificationId, setActiveVerificationId] = useState(null)
     const [executeVerificationId, setExecuteVerificationId] = useState(null)
 
-    const { data: report, error: checkError, isLoading: isChecking } = useExecuteVerificationQuery(executeVerificationId)
+    const { data: report, isLoading: isChecking } = useExecuteVerificationQuery(executeVerificationId)
 
-    // Page loading state
-    const [loading, setLoading] = useState(true);
 
     // All regulations data
     const [regulations_list, setRegulationList] = useState([])
 
-    // State of active regulation and clause
-    const [activeRegulation, setActiveRegulation] = useState({ id: '', name: '' })
 
     // Modals States
-    const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
     const [reportInfoModalShow, setReportInfoModalShow] = useState(false);
 
@@ -98,8 +93,6 @@ const Reports = () => {
         return (
             <>{!isChecking ? <MDBBtn color='dark' className="my-2" onClick={() => setExecuteVerificationId(verificationId)} outline><Stack direction='horizontal'><>Executar verificação</><MDBIcon className='px-2' fas size='lg' icon="play" /></Stack></MDBBtn> :
                 <><MDBBtn color='dark' className="" onClick={() => setExecuteVerificationId(verificationId)} outline><Stack direction='horizontal'><>Executar verificação</><MDBIcon className='px-2' fas size='lg' icon="play" /></Stack></MDBBtn><MDBSpinner grow></MDBSpinner></>}</>
-
-
 
         )
     }

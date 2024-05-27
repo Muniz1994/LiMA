@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
 
 // React-Boostrap imports
-import { Spinner, Stack } from 'react-bootstrap';
+import {Stack } from 'react-bootstrap';
 
 import {
     MDBContainer,
@@ -19,25 +18,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { useVerificationsQuery } from '../context/SliceAPI'
-import { useGetUserQuery } from '../context/userSliceAPI';
 import { NewVerificationModal } from '../components/NewVerificationModal';
 import { AddFileModal } from '../components/AddFileModal';
 
 library.add(faCog, faPlus);
 
-const ProjectUser = ({ userID }) => {
-    const {
-        data: User,
-        error,
-        isLoading: isLoadingUser,
-    } = useGetUserQuery(userID);
-
-    return (
-        <>
-            {error ? console.log(error) : isLoadingUser ? <MDBSpinner text="Loading..." /> : User.username}
-        </>
-    )
-}
 
 const CheckPanel = () => {
 
@@ -52,9 +37,6 @@ const CheckPanel = () => {
     const {
         data: Verifications,
         isLoading,
-        isSuccess,
-        isError,
-        error,
     } = useVerificationsQuery();
 
     return (

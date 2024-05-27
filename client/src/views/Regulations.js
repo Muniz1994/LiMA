@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect} from 'react';
 
 // Import general tools
 import axios from 'axios';
@@ -41,21 +41,12 @@ const Regulations = () => {
     const dispatch = useDispatch();
 
 
-    // Page loading state
-    const [loading, setLoading] = useState(true);
-
-
-    // State of active regulation and clause
-    const [activeZone, setActiveZone] = useState({ id: '', name: '' });
-
     // Modals States
     const [infoRegulationModalShow, setInfoRegulationModalShow] = useState(false);
     const [newRegulationModalShow, setNewRegulationModalShow] = useState(false);
     const [newClauseModalShow, setNewClauseModalShow] = useState(false);
-    const [newZoneModalShow, setNewZoneModalShow] = useState(false);
     const [clauseListModalShow, setClauseListModalShow] = useState(false);
     const [showCode, setShowCode] = useState(false);
-
 
     // Controls the state of the block editor
     const [blockXml, setBlockXml] = useState('<xml xmlns="http://www.w3.org/1999/xhtml"><block type="text" x="70" y="30"><field name="TEXT"></field></block></xml>');
@@ -63,11 +54,9 @@ const Regulations = () => {
     const [editorKey, setEditorKey] = useState(Math.random()); // used to execute a hard update on the editor 
     const [isClauseCodeUpdated, setIsClauseCodeUpdated] = useState(false);
 
-
     // set state changes in the DB
     const [updatedRegulations, setUpdatedRegulations] = useState({});
     const [UpdatedClause, setUpdatedClause] = useState({});
-    const [UpdatedZone, setUpdatedZone] = useState({});
 
 
     // Verify if the active clause has the same code as the editor
@@ -95,7 +84,7 @@ const Regulations = () => {
                 .catch(
                     console.log
                 );
-    }, [updatedRegulations, UpdatedClause, UpdatedZone]);
+    }, [updatedRegulations, UpdatedClause]);
 
 
     //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
