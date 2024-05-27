@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MDBBtn, MDBFile, MDBModalFooter, MDBSpinner } from 'mdb-react-ui-kit';
 import { MDBModal, MDBModalBody, MDBModalContent, MDBModalDialog, MDBModalHeader, MDBModalTitle } from 'mdb-react-ui-kit';
 import { XKTModel, parseIFCIntoXKTModel, writeXKTModelToArrayBuffer } from '@xeokit/xeokit-convert/dist/xeokit-convert.es'
+// TODO: to local file 
 import * as WebIFC from "https://cdn.jsdelivr.net/npm/web-ifc@0.0.40/web-ifc-api.js";
 
 import { useUpdateVerificationMutation } from '../context/SliceAPI';
@@ -23,6 +24,7 @@ function UploadButton({ setIfcFile, setXktFile, setLoadingFile }) {
             WebIFC,
             data,
             xktModel,
+            // TODO: change to local wasm file
             wasmPath: "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-convert/dist/",
             autoNormals: false,
             log: (msg) => { console.log(msg); }

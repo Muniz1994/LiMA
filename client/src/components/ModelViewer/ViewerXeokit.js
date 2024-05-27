@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+// TODO: change to local file
 import { Viewer, WebIFCLoaderPlugin, XKTLoaderPlugin, Mesh, PhongMaterial, buildGridGeometry, VBOGeometry, ContextMenu, NavCubePlugin, DistanceMeasurementsPlugin } from "https://cdn.jsdelivr.net/npm/@xeokit/xeokit-sdk@2.4.0-alpha-37/dist/xeokit-sdk.es.min.js";
 
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';

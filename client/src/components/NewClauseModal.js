@@ -13,7 +13,9 @@ export function NewClauseModal({ ShowState, HideFunction, RegulationId, setUpdat
     const [clauseText, setClauseText] = useState('');
 
     const HandleSubmit = (event) => {
+
         event.preventDefault();
+        
         const newClause = {
             name: clauseName,
             external_reference: externalRef,

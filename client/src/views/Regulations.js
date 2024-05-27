@@ -85,25 +85,6 @@ const Regulations = () => {
 
     // The main loading process of the page
     useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            window.location.replace('http://localhost:3000/login/');
-        } else {
-
-            // Confirm user authentication
-            // TODO: change to RTK
-            axios.get(process.env.REACT_APP_API_ROOT + 'auth/user/',
-                {
-                    headers: {
-                        'Authorization': `Token ${localStorage.getItem('token')}`
-                    }
-                })
-                .then(data => {
-                    setLoading(false);
-                })
-                .catch(
-                    console.log
-                );
-
 
             // Get regulations
             // TODO: change to RTK
@@ -114,7 +95,6 @@ const Regulations = () => {
                 .catch(
                     console.log
                 );
-        }
     }, [updatedRegulations, UpdatedClause, UpdatedZone]);
 
 
@@ -154,7 +134,6 @@ const Regulations = () => {
 
     return (
         <>
-            {loading === false && (
                 <>
                     {/* Initiate the modals */}
                     <ClauseListModal
@@ -375,7 +354,6 @@ const Regulations = () => {
                     </MDBContainer>
 
                 </>
-            )}
         </>
     );
 };

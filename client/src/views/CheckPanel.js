@@ -57,14 +57,6 @@ const CheckPanel = () => {
         error,
     } = useVerificationsQuery();
 
-    useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            window.location.replace('http://localhost:3000/login/');
-        } else {
-
-        }
-    }, []);
-
     return (
         <>
             <NewVerificationModal
